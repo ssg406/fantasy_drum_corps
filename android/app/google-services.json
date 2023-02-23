@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "865655864882",
+    "project_id": "fantasy-drum-corps-54ddc",
+    "storage_bucket": "fantasy-drum-corps-54ddc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865655864882:android:ec7bb81d2d6fc18028862b",
+        "android_client_info": {
+          "package_name": "com.fantasydrumcorps.fantasy_drum_corps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865655864882-cd3jshctb5mou87sc62n5berjo0gqp14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkDV6TMwXTNsI3HG19_mXidDzP2KqJRZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865655864882-cd3jshctb5mou87sc62n5berjo0gqp14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

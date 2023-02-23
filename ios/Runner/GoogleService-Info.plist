@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>865655864882-3c4pqfapdioutpgmn0aecfg2t6mmlkq2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.865655864882-3c4pqfapdioutpgmn0aecfg2t6mmlkq2</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBpovDM6V_rMyaf51WlChq3LD43gT5AhiA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>865655864882</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.fantasydrumcorps.fantasyDrumCorps</string>
+	<key>PROJECT_ID</key>
+	<string>fantasy-drum-corps-54ddc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fantasy-drum-corps-54ddc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:865655864882:ios:5987580b4f78cc5428862b</string>
+</dict>
+</plist>
