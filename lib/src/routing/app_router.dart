@@ -3,6 +3,7 @@ import 'package:fantasy_drum_corps/src/features/authentication/presentation/auth
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
+import 'package:fantasy_drum_corps/src/routing/ui_shell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,7 @@ import 'package:fantasy_drum_corps/src/features/onboarding/presentation/onboardi
 
 // Navigator keys
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 enum AppRoutes {
   signIn,
@@ -70,13 +72,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           ),
         ),
       ),
-      GoRoute(
-          path: '/dashboard',
-          name: AppRoutes.dashboard.name,
-          pageBuilder: (context, state) => NoTransitionPage(
-                key: state.pageKey,
-                child: const Dashboard(),
-              )),
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return NavShell(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/dashboard',
+            name: AppRoutes.dashboard.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              key: state.pageKey,
+              child: const Dashboard(),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 });
