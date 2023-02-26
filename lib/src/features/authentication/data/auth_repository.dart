@@ -50,8 +50,11 @@ class AuthRepository {
   }
 }
 
-final authDatabaseProvider =
-    Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
+final authDatabaseProvider = Provider<FirebaseAuth>((ref) {
+  final auth = FirebaseAuth.instance;
+  auth.setPersistence(Persistence.LOCAL);
+  return auth;
+});
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(ref.watch(authDatabaseProvider));

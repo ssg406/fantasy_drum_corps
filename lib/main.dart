@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/app.dart';
+import 'package:fantasy_drum_corps/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 // ignore: depend_on_referenced_packages
@@ -18,13 +20,26 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   // Create error handlers
   registerErrorHandlers();
-
   // Turn off # in URL for web
   usePathUrlStrategy();
-  runApp(const ProviderScope(child: DrumCorpsFantasy()));
+
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final container = ProviderContainer(
+    overrides: [
+      onboardingRepositoryProvider.overrideWithValue(
+        OnboardingRepository(sharedPreferences),
+      ),
+    ],
+  );
+  await container.read(authStateChangesProvider.future);
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const DrumCorpsFantasy(),
+    ),
+  );
 }
 
 class DrumCorpsFantasy extends StatelessWidget {
@@ -51,13 +66,15 @@ void registerErrorHandlers() {
 
   //Show error UI when any widget in the app fails to build
   ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.red,
-          title: Text('An unknown error occurred'.hardcoded)),
-      body: Center(
-        child: Text(
-          details.toString(),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+            backgroundColor: Colors.red,
+            title: Text('An unknown error occurred'.hardcoded)),
+        body: Center(
+          child: Text(
+            details.toString(),
+          ),
         ),
       ),
     );
