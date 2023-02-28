@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Dashboard controller
 /// TODO refactor into UI shell controller only
-class DashboardController extends AutoDisposeAsyncNotifier<void> {
+class UiShellController extends AutoDisposeAsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 
@@ -14,6 +14,6 @@ class DashboardController extends AutoDisposeAsyncNotifier<void> {
   }
 }
 
-final dashboardControllerProvider =
-    AutoDisposeAsyncNotifierProvider<DashboardController, void>(
-        DashboardController.new);
+final uiShellControllerProvider =
+    AutoDisposeAsyncNotifierProvider<UiShellController, void>(
+        UiShellController.new);

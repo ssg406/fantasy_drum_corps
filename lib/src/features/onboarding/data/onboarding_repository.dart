@@ -13,6 +13,10 @@ class OnboardingRepository {
 
   bool isOnboardingComplete() =>
       sharedPreferences.getBool(onboardingCompleteKey) ?? false;
+
+  Future<void> resetOnboarding() async {
+    await sharedPreferences.setBool(onboardingCompleteKey, false);
+  }
 }
 
 final onboardingRepositoryProvider =

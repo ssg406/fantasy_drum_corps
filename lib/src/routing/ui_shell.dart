@@ -1,4 +1,6 @@
-import 'package:fantasy_drum_corps/src/routing/dashboard_controller.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
+import 'package:fantasy_drum_corps/src/routing/ui_shell_controller.dart';
+import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,7 +20,7 @@ class _NavShellState extends ConsumerState<NavShell> {
   var _selectedIndex = 0;
 
   Future<void> _logoutUser() async {
-    return ref.read(dashboardControllerProvider.notifier).signOut();
+    return ref.read(uiShellControllerProvider.notifier).signOut();
   }
 
   void _showUserMenu(clickPosition) async {
@@ -55,26 +57,12 @@ class _NavShellState extends ConsumerState<NavShell> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue>(uiShellControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context));
+    final state = ref.watch(uiShellControllerProvider);
     return Scaffold(
         appBar: AppBar(
-          title: RichText(
-            text: TextSpan(children: [
-              TextSpan(
-                  text: 'FANTASY',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: Colors.lightBlue, letterSpacing: 1.5)),
-              TextSpan(
-                text: 'DRUM',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              TextSpan(
-                text: 'CORPS',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ]),
-          ),
+          title: const LogoText(),
           actions: [
             Padding(
                 padding: const EdgeInsets.only(right: 45.0),
@@ -95,7 +83,8 @@ class _NavShellState extends ConsumerState<NavShell> {
           children: [
             NavigationRail(
               extended: MediaQuery.of(context).size.width > 700,
-              onDestinationSelected: _setNavRailDestination,
+              onDestinationSelected:
+                  state.isLoading ? null : _setNavRailDestination,
               selectedIndex: _selectedIndex,
               destinations: const [
                 NavigationRailDestination(
@@ -121,7 +110,9 @@ class _NavShellState extends ConsumerState<NavShell> {
               ],
             ),
             Expanded(
-              child: widget.child,
+              child: state.isLoading
+                  ? const CircularProgressIndicator()
+                  : widget.child,
             )
           ],
         ));

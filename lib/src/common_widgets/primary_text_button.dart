@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 class PrimaryTextButton extends StatelessWidget {
   const PrimaryTextButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.label,
     required this.isLoading,
   });
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String label;
   final bool isLoading;
 
@@ -25,10 +25,7 @@ class PrimaryTextButton extends StatelessWidget {
           ? const CircularProgressIndicator()
           : Text(
               label,
-              style: const TextStyle(
-                fontSize: 15.0,
-                letterSpacing: 1.5,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
     );
   }

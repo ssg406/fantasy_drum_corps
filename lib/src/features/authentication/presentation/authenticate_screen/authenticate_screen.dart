@@ -1,9 +1,10 @@
+import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authentication_form_type.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authentication_screen_controller.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authentication_validators.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_validators.dart';
+import 'package:fantasy_drum_corps/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
@@ -12,12 +13,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AuthenticateScreen extends ConsumerStatefulWidget {
-  const AuthenticateScreen({Key? key, required this.formType})
-      : super(key: key);
-  final AuthenticationFormType formType;
+  const AuthenticateScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<AuthenticateScreen> createState() => _AuthenticateScreenState();
@@ -29,7 +27,6 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
   final _node = FocusScopeNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late var _formType = widget.formType;
   var _submitted = false;
 
   String get email => _emailController.text;
@@ -49,8 +46,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     if (_formKey.currentState!.validate()) {
       final controller =
           ref.read(authenticateScreenControllerProvider.notifier);
-      await controller.submit(
-          email: email, password: password, formType: _formType);
+      await controller.submit(email: email, password: password);
     }
   }
 
@@ -60,24 +56,22 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
   }
 
   void _emailEditingComplete() {
-    if (canSubmitEmail(email)) {
+    if (email.isNotEmpty) {
       _node.nextFocus();
     }
   }
 
   void _passwordEditingComplete() {
-    if (!canSubmitEmail(email)) {
+    if (email.isEmpty) {
       _node.previousFocus();
       return;
     }
     _submit();
   }
 
-  void _toggleFormType() {
-    setState(() {
-      _formType = _formType.toggledFormAction;
-    });
-    _passwordController.clear();
+  void _resetOnboardingStatus() {
+    ref.read(onboardingRepositoryProvider).resetOnboarding();
+    context.goNamed(AppRoutes.register.name);
   }
 
   @override
@@ -86,12 +80,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(authenticateScreenControllerProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'FANTASY DRUM CORPS',
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
-      ),
+      appBar: AppBar(title: const LogoText(size: 32.0)),
       body: ResponsiveCenter(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0),
         maxContentWidth: 600,
@@ -104,7 +93,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _formType.title,
+                  'Sign In',
                   style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -135,43 +124,31 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                   autocorrect: false,
                   keyboardAppearance: Brightness.light,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (password) => !_submitted
-                      ? null
-                      : getPasswordErrors(password ?? '', _formType),
+                  validator: (password) =>
+                      !_submitted ? null : getPasswordErrors(password ?? ''),
                   onEditingComplete: _passwordEditingComplete,
                 ),
                 gapH20,
                 PrimaryButton(
                     isLoading: state.isLoading,
                     onPressed: _submit,
-                    label: _formType.submitButtonText),
+                    label: 'Sign In'),
                 gapH48,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton.icon(
-                      onPressed: _submitSSO,
-                      icon: const FaIcon(FontAwesomeIcons.google),
-                      label: Text('Continue with Google'.hardcoded),
-                    ),
-                    TextButton.icon(
-                      onPressed: () =>
-                          context.goNamed(AppRoutes.dashboard.name),
-                      icon: const FaIcon(FontAwesomeIcons.facebook),
-                      label: Text('Continue with Facebook'.hardcoded),
-                    )
-                  ],
+                TextButton.icon(
+                  onPressed: _submitSSO,
+                  icon: const FaIcon(FontAwesomeIcons.google),
+                  label: Text('Continue with Google'.hardcoded),
                 ),
                 gapH20,
                 const Divider(thickness: 1.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(_formType.secondaryFormText),
+                    const Text('Not a member yet?'),
                     PrimaryTextButton(
                         isLoading: state.isLoading,
-                        onPressed: _toggleFormType,
-                        label: _formType.toggleFormButtonText),
+                        onPressed: _resetOnboardingStatus,
+                        label: 'Register'),
                   ],
                 ),
               ],
