@@ -2,9 +2,9 @@ import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/shared_preferences_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_validators.dart';
-import 'package:fantasy_drum_corps/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
@@ -69,8 +69,8 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     _submit();
   }
 
-  void _resetOnboardingStatus() {
-    ref.read(onboardingRepositoryProvider).resetOnboarding();
+  void _returnToRegister() {
+    ref.read(sharedPreferencesRepositoryProvider).resetRegistrationStatus();
     context.goNamed(AppRoutes.register.name);
   }
 
@@ -80,9 +80,8 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(authenticateScreenControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: const LogoText(size: 32.0)),
       body: ResponsiveCenter(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0),
+        padding: centerContentPadding,
         maxContentWidth: 600,
         child: FocusScope(
           node: _node,
@@ -92,10 +91,18 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  width: 300.0,
+                  height: 300.0,
+                  child: Image.asset(
+                    'fc_logo_sm.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                gapH32,
                 Text(
                   'Sign In',
                   style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
                 ),
                 gapH32,
                 TextFormField(
@@ -134,12 +141,12 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                     onPressed: _submit,
                     label: 'Sign In'),
                 gapH48,
-                TextButton.icon(
-                  onPressed: _submitSSO,
-                  icon: const FaIcon(FontAwesomeIcons.google),
-                  label: Text('Continue with Google'.hardcoded),
-                ),
-                gapH20,
+                // TextButton.icon(
+                //   onPressed: _submitSSO,
+                //   icon: const FaIcon(FontAwesomeIcons.google),
+                //   label: Text('Continue with Google'.hardcoded),
+                // ),
+                // gapH20,
                 const Divider(thickness: 1.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +154,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                     const Text('Not a member yet?'),
                     PrimaryTextButton(
                         isLoading: state.isLoading,
-                        onPressed: _resetOnboardingStatus,
+                        onPressed: _returnToRegister,
                         label: 'Register'),
                   ],
                 ),

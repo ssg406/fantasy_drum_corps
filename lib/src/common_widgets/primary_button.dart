@@ -26,7 +26,7 @@ class PrimaryButton extends StatelessWidget {
           horizontal: 20.0,
         ),
         backgroundColor:
-            onSurface ? Theme.of(context).colorScheme.onSurface : null,
+            onSurface ? Theme.of(context).colorScheme.surfaceVariant : null,
       ),
       child: isLoading
           ? const CircularProgressIndicator()
@@ -35,7 +35,7 @@ class PrimaryButton extends StatelessWidget {
               style: TextStyle(
                 letterSpacing: 1.5,
                 color: onSurface
-                    ? Theme.of(context).colorScheme.surfaceVariant
+                    ? Theme.of(context).colorScheme.onSurfaceVariant
                     : null,
                 fontWeight: FontWeight.w600,
               ),

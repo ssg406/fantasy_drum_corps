@@ -13,6 +13,11 @@ class Sizes {
   static const p64 = 64.0;
 }
 
+/// Standardized paddings
+const pagePadding = EdgeInsets.symmetric(vertical: 40.0, horizontal: 50.0);
+const cardPadding = EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0);
+const centerContentPadding = EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0);
+
 /// Constant gap widths
 const gapW4 = SizedBox(width: Sizes.p4);
 const gapW8 = SizedBox(width: Sizes.p8);

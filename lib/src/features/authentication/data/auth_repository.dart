@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fantasy_drum_corps/src/features/leagues/data/league_repository.dart';
+import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +13,8 @@ class AuthRepository {
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
 
+  Stream<User?> userChanges() => _auth.userChanges();
+
   Future<UserCredential> createUserWithEmailAndPassword(
       String email, String password) async {
     return await _auth.createUserWithEmailAndPassword(
@@ -21,6 +23,56 @@ class AuthRepository {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await _auth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  Future<void> setDisplayName(String displayName) {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return user.updateDisplayName(displayName);
+    } else {
+      throw AssertionError('User cannot be null when updating display name');
+    }
+  }
+
+  Future<void> setEmail(String newEmail, String password) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final validated = await _validatePassword(password);
+      return user.updateEmail(newEmail);
+    } else {
+      throw AssertionError('User cannot be null when updating email');
+    }
+  }
+
+  Future<void> setPhotoUrl(String url) {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return user.updatePhotoURL(url);
+    } else {
+      throw AssertionError('User cannot be null when updating avatar URL');
+    }
+  }
+
+  Future<bool> _validatePassword(String password) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw AssertionError('User cannot be null when updating password');
+    }
+    final authCredential =
+        EmailAuthProvider.credential(email: user.email!, password: password);
+    final authResult = await user.reauthenticateWithCredential(authCredential);
+    return authResult.user != null;
+  }
+
+  Future<void> setPassword(
+      {required String oldPassword, required String newPassword}) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final validated = await _validatePassword(oldPassword);
+      return user.updatePassword(newPassword);
+    } else {
+      throw AssertionError('User cannot be null when updating password.');
+    }
   }
 
   Future<void> signInWithGoogle() async {
@@ -64,4 +116,12 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 
 final authStateChangesProvider = StreamProvider<User?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges();
+});
+
+final authDetailsChangesProvider = StreamProvider<User?>((ref) {
+  return ref.watch(authRepositoryProvider).userChanges();
+});
+
+final userChangesProvider = StreamProvider<User?>((ref) {
+  return ref.watch(authDatabaseProvider).userChanges();
 });

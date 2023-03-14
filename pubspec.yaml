@@ -51,8 +51,17 @@ dependencies:
   shared_preferences: ^2.0.18
   uuid: ^3.0.7
   profanity_filter: ^2.0.0
+  file_picker: ^5.2.5
+  firebase_storage: ^11.0.14
+  socket_io_client: ^2.0.1
+  json_annotation: ^4.8.0
+  responsive_framework: ^0.2.0
+
 
 dev_dependencies:
+  json_serializable: ^6.6.1
+  build_runner: ^2.3.3
+
   flutter_test:
     sdk: flutter
 

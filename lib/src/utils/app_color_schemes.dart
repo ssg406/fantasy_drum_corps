@@ -65,6 +65,9 @@ class AppColors {
     surfaceTint: Color(0xff1565c0),
   );
 
+  static const customBlue = Color(0xff2583ff);
+  static const customGreen = Color(0xff38d021);
+
   static ColorScheme get darkColors => flexSchemeDark;
   static ColorScheme get lightColors => flexSchemeLight;
 }

@@ -21,7 +21,7 @@ mixin RegistrationValidators {
 
   bool canSubmitDisplayName(String displayName) {
     final filter = ProfanityFilter();
-    return filter.hasProfanity(displayName) || displayName.isNotEmpty;
+    return !filter.hasProfanity(displayName) && displayName.isNotEmpty;
   }
 
   String? getPasswordErrors(String password) {
@@ -42,7 +42,6 @@ mixin RegistrationValidators {
 
   String? getDisplayNameErrors(String displayName) {
     final bool showDisplayNameError = !canSubmitDisplayName(displayName);
-    debugPrint('showDisplayNameError: $showDisplayNameError');
     final String displayNameError = displayName.isEmpty
         ? 'Please enter a display name'.hardcoded
         : 'Please enter a different display name'.hardcoded;

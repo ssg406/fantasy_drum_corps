@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/app.dart';
-import 'package:fantasy_drum_corps/src/features/onboarding/data/onboarding_repository.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/shared_preferences_repository.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  //await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
+
   // Create error handlers
   registerErrorHandlers();
   // Turn off # in URL for web
@@ -28,12 +33,12 @@ void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   final container = ProviderContainer(
     overrides: [
-      onboardingRepositoryProvider.overrideWithValue(
-        OnboardingRepository(sharedPreferences),
+      sharedPreferencesRepositoryProvider.overrideWithValue(
+        SharedPreferencesRepository(sharedPreferences),
       ),
     ],
   );
-  await container.read(authStateChangesProvider.future);
+
   runApp(
     UncontrolledProviderScope(
       container: container,
