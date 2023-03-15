@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/common_widgets/alert_dialogs.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';

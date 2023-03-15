@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthenticateScreenController extends AutoDisposeAsyncNotifier<void> {

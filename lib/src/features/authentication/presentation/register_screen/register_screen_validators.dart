@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:profanity_filter/profanity_filter.dart';
-import 'package:flutter/material.dart';
 
 /// Mixin class provides validation features to registration page
 mixin RegistrationValidators {

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 
 /// Provides CRUD functionality for player leagues
 class ToursRepository {
@@ -118,4 +118,9 @@ final tourStreamProvider =
   }
   final repository = ref.watch(toursRepositoryProvider);
   return repository.watchTour(tourId: tourId);
+});
+
+final allToursStreamProvider =
+    StreamProvider.family<List<Tour>, bool>((ref, watchPublicOnly) {
+  return ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
 });

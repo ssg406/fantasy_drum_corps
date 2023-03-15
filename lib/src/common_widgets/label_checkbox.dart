@@ -4,8 +4,10 @@ class LabelCheckbox extends StatefulWidget {
   const LabelCheckbox(
     this.label, {
     Key? key,
+    required this.onChecked,
   }) : super(key: key);
   final String label;
+  final void Function(bool) onChecked;
 
   @override
   State<LabelCheckbox> createState() => _LabelCheckboxState();
@@ -18,6 +20,7 @@ class _LabelCheckboxState extends State<LabelCheckbox> {
     setState(() {
       isChecked = !(isChecked ?? false);
     });
+    widget.onChecked(isChecked ?? false);
   }
 
   @override

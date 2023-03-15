@@ -1,8 +1,7 @@
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/web_scrollable_list_view.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
-
-import 'package:fantasy_drum_corps/src/common_widgets/web_scrollable_list_view.dart';
 
 /// Main page which displays information on tours the user is a member of
 /// as well as currently public tours that can be joined

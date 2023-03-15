@@ -1,21 +1,15 @@
-import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/shared_preferences_repository.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_validators.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
-import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 /// Registration screen presented after initial onboarding

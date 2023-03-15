@@ -1,5 +1,8 @@
-import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/details_card/details_card_controller.dart';
@@ -9,12 +12,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fantasy_drum_corps/src/features/profile/data/storage_repository.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 
 class DetailsCard extends ConsumerStatefulWidget {
   const DetailsCard({Key? key}) : super(key: key);

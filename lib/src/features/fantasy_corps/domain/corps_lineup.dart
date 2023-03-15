@@ -1,6 +1,3 @@
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
-import 'package:json_annotation/json_annotation.dart';
-
 class CorpsLineup {
   CorpsLineup({
     required this.userId,

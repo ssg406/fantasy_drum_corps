@@ -1,5 +1,4 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/corps_lineup.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 class FantasyCorps {
   const FantasyCorps({

@@ -1,7 +1,7 @@
-import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/shared_preferences_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_validators.dart';
@@ -11,8 +11,6 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AuthenticateScreen extends ConsumerStatefulWidget {
   const AuthenticateScreen({Key? key}) : super(key: key);

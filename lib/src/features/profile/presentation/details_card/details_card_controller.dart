@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/profile/data/storage_repository.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailsCardController extends AutoDisposeAsyncNotifier<void> {

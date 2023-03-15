@@ -1,14 +1,14 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/password_card/password_card_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 
 class PasswordCard extends ConsumerStatefulWidget {
   const PasswordCard({Key? key}) : super(key: key);

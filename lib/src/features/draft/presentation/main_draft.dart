@@ -5,7 +5,6 @@ import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
 
 /// [TourDraft] is responsible for coordinating the live draft event.
 /// The containing class is the only class which communicates with the Socket.io
@@ -359,7 +358,10 @@ class CaptionFilterCard extends StatelessWidget {
               direction: Axis.horizontal,
               children: [
                 for (final caption in DrumCorpsData.captionAbbreviations)
-                  LabelCheckbox(caption)
+                  LabelCheckbox(
+                    caption,
+                    onChecked: (checked) => debugPrint(checked.toString()),
+                  )
               ],
             )
           ],

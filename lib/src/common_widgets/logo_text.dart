@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class LogoText extends StatelessWidget {
