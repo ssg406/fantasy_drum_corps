@@ -82,11 +82,11 @@ class CustomTourTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton.icon(
-                onPressed: () => context.goNamed(AppRoutes.tourDetail.name,
+                onPressed: () => context.pushNamed(AppRoutes.tourDetail.name,
                     params: {'tid': tour.id!}),
                 icon: const Icon(Icons.arrow_circle_right_outlined),
                 label: Text(
-                  'VIEW',
+                  'View',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),

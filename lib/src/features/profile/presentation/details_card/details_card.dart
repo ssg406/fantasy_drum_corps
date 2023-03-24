@@ -14,14 +14,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailsCard extends ConsumerStatefulWidget {
-  const DetailsCard({Key? key}) : super(key: key);
+class DetailsCard extends ConsumerWidget {
+  const DetailsCard({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  ConsumerState<DetailsCard> createState() => _DetailsCardState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AsyncValueWidget(
+      value: ref.watch(playerStreamProvider),
+      data: (Player player) => DetailsCardContents(player: player),
+    );
+  }
 }
 
-class _DetailsCardState extends ConsumerState<DetailsCard>
+class DetailsCardContents extends ConsumerStatefulWidget {
+  const DetailsCardContents({Key? key, required this.player}) : super(key: key);
+
+  final Player player;
+
+  @override
+  ConsumerState createState() => _DetailsCardContentsState();
+}
+
+class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     with RegistrationValidators {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -37,64 +53,86 @@ class _DetailsCardState extends ConsumerState<DetailsCard>
     ref.listen<AsyncValue>(detailsCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(detailsCardControllerProvider);
-    return AsyncValueWidget(
-      value: ref.watch(playerStreamProvider),
-      data: (Player player) {
-        return TitledSectionCard(
-          title: 'User Details',
-          child: Column(
+    return TitledSectionCard(
+      title: 'User Details',
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: _getImageFile,
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: Tooltip(
-                        message: 'Change Image',
-                        child: state.isLoading
-                            ? const CircularProgressIndicator()
-                            : Avatar(
-                                radius: 50,
-                                photoUrl: player.photoUrl,
-                              ),
+              GestureDetector(
+                onTapDown: (tapDetails) =>
+                    _showAvatarMenu(tapDetails.globalPosition),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: state.isLoading
+                      ? const CircularProgressIndicator()
+                      : Avatar(
+                          radius: 50,
+                          photoUrl: widget.player.photoUrl,
+                        ),
+                ),
+              ),
+              gapW24,
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _nameController
+                          ..text = widget.player.displayName ?? '',
+                        validator: (input) => canSubmitDisplayName(input ?? '')
+                            ? null
+                            : getDisplayNameErrors(input ?? ''),
+                        decoration:
+                            const InputDecoration(labelText: 'Display Name'),
+                        onEditingComplete: _submit,
                       ),
-                    ),
+                    ],
                   ),
-                  gapW24,
-                  Expanded(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _nameController
-                              ..text = player.displayName ?? '',
-                            validator: (input) =>
-                                canSubmitDisplayName(input ?? '')
-                                    ? null
-                                    : getDisplayNameErrors(input ?? ''),
-                            decoration: const InputDecoration(
-                                labelText: 'Display Name'),
-                            onEditingComplete: _submit,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              PrimaryButton(
-                onSurface: true,
-                onPressed: () => _submit(),
-                label: 'Update',
-                isLoading: state.isLoading,
-              ),
+                ),
+              )
             ],
           ),
-        );
-      },
+          PrimaryButton(
+            onSurface: true,
+            onPressed: () => _submit(),
+            label: 'Update',
+            isLoading: state.isLoading,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAvatarMenu(clickPosition) async {
+    Size screenSize = MediaQuery.of(context).size;
+    double left = clickPosition.dx;
+    double top = clickPosition.dy;
+    double right = screenSize.width - left;
+    double bottom = screenSize.height - top;
+
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, right, bottom),
+      items: [
+        PopupMenuItem(
+          onTap: _getImageFile,
+          child: const ListTile(
+            leading: Icon(Icons.upload),
+            title: Text('Upload Image'),
+          ),
+        ),
+        PopupMenuItem(
+          enabled: widget.player.photoUrl != null,
+          onTap: _clearProfileImage,
+          child: const ListTile(
+            leading: Icon(Icons.delete_forever),
+            title: Text('Clear Image'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -103,6 +141,11 @@ class _DetailsCardState extends ConsumerState<DetailsCard>
       final controller = ref.read(detailsCardControllerProvider.notifier);
       await controller.setDisplayName(_nameController.text);
     }
+  }
+
+  Future<void> _clearProfileImage() async {
+    final controller = ref.read(detailsCardControllerProvider.notifier);
+    await controller.clearUploadedImage(widget.player.photoUrl!);
   }
 
   Future<void> _getImageFile() async {

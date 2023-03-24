@@ -2,7 +2,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour_controller.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour_controller.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +30,7 @@ class _CreateTourState extends ConsumerState<CreateTour> {
   TimeOfDay? pickedTime;
 
   String get name => _nameController.text;
+
   String get description => _descriptionController.text;
 
   @override

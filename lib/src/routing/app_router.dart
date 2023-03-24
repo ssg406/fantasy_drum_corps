@@ -7,9 +7,9 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/subcapt
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';

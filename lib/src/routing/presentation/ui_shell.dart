@@ -1,4 +1,7 @@
+import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,7 @@ class NavShell extends ConsumerStatefulWidget {
     super.key,
     required this.child,
   });
+
   final Widget child;
 
   @override
@@ -79,12 +83,27 @@ class _NavShellState extends ConsumerState<NavShell> {
                 onTapDown: (tapDetails) =>
                     _showUserMenu(tapDetails.globalPosition),
                 child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColorDark,
-                    child: const Text('SJ'),
-                  ),
-                ),
+                    cursor: SystemMouseCursors.click,
+                    child: AsyncValueWidget(
+                      showLoading: false,
+                      value: ref.watch(playerStreamProvider),
+                      data: (Player player) {
+                        return CircleAvatar(
+                          backgroundImage: player.photoUrl != null
+                              ? NetworkImage(player.photoUrl!)
+                              : null,
+                          backgroundColor: Theme.of(context).primaryColorDark,
+                          child: player.photoUrl == null
+                              ? Icon(
+                                  Icons.account_circle,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceVariant,
+                                )
+                              : null,
+                        );
+                      },
+                    )),
               ),
             ],
           ),

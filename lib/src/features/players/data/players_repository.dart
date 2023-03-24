@@ -70,6 +70,15 @@ class PlayersRepository {
     });
   }
 
+  Future<void> clearPhotoUrl({required String playerId}) async {
+    final playerRef = _db.doc(playerPath(playerId));
+    playerRef.get().then((doc) async {
+      final player = Player.fromJson(doc.data()!, doc.id);
+      player.photoUrl = null;
+      await updatePlayer(player: player);
+    });
+  }
+
   Future<Player?> fetchPlayer(String playerId) async {
     final ref = _db.collection(playersPath).doc(playerId).withConverter(
           fromFirestore: (snapshot, _) =>
@@ -147,4 +156,12 @@ final setPhotoUrlProvider = Provider.family<Future<void>, String>((ref, url) {
   return ref
       .watch(playersRepositoryProvider)
       .setPhotoUrl(playerId: user.uid, url: url);
+});
+
+final clearPhotoUrlProvider = Provider<Future<void>>((ref) {
+  final user = ref.watch(authRepositoryProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('User cannot be null when setting display name');
+  }
+  return ref.watch(playersRepositoryProvider).clearPhotoUrl(playerId: user.uid);
 });

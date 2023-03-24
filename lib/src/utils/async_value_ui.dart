@@ -27,5 +27,9 @@ extension AsyncValueUI on AsyncValue {
       showExceptionAlertDialog(
           context: context, title: 'Error'.hardcoded, exception: message);
     }
+    if (hasValue && !hasError && !isLoading) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Success!')));
+    }
   }
 }

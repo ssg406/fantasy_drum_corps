@@ -25,6 +25,16 @@ class DetailsCardController extends AutoDisposeAsyncNotifier<void> {
     await ref.read(setPhotoUrlProvider(imageUrl));
   }
 
+  Future<void> clearUploadedImage(String photoUrl) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() {
+      return ref
+          .read(storageRepositoryProvider)
+          .deleteImage(photoUrl)
+          .then((_) => ref.read(clearPhotoUrlProvider));
+    });
+  }
+
   Future<void> setDisplayName(String displayName) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(

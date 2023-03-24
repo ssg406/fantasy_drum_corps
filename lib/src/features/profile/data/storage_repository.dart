@@ -13,6 +13,11 @@ class StorageRepository {
     await imageRef.putData(data);
     return imageRef.getDownloadURL();
   }
+
+  Future<void> deleteImage(String photoUrl) async {
+    final imageRef = _storage.refFromURL(photoUrl);
+    await imageRef.delete();
+  }
 }
 
 final storageRepositoryProvider = Provider<StorageRepository>(
