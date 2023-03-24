@@ -24,6 +24,8 @@ extension AuthenticationFormTypeExt on AuthenticationFormType {
     }
   }
 
+  bool get isRegistrationForm => this == AuthenticationFormType.register;
+
   AuthenticationFormType get toggledFormAction {
     if (this == AuthenticationFormType.register) {
       return AuthenticationFormType.signIn;

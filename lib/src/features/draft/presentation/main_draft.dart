@@ -1,7 +1,11 @@
+import 'package:fantasy_drum_corps/src/common_widgets/accent_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -151,12 +155,12 @@ class PlayerLineup extends StatelessWidget {
           crossAxisCount: 2,
           childAspectRatio: 2,
           children: [
-            for (final caption in DrumCorpsData.captionFullNames)
+            for (final caption in Caption.values)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    caption,
+                    caption.name,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text('Position 1',
@@ -183,23 +187,33 @@ class AvailableCaptions extends StatelessWidget {
     return Card(
       child: Padding(
         padding: cardPadding,
-        child: SizedBox(
-          height: 350,
-          child: GridView.count(
-            crossAxisCount: 2,
-            childAspectRatio: 3.0,
-            children: [
-              for (final corps in DrumCorpsData.allNames)
-                for (final caption in DrumCorpsData.captionFullNames)
-                  InkWell(
-                    onTap: () => debugPrint('selected caption'),
-                    child: ListTile(
-                      title: Text(corps),
-                      subtitle: Text(caption),
-                    ),
-                  ),
-            ],
-          ),
+        child: Column(
+          children: [
+            Text('Remaining Picks',
+                style: Theme.of(context).textTheme.titleMedium),
+            gapH8,
+            SizedBox(
+              height: 350,
+              child: ListView(
+                children: [
+                  for (final corps in DrumCorps.values)
+                    for (final caption in Caption.values)
+                      InkWell(
+                        onTap: () => debugPrint(
+                            'selected ${corps.name} ${caption.name}'),
+                        child: Text('${corps.name} ${caption.name}'),
+                      )
+                ],
+              ),
+            ),
+            gapH8,
+            Align(
+                alignment: Alignment.bottomRight,
+                child: AccentButton(
+                  label: 'Draft',
+                  onPressed: () => debugPrint('drafted'),
+                ))
+          ],
         ),
       ),
     );
@@ -228,11 +242,11 @@ class SelectFantasyCorpsCard extends StatelessWidget {
                 return selection == null ? 'Please make a selection' : null;
               },
               decoration: const InputDecoration(labelText: 'Sponsored Corps'),
-              items: DrumCorpsData.allNames.map<DropdownMenuItem<String>>(
-                (String corps) {
+              items: DrumCorps.values.map<DropdownMenuItem<String>>(
+                (DrumCorps corps) {
                   return DropdownMenuItem<String>(
-                    value: corps,
-                    child: Text(corps),
+                    value: corps.name,
+                    child: Text(corps.name),
                   );
                 },
               ).toList(),
@@ -352,14 +366,17 @@ class CaptionFilterCard extends StatelessWidget {
         padding: cardPadding,
         child: Column(
           children: [
-            const Text('Best Available Captions Left'),
+            Text(
+              'Filter Remaining Captions by Type',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Wrap(
               spacing: 5.0,
               direction: Axis.horizontal,
               children: [
-                for (final caption in DrumCorpsData.captionAbbreviations)
+                for (final caption in Caption.values)
                   LabelCheckbox(
-                    caption,
+                    caption.abbreviation,
                     onChecked: (checked) => debugPrint(checked.toString()),
                   )
               ],

@@ -1,17 +1,16 @@
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/competition/presentation/scheduled_matchup.dart';
 import 'package:fantasy_drum_corps/src/features/competition/presentation/standings.dart';
 import 'package:fantasy_drum_corps/src/features/competition/presentation/subcaption_results.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
-import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
 import 'package:flutter/material.dart';
@@ -57,14 +56,14 @@ final goRouterProvider = Provider<GoRouter>(
       redirect: (context, state) {
         final isLoggedIn = authRepository.currentUser != null;
         if (isLoggedIn) {
-          if (state.subloc.startsWith('/signIn') ||
-              state.subloc.startsWith('/register')) {
+          if (state.subloc.startsWith('/signIn')) {
             return '/dashboard';
           }
         } else {
           if (state.subloc.startsWith('/dashboard') ||
-              state.subloc.startsWith('/leagues') ||
-              state.subloc.startsWith('/profile')) {
+              state.subloc.startsWith('/profile') ||
+              state.subloc.startsWith('/tours') ||
+              state.subloc.startsWith('/about')) {
             return '/signIn';
           }
         }
@@ -76,15 +75,8 @@ final goRouterProvider = Provider<GoRouter>(
           name: AppRoutes.signIn.name,
           pageBuilder: (context, state) => NoTransitionPage(
             key: state.pageKey,
-            child: const AuthenticateScreen(),
-          ),
-        ),
-        GoRoute(
-          path: '/register',
-          name: AppRoutes.register.name,
-          pageBuilder: (context, state) => NoTransitionPage(
-            key: state.pageKey,
-            child: const RegistrationScreen(),
+            child: const AuthenticateScreen(
+                formType: AuthenticationFormType.register),
           ),
         ),
         ShellRoute(

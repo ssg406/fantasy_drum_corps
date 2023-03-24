@@ -3,7 +3,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_validators.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/password_card/password_card_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';

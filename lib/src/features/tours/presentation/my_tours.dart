@@ -34,10 +34,13 @@ class _MyToursState extends ConsumerState<MyTours> {
                   value: ref.watch(ownedToursStreamProvider),
                   data: (List<Tour> tours) {
                     return SizedBox(
-                      height: 400,
+                      height: MediaQuery.of(context).size.height * 0.4,
                       child: ListView(
                         children: [
-                          for (final tour in tours) CustomTourTile(tour: tour)
+                          for (final tour in tours)
+                            CustomTourTile(
+                              tour: tour,
+                            )
                         ],
                       ),
                     );
@@ -46,8 +49,24 @@ class _MyToursState extends ConsumerState<MyTours> {
               ),
               gapH16,
               TitledSectionCard(
-                title: 'Tours You\'ve Joined',
-                child: Text('tours i joined'),
+                title: 'Joined Tours',
+                child: AsyncValueWidget(
+                  value: ref.watch(
+                      ownedToursStreamProvider), // joinedToursStreamProvider,
+                  data: (List<Tour> tours) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: ListView(
+                        children: [
+                          for (final tour in tours)
+                            CustomTourTile(
+                              tour: tour,
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

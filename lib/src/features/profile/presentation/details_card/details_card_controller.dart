@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/profile/data/storage_repository.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,13 +22,13 @@ class DetailsCardController extends AutoDisposeAsyncNotifier<void> {
     String fileName = result.files.first.name;
     String imageUrl =
         await ref.read(storageRepositoryProvider).uploadImage(fileName, bytes);
-    await ref.read(authRepositoryProvider).setPhotoUrl(imageUrl);
+    await ref.read(setPhotoUrlProvider(imageUrl));
   }
 
   Future<void> setDisplayName(String displayName) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-        () => ref.read(authRepositoryProvider).setDisplayName(displayName));
+        () => ref.read(setDisplayNameProvider(displayName)));
   }
 }
 

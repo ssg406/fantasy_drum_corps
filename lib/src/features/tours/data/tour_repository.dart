@@ -5,16 +5,19 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Provides CRUD functionality for player leagues
+/// Provides CRUD functionality for player tours. Data saved to and served from
+/// Firebase Firestore database
 class ToursRepository {
   const ToursRepository(this._database);
+
   final FirebaseFirestore _database;
 
   static String tourPath(String tourId) => 'tours/$tourId';
-  static String toursPath() => 'tours';
+
+  static String toursPath = 'tours';
 
   // Return Firestore query with converter for league collection
-  Query<Tour> queryTours() => _database.collection(toursPath()).withConverter(
+  Query<Tour> queryTours() => _database.collection(toursPath).withConverter(
         fromFirestore: (snapshot, _) =>
             Tour.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (league, _) => league.toJson(),
@@ -22,7 +25,7 @@ class ToursRepository {
 
   // Create league
   Future<void> addTour(Tour tour) {
-    return _database.collection(toursPath()).add(tour.toJson());
+    return _database.collection(toursPath).add(tour.toJson());
   }
 
   // Update a league
@@ -41,6 +44,18 @@ class ToursRepository {
       }
     });
     await tourRef.delete();
+  }
+
+  // Add user to tour
+  Future<void> addPlayerToTour(
+      {required TourID tourId, required String playerId}) async {
+    final tourRef = _database.doc(tourPath(tourId));
+    tourRef.get().then((doc) async {
+      final tour = Tour.fromJson(doc.data()!, doc.id);
+      // TODO validate tour size
+      tour.addPlayer(playerId);
+      await updateTour(tour);
+    });
   }
 
   // Get single league document as stream
@@ -94,12 +109,23 @@ final firebaseDatabaseProvider =
 final toursRepositoryProvider = Provider<ToursRepository>(
     (ref) => ToursRepository(ref.watch(firebaseDatabaseProvider)));
 
-final toursQueryProvider = Provider<Query<Tour>>((ref) {
+final addPlayerToTourProvider =
+    Provider.family<Future<void>, String>((ref, tourId) {
   final user = ref.watch(authDatabaseProvider).currentUser;
   if (user == null) {
-    throw AssertionError('User cannot be null when querying leagues');
+    throw AssertionError('User cannot  be null when joining tours');
   }
-  return ref.watch(toursRepositoryProvider).queryTours();
+  return ref
+      .watch(toursRepositoryProvider)
+      .addPlayerToTour(tourId: tourId, playerId: user.uid);
+});
+
+final joinedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
+  final user = ref.watch(authDatabaseProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('User cannot  be null when finding tours');
+  }
+  return ref.watch(toursRepositoryProvider).watchJoinedTours(user.uid);
 });
 
 final ownedToursStreamProvider = StreamProvider<List<Tour>>((ref) {

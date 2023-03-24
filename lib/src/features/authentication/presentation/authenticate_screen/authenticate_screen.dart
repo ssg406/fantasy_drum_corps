@@ -2,32 +2,35 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/shared_preferences_repository.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_validators.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AuthenticateScreen extends ConsumerStatefulWidget {
-  const AuthenticateScreen({Key? key}) : super(key: key);
+  const AuthenticateScreen({Key? key, required this.formType})
+      : super(key: key);
+  final AuthenticationFormType formType;
 
   @override
   ConsumerState<AuthenticateScreen> createState() => _AuthenticateScreenState();
 }
 
 class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
-    with AuthenticationValidators {
+    with RegistrationValidators {
   final _formKey = GlobalKey<FormState>();
   final _node = FocusScopeNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   var _submitted = false;
+  late var _formType = widget.formType;
 
   String get email => _emailController.text;
+
   String get password => _passwordController.text;
 
   @override
@@ -44,32 +47,30 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     if (_formKey.currentState!.validate()) {
       final controller =
           ref.read(authenticateScreenControllerProvider.notifier);
-      await controller.submit(email: email, password: password);
+      await controller.submit(
+          email: email, password: password, formType: _formType);
     }
   }
 
   void _submitSSO() async {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
-    await controller.singleSignOn();
   }
 
-  void _emailEditingComplete() {
-    if (email.isNotEmpty) {
-      _node.nextFocus();
-    }
-  }
+  void _emailEditingComplete() {}
 
   void _passwordEditingComplete() {
-    if (email.isEmpty) {
+    if (!canSubmitEmail(email)) {
       _node.previousFocus();
       return;
     }
     _submit();
   }
 
-  void _returnToRegister() {
-    ref.read(sharedPreferencesRepositoryProvider).resetRegistrationStatus();
-    context.goNamed(AppRoutes.register.name);
+  void _toggleFormType() {
+    setState(() {
+      _formType = _formType.toggledFormAction;
+      _passwordController.clear();
+    });
   }
 
   @override
@@ -99,7 +100,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                 ),
                 gapH32,
                 Text(
-                  'Sign In',
+                  _formType.title,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 gapH32,
@@ -111,7 +112,8 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                     enabled: !state.isLoading,
                   ),
                   validator: (email) =>
-                      !_submitted ? null : getEmailErrors(email ?? ''), //
+                      !_submitted ? null : getEmailErrors(email ?? ''),
+                  //
                   onEditingComplete: _emailEditingComplete,
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
@@ -139,21 +141,21 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                     onPressed: _submit,
                     label: 'Sign In'),
                 gapH48,
-                // TextButton.icon(
-                //   onPressed: _submitSSO,
-                //   icon: const FaIcon(FontAwesomeIcons.google),
-                //   label: Text('Continue with Google'.hardcoded),
-                // ),
-                // gapH20,
+                TextButton.icon(
+                  onPressed: _submitSSO,
+                  icon: const FaIcon(FontAwesomeIcons.google),
+                  label: Text('Continue with Google'.hardcoded),
+                ),
+                gapH20,
                 const Divider(thickness: 1.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Not a member yet?'),
+                    Text(_formType.secondaryFormText),
                     PrimaryTextButton(
                         isLoading: state.isLoading,
-                        onPressed: _returnToRegister,
-                        label: 'Register'),
+                        onPressed: _toggleFormType,
+                        label: _formType.toggleFormButtonText),
                   ],
                 ),
               ],

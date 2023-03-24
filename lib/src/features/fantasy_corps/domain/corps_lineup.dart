@@ -1,3 +1,5 @@
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
+
 class CorpsLineup {
   CorpsLineup({
     required this.userId,
@@ -11,29 +13,30 @@ class CorpsLineup {
     this.musicAnalysis2,
     this.percussion,
   });
+
   final String userId;
-  String? generalEffect1;
-  String? generalEffect2;
-  String? visualProficiency;
-  String? visualAnalysis;
-  String? colorGuard;
-  String? brass;
-  String? musicAnalysis1;
-  String? musicAnalysis2;
-  String? percussion;
+  DrumCorps? generalEffect1;
+  DrumCorps? generalEffect2;
+  DrumCorps? visualProficiency;
+  DrumCorps? visualAnalysis;
+  DrumCorps? colorGuard;
+  DrumCorps? brass;
+  DrumCorps? musicAnalysis1;
+  DrumCorps? musicAnalysis2;
+  DrumCorps? percussion;
 
   factory CorpsLineup.fromJson(Map<String, dynamic> json) {
     return CorpsLineup(
       userId: json['userId'] as String,
-      generalEffect1: json['generalEffect1'] as String?,
-      generalEffect2: json['generalEffect2'] as String?,
-      visualProficiency: json['visualProficiency'] as String?,
-      visualAnalysis: json['visualAnalysis'] as String?,
-      colorGuard: json['colorGuard'] as String?,
-      brass: json['brass'] as String?,
-      musicAnalysis1: json['musicAnalysis1'] as String?,
-      musicAnalysis2: json['musicAnalysis2'] as String?,
-      percussion: json['percussion'] as String?,
+      generalEffect1: json['generalEffect1'] as DrumCorps?,
+      generalEffect2: json['generalEffect2'] as DrumCorps?,
+      visualProficiency: json['visualProficiency'] as DrumCorps?,
+      visualAnalysis: json['visualAnalysis'] as DrumCorps?,
+      colorGuard: json['colorGuard'] as DrumCorps?,
+      brass: json['brass'] as DrumCorps?,
+      musicAnalysis1: json['musicAnalysis1'] as DrumCorps?,
+      musicAnalysis2: json['musicAnalysis2'] as DrumCorps?,
+      percussion: json['percussion'] as DrumCorps?,
     );
   }
 

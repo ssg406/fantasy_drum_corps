@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   const AuthRepository(this._auth);
+
   final FirebaseAuth _auth;
 
   User? get currentUser => _auth.currentUser;
@@ -23,15 +24,6 @@ class AuthRepository {
     await _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> setDisplayName(String displayName) {
-    final user = _auth.currentUser;
-    if (user != null) {
-      return user.updateDisplayName(displayName);
-    } else {
-      throw AssertionError('User cannot be null when updating display name');
-    }
-  }
-
   Future<void> setEmail(String newEmail, String password) async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -39,15 +31,6 @@ class AuthRepository {
       return user.updateEmail(newEmail);
     } else {
       throw AssertionError('User cannot be null when updating email');
-    }
-  }
-
-  Future<void> setPhotoUrl(String url) {
-    final user = _auth.currentUser;
-    if (user != null) {
-      return user.updatePhotoURL(url);
-    } else {
-      throw AssertionError('User cannot be null when updating avatar URL');
     }
   }
 
@@ -73,11 +56,11 @@ class AuthRepository {
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
       googleProvider.addScope('email');
-      await _auth.signInWithPopup(googleProvider);
+      return await _auth.signInWithPopup(googleProvider);
     } else {
       // Trigger authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -93,7 +76,7 @@ class AuthRepository {
       );
 
       // Complete authentication with firebase
-      await _auth.signInWithCredential(credential);
+      return await _auth.signInWithCredential(credential);
     }
   }
 
@@ -102,24 +85,32 @@ class AuthRepository {
   }
 }
 
+/// Provider for Firebase Auth Instance
 final authDatabaseProvider = Provider<FirebaseAuth>((ref) {
   final auth = FirebaseAuth.instance;
   auth.setPersistence(Persistence.LOCAL);
   return auth;
 });
 
+/// Provider for [AuthRepository]
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository(ref.watch(authDatabaseProvider));
 });
 
-final authStateChangesProvider = StreamProvider<User?>((ref) {
+/// Provider for Stream of [User?] that changes when authorization state
+/// changes
+final authStateChangesProvider = StreamProvider.autoDispose<User?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges();
 });
 
-final authDetailsChangesProvider = StreamProvider<User?>((ref) {
+/// Provider for Stream of [User?] that updates on ID token changes as
+/// well as auth state changes.
+final authDetailsChangesProvider = StreamProvider.autoDispose<User?>((ref) {
   return ref.watch(authRepositoryProvider).userChanges();
 });
 
-final userChangesProvider = StreamProvider<User?>((ref) {
+/// Provider for Stream of [User?] that updates on all auth state changes, ID
+/// token changes, and user profile changes
+final userChangesProvider = StreamProvider.autoDispose<User?>((ref) {
   return ref.watch(authDatabaseProvider).userChanges();
 });

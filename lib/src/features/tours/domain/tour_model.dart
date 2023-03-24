@@ -10,20 +10,23 @@ class Tour {
     required this.description,
     required this.isPublic,
     required this.owner,
-    this.slotsAvailable = 8,
     required this.members,
     required this.draftDateTime,
     this.password,
   });
+
+  static const int tourSize = 8;
+
   final TourID? id;
   final String name;
   final String description;
   final bool isPublic;
   final String owner;
-  final int slotsAvailable;
   final List<String> members;
   final DateTime draftDateTime;
   String? password;
+
+  int get slotsAvailable => tourSize - members.length;
 
   factory Tour.fromJson(Map<String, dynamic> json, String id) {
     return Tour(
@@ -32,7 +35,6 @@ class Tour {
       description: json['description'] as String,
       isPublic: json['isPublic'] as bool,
       owner: json['owner'] as String,
-      slotsAvailable: json['slotsAvailable'] as int,
       members:
           (json['members'] as List<dynamic>).map((e) => e as String).toList(),
       draftDateTime: (json['draftDateTime'] as Timestamp).toDate(),
@@ -50,4 +52,12 @@ class Tour {
         'password': password,
         'draftDateTime': draftDateTime,
       };
+
+  void addPlayer(String playerId) {
+    if (members.length < tourSize) {
+      members.add(playerId);
+    } else {
+      throw StateError('Tour already has $tourSize members');
+    }
+  }
 }

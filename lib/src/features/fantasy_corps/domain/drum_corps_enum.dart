@@ -24,7 +24,7 @@ enum DrumCorps {
 }
 
 extension DrumCorpsNames on DrumCorps {
-  String get name {
+  String get fullName {
     switch (this) {
       case DrumCorps.theAcademy:
         return 'The Academy';

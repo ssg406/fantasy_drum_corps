@@ -3,13 +3,13 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/presentation/register_screen/register_screen_validators.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/details_card/details_card_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,8 +38,8 @@ class _DetailsCardState extends ConsumerState<DetailsCard>
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(detailsCardControllerProvider);
     return AsyncValueWidget(
-      value: ref.watch(userChangesProvider),
-      data: (User? user) {
+      value: ref.watch(playerStreamProvider),
+      data: (Player player) {
         return TitledSectionCard(
           title: 'User Details',
           child: Column(
@@ -53,10 +53,12 @@ class _DetailsCardState extends ConsumerState<DetailsCard>
                       cursor: SystemMouseCursors.click,
                       child: Tooltip(
                         message: 'Change Image',
-                        child: Avatar(
-                          radius: 50,
-                          photoUrl: user?.photoURL,
-                        ),
+                        child: state.isLoading
+                            ? const CircularProgressIndicator()
+                            : Avatar(
+                                radius: 50,
+                                photoUrl: player.photoUrl,
+                              ),
                       ),
                     ),
                   ),
@@ -68,7 +70,7 @@ class _DetailsCardState extends ConsumerState<DetailsCard>
                         children: [
                           TextFormField(
                             controller: _nameController
-                              ..text = user?.displayName ?? '',
+                              ..text = player.displayName ?? '',
                             validator: (input) =>
                                 canSubmitDisplayName(input ?? '')
                                     ? null

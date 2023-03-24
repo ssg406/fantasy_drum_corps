@@ -7,9 +7,13 @@ import 'package:go_router/go_router.dart';
 class CustomTourTile extends StatelessWidget {
   const CustomTourTile({Key? key, required this.tour}) : super(key: key);
   final Tour tour;
+
   String get tourName => tour.name;
+
   String get tourDescription => tour.description;
+
   bool get isPublic => tour.isPublic;
+
   int get openSlots => tour.slotsAvailable;
 
   String _getSlotsText() {
@@ -48,7 +52,7 @@ class CustomTourTile extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.lock_open_rounded,
+                isPublic ? Icons.lock_open_rounded : Icons.lock,
                 color: isPublic ? Colors.green : Colors.red,
               ),
               gapW8,
@@ -78,16 +82,8 @@ class CustomTourTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton.icon(
-                onPressed: () => debugPrint('joinleague'),
-                icon: const Icon(Icons.add_circle_outline_rounded),
-                label: Text(
-                  'JOIN',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
-              TextButton.icon(
                 onPressed: () => context.goNamed(AppRoutes.tourDetail.name,
-                    params: {'tid': tour.id!}, extra: tour),
+                    params: {'tid': tour.id!}),
                 icon: const Icon(Icons.arrow_circle_right_outlined),
                 label: Text(
                   'VIEW',

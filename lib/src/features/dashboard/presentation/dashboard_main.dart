@@ -1,86 +1,65 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fantasy_drum_corps/src/features/dashboard/presentation/complete_profile_card.dart';
+import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_tour_card.dart';
+import 'package:fantasy_drum_corps/src/features/dashboard/presentation/greeting_card.dart';
+import 'package:fantasy_drum_corps/src/features/dashboard/presentation/new_member_card.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
+import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
+import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-class Dashboard extends ConsumerWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class Dashboard extends ConsumerStatefulWidget {
+  const Dashboard({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AsyncValueWidget(
-        value: ref.watch(userChangesProvider),
-        data: (User? user) {
-          return SingleChildScrollView(
-            child: ResponsiveCenter(
-              child: Padding(
-                padding: pagePadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Dashboard',
-                      style: Theme.of(context).textTheme.displaySmall,
-                    ),
-                    gapH8,
-                    Text(
-                      'Hi, ${user?.displayName}! Welcome to Fantasy Corps.',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    gapH32,
-                    const NewMemberCard(),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
+  ConsumerState createState() => _DashboardState();
 }
 
-class NewMemberCard extends StatelessWidget {
-  const NewMemberCard({Key? key}) : super(key: key);
-
+class _DashboardState extends ConsumerState<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Thanks for joining Fantasy Corps! It looks like you have not created or joined a tour yet',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            gapH16,
-            const Text(
-              'Create a new tour and invite others. Or, search for a public tour to join. You can aprticipate in as many tours as you like.',
-            ),
-            gapH16,
-            ButtonBar(
-              children: [
-                PrimaryButton(
-                  onSurface: true,
-                  onPressed: () => context.goNamed(AppRoutes.createTour.name),
-                  isLoading: false,
-                  label: 'Create Tour',
-                ),
-                PrimaryButton(
-                  onSurface: true,
-                  onPressed: () => context.goNamed(AppRoutes.joinTour.name),
-                  isLoading: false,
-                  label: 'Join Tour',
-                )
-              ],
-            ),
-          ],
+    return SingleChildScrollView(
+      child: ResponsiveCenter(
+        maxContentWidth: 1200.0,
+        child: Padding(
+          padding: pagePadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AsyncValueWidget(
+                value: ref.watch(playerStreamProvider),
+                data: (Player player) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GreetingCard(displayName: player.displayName),
+                      gapH16,
+                      if (player.displayName == null ||
+                          player.selectedCorps == null)
+                        const CompleteProfileCard()
+                    ],
+                  );
+                },
+              ),
+              gapH16,
+              AsyncValueWidget(
+                value: ref.watch(joinedToursStreamProvider),
+                data: (List<Tour> tours) {
+                  if (tours.isEmpty) {
+                    return const NewMemberCard();
+                  } else {
+                    return DashboardTourCard(tours: tours);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
