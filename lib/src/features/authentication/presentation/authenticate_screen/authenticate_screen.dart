@@ -79,86 +79,88 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(authenticateScreenControllerProvider);
     return Scaffold(
-      body: ResponsiveCenter(
-        padding: centerContentPadding,
-        maxContentWidth: 600,
-        child: FocusScope(
-          node: _node,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 300.0,
-                  height: 300.0,
-                  child: Image.asset(
-                    'fc_logo_sm.png',
-                    fit: BoxFit.contain,
+      body: SingleChildScrollView(
+        child: ResponsiveCenter(
+          padding: centerContentPadding,
+          maxContentWidth: 600,
+          child: FocusScope(
+            node: _node,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 300.0,
+                    height: 300.0,
+                    child: Image.asset(
+                      'fc_logo_sm.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                gapH32,
-                Text(
-                  _formType.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                gapH32,
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email'.hardcoded,
-                    hintText: 'me@gmail.com'.hardcoded,
-                    enabled: !state.isLoading,
+                  gapH32,
+                  Text(
+                    _formType.title,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  validator: (email) =>
-                      !_submitted ? null : getEmailErrors(email ?? ''),
-                  //
-                  onEditingComplete: _emailEditingComplete,
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  keyboardAppearance: Brightness.light,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                ),
-                gapH20,
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password'.hardcoded,
-                    enabled: !state.isLoading,
+                  gapH32,
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email'.hardcoded,
+                      hintText: 'me@gmail.com'.hardcoded,
+                      enabled: !state.isLoading,
+                    ),
+                    validator: (email) =>
+                        !_submitted ? null : getEmailErrors(email ?? ''),
+                    //
+                    onEditingComplete: _emailEditingComplete,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    keyboardAppearance: Brightness.light,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  obscureText: true,
-                  autocorrect: false,
-                  keyboardAppearance: Brightness.light,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (password) =>
-                      !_submitted ? null : getPasswordErrors(password ?? ''),
-                  onEditingComplete: _passwordEditingComplete,
-                ),
-                gapH20,
-                PrimaryButton(
-                    isLoading: state.isLoading,
-                    onPressed: _submit,
-                    label: 'Sign In'),
-                gapH48,
-                TextButton.icon(
-                  onPressed: _submitSSO,
-                  icon: const FaIcon(FontAwesomeIcons.google),
-                  label: Text('Continue with Google'.hardcoded),
-                ),
-                gapH20,
-                const Divider(thickness: 1.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(_formType.secondaryFormText),
-                    PrimaryTextButton(
-                        isLoading: state.isLoading,
-                        onPressed: _toggleFormType,
-                        label: _formType.toggleFormButtonText),
-                  ],
-                ),
-              ],
+                  gapH20,
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password'.hardcoded,
+                      enabled: !state.isLoading,
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                    keyboardAppearance: Brightness.light,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (password) =>
+                        !_submitted ? null : getPasswordErrors(password ?? ''),
+                    onEditingComplete: _passwordEditingComplete,
+                  ),
+                  gapH20,
+                  PrimaryButton(
+                      isLoading: state.isLoading,
+                      onPressed: _submit,
+                      label: 'Sign In'),
+                  gapH48,
+                  TextButton.icon(
+                    onPressed: _submitSSO,
+                    icon: const FaIcon(FontAwesomeIcons.google),
+                    label: Text('Continue with Google'.hardcoded),
+                  ),
+                  gapH20,
+                  const Divider(thickness: 1.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(_formType.secondaryFormText),
+                      PrimaryTextButton(
+                          isLoading: state.isLoading,
+                          onPressed: _toggleFormType,
+                          label: _formType.toggleFormButtonText),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
