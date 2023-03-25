@@ -13,7 +13,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mime/mime.dart';
 
+/// [DetailsCard] presents a UI that allows the user to change their display
+/// name and update or remove their profile image
 class DetailsCard extends ConsumerWidget {
   const DetailsCard({
     Key? key,
@@ -21,6 +25,7 @@ class DetailsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Get player object and pass to widget
     return AsyncValueWidget(
       value: ref.watch(playerStreamProvider),
       data: (Player player) => DetailsCardContents(player: player),
@@ -41,11 +46,21 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     with RegistrationValidators {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  static const imageMaxSize = 5000000;
+
+  String get displayName => _nameController.text;
 
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  void _onDisplayNameEditingComplete() {
+    if (!canSubmitDisplayName(displayName)) {
+      return;
+    }
+    _submitDisplayName();
   }
 
   @override
@@ -80,6 +95,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
                   child: Column(
                     children: [
                       TextFormField(
+                        enabled: !state.isLoading,
                         controller: _nameController
                           ..text = widget.player.displayName ?? '',
                         validator: (input) => canSubmitDisplayName(input ?? '')
@@ -87,7 +103,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
                             : getDisplayNameErrors(input ?? ''),
                         decoration:
                             const InputDecoration(labelText: 'Display Name'),
-                        onEditingComplete: _submit,
+                        onEditingComplete: _onDisplayNameEditingComplete,
                       ),
                     ],
                   ),
@@ -97,7 +113,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
           ),
           PrimaryButton(
             onSurface: true,
-            onPressed: () => _submit(),
+            onPressed: () => _submitDisplayName(),
             label: 'Update',
             isLoading: state.isLoading,
           ),
@@ -106,6 +122,8 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     );
   }
 
+  // Display pop up menu on click of avatar that allows user to add a new
+  // profile image or clear an existing one
   void _showAvatarMenu(clickPosition) async {
     Size screenSize = MediaQuery.of(context).size;
     double left = clickPosition.dx;
@@ -136,18 +154,21 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     );
   }
 
-  Future<void> _submit() async {
-    if (true) {
+  // Submit display name changes to controller
+  Future<void> _submitDisplayName() async {
+    if (_formKey.currentState!.validate()) {
       final controller = ref.read(detailsCardControllerProvider.notifier);
-      await controller.setDisplayName(_nameController.text);
+      await controller.setDisplayName(displayName);
     }
   }
 
+  // Clear the existing profile image from the application
   Future<void> _clearProfileImage() async {
     final controller = ref.read(detailsCardControllerProvider.notifier);
     await controller.clearUploadedImage(widget.player.photoUrl!);
   }
 
+  // Display file upload dialog to user and retrieve selected file
   Future<void> _getImageFile() async {
     FilePickerResult? result;
     if (kIsWeb) {
@@ -155,9 +176,38 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     } else {
       result = await FilePicker.platform.pickFiles();
     }
-    if (result != null) {
-      final controller = ref.read(detailsCardControllerProvider.notifier);
-      await controller.uploadAvatarImage(result);
+    if (result == null) {
+      return;
     }
+
+    if (!_validateImage(result)) {
+      _showImageErrorDialog();
+      return;
+    }
+    final controller = ref.read(detailsCardControllerProvider.notifier);
+    await controller.uploadAvatarImage(result);
+  }
+  // Check file is an image and under the given max size
+  bool _validateImage(FilePickerResult result) {
+    final bytes = result.files.first.bytes;
+    final size = result.files.single.size;
+    final mimeType = lookupMimeType('', headerBytes: bytes) ?? '';
+    return mimeType.startsWith('image') && size < imageMaxSize;
+  }
+
+  // Inform the user the file has not been accepted for upload
+  void _showImageErrorDialog() async {
+    await showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Invalid File'),
+        content: const Text('Please make sure you have selected a valid image under 5MB in size'),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: const Text('Okay'),
+          )
+        ],
+      );
+    });
   }
 }

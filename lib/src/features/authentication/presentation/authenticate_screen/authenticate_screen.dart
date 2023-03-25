@@ -56,7 +56,11 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
   }
 
-  void _emailEditingComplete() {}
+  void _emailEditingComplete() {
+    if (canSubmitEmail(email)) {
+      _node.nextFocus();
+    }
+  }
 
   void _passwordEditingComplete() {
     if (!canSubmitEmail(email)) {
