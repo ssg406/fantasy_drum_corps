@@ -1,11 +1,11 @@
 enum Caption {
   ge1,
   ge2,
-  visProf,
-  visAnls,
+  visualProficiency,
+  visualAnalysis,
   colorGuard,
   brass,
-  ensemble,
+  musicAnalysis,
   percussion,
 }
 
@@ -16,18 +16,18 @@ extension CaptionName on Caption {
         return 'General Effect 1';
       case Caption.ge2:
         return 'General Effect 2';
-      case Caption.visProf:
+      case Caption.visualProficiency:
         return 'Visual Proficiency';
-      case Caption.visAnls:
+      case Caption.visualAnalysis:
         return 'Visual Analysis';
       case Caption.colorGuard:
         return 'Colorguard';
       case Caption.brass:
         return 'Brass';
-      case Caption.ensemble:
-        return 'Ensemble';
       case Caption.percussion:
         return 'Percussion';
+      case Caption.musicAnalysis:
+        return 'Music Analysis';
     }
   }
 
@@ -37,16 +37,16 @@ extension CaptionName on Caption {
         return 'GE 1';
       case Caption.ge2:
         return 'GE 2';
-      case Caption.visProf:
+      case Caption.visualProficiency:
         return 'Vis. Prof';
-      case Caption.visAnls:
+      case Caption.visualAnalysis:
         return 'Vis. Anls';
       case Caption.colorGuard:
         return 'Colorguard';
       case Caption.brass:
         return 'Brass';
-      case Caption.ensemble:
-        return 'Ensemble';
+      case Caption.musicAnalysis:
+        return 'Music Anls.';
       case Caption.percussion:
         return 'Percussion';
     }
