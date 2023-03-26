@@ -4,6 +4,8 @@ import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Riverpod [AsyncNotifier] controller for [SelectedCorpsCard]. Communicates
+/// with [PlayerRepository]
 class SponsoredCorpsCardController extends AutoDisposeAsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
@@ -15,6 +17,7 @@ class SponsoredCorpsCardController extends AutoDisposeAsyncNotifier<void> {
   }
 }
 
+/// Riverpod Providers
 final sponsoredCorpsCardControllerProvider =
     AutoDisposeAsyncNotifierProvider<SponsoredCorpsCardController, void>(
         SponsoredCorpsCardController.new);

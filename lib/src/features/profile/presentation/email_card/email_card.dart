@@ -54,13 +54,13 @@ class _EmailCardState extends ConsumerState<EmailCard>
                   decoration: const InputDecoration(
                     labelText: 'Email',
                   ),
-                  onEditingComplete: _submit,
+                  onEditingComplete: _submitEmail,
                 ),
               ),
               gapH20,
               PrimaryButton(
                 onSurface: true,
-                onPressed: _submit,
+                onPressed: _submitEmail,
                 label: 'Update',
                 isLoading: state.isLoading,
               ),
@@ -72,7 +72,7 @@ class _EmailCardState extends ConsumerState<EmailCard>
   }
 
   /// Validates email and presents dialog for reauthentication
-  Future<void> _submit() {
+  Future<void> _submitEmail() {
     final controller = ref.read(emailCardControllerProvider.notifier);
     return showDialog(
       context: context,

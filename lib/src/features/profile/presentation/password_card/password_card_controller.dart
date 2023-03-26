@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// [AsyncNotifier] controller for [PasswordCard] on profile page. Communicates
+/// with [AuthRepository] to update password
 class PasswordCardController extends AutoDisposeAsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
@@ -15,7 +17,7 @@ class PasswordCardController extends AutoDisposeAsyncNotifier<void> {
         .setPassword(oldPassword: currentPassword, newPassword: newPassword));
   }
 }
-
+/// Riverpod Providers
 final passwordControllerCardProvider =
     AutoDisposeAsyncNotifierProvider<PasswordCardController, void>(
         PasswordCardController.new);

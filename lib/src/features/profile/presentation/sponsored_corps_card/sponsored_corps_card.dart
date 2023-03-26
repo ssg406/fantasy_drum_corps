@@ -10,6 +10,8 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// [SponsoredCorpsCard] on the profile page allows the user to select a
+/// Drum Corps that will receive their donation at the end of the season.
 class SponsoredCorpsCard extends ConsumerStatefulWidget {
   const SponsoredCorpsCard({Key? key}) : super(key: key);
 
@@ -45,7 +47,6 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
                         value: drumCorps, child: Text(drumCorps.fullName));
                   }).toList(),
                   onChanged: (DrumCorps? newValue) {
-                    print(newValue?.name);
                     setState(() => _selectedCorps = newValue);
                   },
                 ),
@@ -55,7 +56,7 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
                 onSurface: true,
                 label: 'Change Selection',
                 isLoading: state.isLoading,
-                onPressed: _submitSelection,
+                onPressed: _submitSelectedCorps,
               )
             ],
           ),
@@ -64,7 +65,8 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
     );
   }
 
-  Future<void> _submitSelection() async {
+  // Check that a corps has been selected and submit the choice to the controller
+  Future<void> _submitSelectedCorps() async {
     if (_formKey.currentState!.validate()) {
       final controller =
           ref.read(sponsoredCorpsCardControllerProvider.notifier);
