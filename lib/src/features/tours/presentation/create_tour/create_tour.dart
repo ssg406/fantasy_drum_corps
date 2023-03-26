@@ -227,10 +227,13 @@ class _CreateTourState extends ConsumerState<CreateTour> {
       );
     }
     _confirmCreation();
+    if (mounted) {
+      context.goNamed(AppRoutes.myTours.name);
+    }
   }
 
-  void _confirmCreation() {
-    showDialog(
+  Future<void> _confirmCreation() async {
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -239,7 +242,7 @@ class _CreateTourState extends ConsumerState<CreateTour> {
               'Congratulations on your new tour! Let your friends know and make sure to give them the password if you created a private tour. Remember to log back in to initate the draft at your chosen time!'),
           actions: [
             TextButton(
-              onPressed: () => context.goNamed(AppRoutes.myTours.name),
+              onPressed: () => context.pop(),
               child: const Text('Back to Tours'),
             )
           ],

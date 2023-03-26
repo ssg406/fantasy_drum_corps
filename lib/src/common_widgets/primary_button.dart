@@ -10,16 +10,18 @@ class PrimaryButton extends StatelessWidget {
     required this.label,
     required this.isLoading,
     this.onSurface = false,
+    this.isDisabled = false,
   });
   final VoidCallback onPressed;
   final String label;
   final bool isLoading;
   final bool onSurface;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: isLoading || isDisabled ? null : onPressed,
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
           vertical: 15.0,

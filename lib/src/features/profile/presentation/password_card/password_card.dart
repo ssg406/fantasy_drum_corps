@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Allows user to alter password and verifies existing password before updating
 class PasswordCard extends ConsumerStatefulWidget {
   const PasswordCard({Key? key}) : super(key: key);
 
@@ -35,6 +36,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
     ref.listen<AsyncValue>(passwordControllerCardProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(passwordControllerCardProvider);
+    final isGoogleAuth = ref.read(passwordControllerCardProvider.notifier).getIsGoogleProvider();
     return AsyncValueWidget(
       value: ref.watch(authStateChangesProvider),
       data: (User? user) {
@@ -44,7 +46,13 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
             key: _formKey,
             child: Column(
               children: [
+                if (isGoogleAuth)
+                  ...[
+                    const Text('Your account is being managed by Google'),
+                    gapH24,
+                  ],
                 TextFormField(
+                  enabled: !isGoogleAuth,
                   controller: _currentPasswordController,
                   validator: (input) {
                     if (input == null || input.isEmpty) {
@@ -61,6 +69,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
                 ),
                 gapH24,
                 TextFormField(
+                  enabled: !isGoogleAuth,
                   validator: (input) => getPasswordErrors(input ?? ''),
                   obscureText: true,
                   controller: _newPasswordController,
@@ -70,6 +79,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
                 ),
                 gapH32,
                 PrimaryButton(
+                  isDisabled: isGoogleAuth,
                   onSurface: true,
                   onPressed: _submitPassword,
                   label: 'Update',
@@ -83,6 +93,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
     );
   }
 
+  // Submit updated password to controller
   Future<void> _submitPassword() async {
     final controller = ref.read(passwordControllerCardProvider.notifier);
     await controller.updatePassword(
