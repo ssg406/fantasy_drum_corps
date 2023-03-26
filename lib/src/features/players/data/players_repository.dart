@@ -165,3 +165,11 @@ final clearPhotoUrlProvider = Provider<Future<void>>((ref) {
   }
   return ref.watch(playersRepositoryProvider).clearPhotoUrl(playerId: user.uid);
 });
+
+final fetchCurrentPlayerProvider = FutureProvider<Player?>((ref) {
+  final user = ref.watch(authRepositoryProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('User cannot be null when setting display name');
+  }
+  return ref.watch(playersRepositoryProvider).fetchPlayer(user.uid);
+});

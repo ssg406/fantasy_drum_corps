@@ -32,6 +32,10 @@ class AuthenticateScreenController extends AutoDisposeAsyncNotifier<void> {
             email: email, password: password);
     }
   }
+
+  Future<void> authenticateWithGoogle() async {
+    ref.read(authServiceProvider).registerWithGoogle();
+  }
 }
 
 final authenticateScreenControllerProvider =

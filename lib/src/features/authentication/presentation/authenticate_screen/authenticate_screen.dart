@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+/// [AuthenticateScreen] shows sign in and registration form and allows the user
+/// to toggle between each function.
 class AuthenticateScreen extends ConsumerStatefulWidget {
   const AuthenticateScreen({Key? key, required this.formType})
       : super(key: key);
@@ -54,6 +56,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
 
   void _submitSSO() async {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
+    await controller.authenticateWithGoogle();
   }
 
   void _emailEditingComplete() {

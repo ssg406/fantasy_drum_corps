@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_service.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// [AsyncNotifier] controller for [PasswordCard] on profile page. Communicates
@@ -15,6 +17,10 @@ class PasswordCardController extends AutoDisposeAsyncNotifier<void> {
     state = await AsyncValue.guard(() => ref
         .read(authRepositoryProvider)
         .setPassword(oldPassword: currentPassword, newPassword: newPassword));
+  }
+
+  bool getIsGoogleProvider() {
+    return ref.read(authServiceProvider).getUserProvider();
   }
 }
 /// Riverpod Providers
