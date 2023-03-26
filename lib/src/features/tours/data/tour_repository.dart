@@ -100,6 +100,17 @@ class ToursRepository {
     final tours = await queryTours().get();
     return tours.docs.map((doc) => doc.data()).toList();
   }
+
+  // Fetch single tour
+  Future<Tour?> fetchTour({required String tourId}) async {
+    final ref = _database.collection(toursPath).doc(tourId).withConverter(
+      fromFirestore: (snapshot, _) =>
+          Tour.fromJson(snapshot.data()!, snapshot.id),
+      toFirestore: (tour, _) => tour.toJson(),
+    );
+    final snapshot = await ref.get();
+    return snapshot.data();
+}
 }
 
 /// Providers
@@ -110,7 +121,7 @@ final toursRepositoryProvider = Provider<ToursRepository>(
     (ref) => ToursRepository(ref.watch(firebaseDatabaseProvider)));
 
 final addPlayerToTourProvider =
-    Provider.family<Future<void>, String>((ref, tourId) {
+    Provider.family.autoDispose<Future<void>, String>((ref, tourId) {
   final user = ref.watch(authDatabaseProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot  be null when joining tours');
@@ -128,7 +139,7 @@ final joinedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
   return ref.watch(toursRepositoryProvider).watchJoinedTours(user.uid);
 });
 
-final ownedToursStreamProvider = StreamProvider<List<Tour>>((ref) {
+final ownedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
   final user = ref.watch(authDatabaseProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when querying tours');
@@ -147,6 +158,10 @@ final tourStreamProvider =
 });
 
 final allToursStreamProvider =
-    StreamProvider.family<List<Tour>, bool>((ref, watchPublicOnly) {
+    StreamProvider.autoDispose.family<List<Tour>, bool>((ref, watchPublicOnly) {
   return ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
+});
+
+final fetchTourProvider = FutureProvider.autoDispose.family<Tour?, String>((ref, tourId) {
+  return ref.read(toursRepositoryProvider).fetchTour(tourId: tourId);
 });

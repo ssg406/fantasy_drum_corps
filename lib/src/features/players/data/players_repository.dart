@@ -45,8 +45,7 @@ class PlayersRepository {
     final playerRef = _db.doc(playerPath(playerId));
     playerRef.get().then((doc) async {
       final player = Player.fromJson(doc.data()!, doc.id);
-      player.displayName = displayName;
-      await updatePlayer(player: player);
+      await updatePlayer(player: player.copyWith(displayName: displayName));
     });
   }
 
@@ -55,8 +54,7 @@ class PlayersRepository {
     final playerRef = _db.doc(playerPath(playerId));
     playerRef.get().then((doc) async {
       final player = Player.fromJson(doc.data()!, doc.id);
-      player.selectedCorps = corps;
-      await updatePlayer(player: player);
+      await updatePlayer(player: player.copyWith(selectedCorps: corps));
     });
   }
 
@@ -65,8 +63,7 @@ class PlayersRepository {
     final playerRef = _db.doc(playerPath(playerId));
     playerRef.get().then((doc) async {
       final player = Player.fromJson(doc.data()!, doc.id);
-      player.photoUrl = url;
-      await updatePlayer(player: player);
+      await updatePlayer(player: player.copyWith(photoUrl: url));
     });
   }
 
@@ -74,8 +71,7 @@ class PlayersRepository {
     final playerRef = _db.doc(playerPath(playerId));
     playerRef.get().then((doc) async {
       final player = Player.fromJson(doc.data()!, doc.id);
-      player.photoUrl = null;
-      await updatePlayer(player: player);
+      await updatePlayer(player: player.copyWith(photoUrl: null));
     });
   }
 
