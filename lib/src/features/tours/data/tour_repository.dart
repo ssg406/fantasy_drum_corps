@@ -53,7 +53,6 @@ class ToursRepository {
     tourRef.get().then((doc) async {
       final tour = Tour.fromJson(doc.data()!, doc.id);
       // TODO validate tour size
-      tour.addPlayer(playerId);
       await updateTour(tour);
     });
   }
@@ -104,13 +103,13 @@ class ToursRepository {
   // Fetch single tour
   Future<Tour?> fetchTour({required String tourId}) async {
     final ref = _database.collection(toursPath).doc(tourId).withConverter(
-      fromFirestore: (snapshot, _) =>
-          Tour.fromJson(snapshot.data()!, snapshot.id),
-      toFirestore: (tour, _) => tour.toJson(),
-    );
+          fromFirestore: (snapshot, _) =>
+              Tour.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (tour, _) => tour.toJson(),
+        );
     final snapshot = await ref.get();
     return snapshot.data();
-}
+  }
 }
 
 /// Providers
@@ -162,6 +161,7 @@ final allToursStreamProvider =
   return ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
 });
 
-final fetchTourProvider = FutureProvider.autoDispose.family<Tour?, String>((ref, tourId) {
+final fetchTourProvider =
+    FutureProvider.autoDispose.family<Tour?, String>((ref, tourId) {
   return ref.read(toursRepositoryProvider).fetchTour(tourId: tourId);
 });

@@ -37,7 +37,7 @@ class PlayersRepository {
   }
 
   Future<void> updatePlayer({required Player player}) async {
-    return _db.doc(playerPath(player.playerId)).update(player.toJson());
+    return _db.doc(playerPath(player.playerId!)).update(player.toJson());
   }
 
   Future<void> setDisplayName(

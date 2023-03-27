@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 typedef TourID = String;
 
 /// Model class which represents a FantasyDC league
-@immutable
 class Tour {
   const Tour({
     this.id,
@@ -17,8 +15,6 @@ class Tour {
     this.password,
   });
 
-  static const int tourSize = 8;
-
   final TourID? id;
   final String name;
   final String description;
@@ -28,7 +24,15 @@ class Tour {
   final DateTime draftDateTime;
   final String? password;
 
-  int get slotsAvailable => tourSize - members.length;
+  static const maxTourSize = 8;
+
+  void addPlayerToTour(String playerId) {
+    if (members.length >= maxTourSize) {
+      throw StateError('A tour cannot have more than $maxTourSize members');
+    }
+  }
+
+  int get slotsAvailable => maxTourSize - members.length;
 
   factory Tour.fromJson(Map<String, dynamic> json, String id) {
     return Tour(
@@ -64,6 +68,7 @@ class Tour {
       String? password,
       DateTime? draftDateTime}) {
     return Tour(
+      id: id,
       name: tourName ?? name,
       description: description ?? this.description,
       isPublic: isPublic ?? this.isPublic,
@@ -75,10 +80,10 @@ class Tour {
   }
 
   void addPlayer(String playerId) {
-    if (members.length < tourSize) {
+    if (members.length < maxTourSize) {
       members.add(playerId);
     } else {
-      throw StateError('Tour already has $tourSize members');
+      throw StateError('Tour already has $maxTourSize members');
     }
   }
 }

@@ -1,17 +1,15 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
-import 'package:flutter/cupertino.dart';
 
-@immutable
 class Player {
   const Player({
-    required this.playerId,
+    this.playerId,
     this.displayName,
     this.about,
     this.selectedCorps,
     this.photoUrl,
   });
 
-  final String playerId;
+  final String? playerId;
   final String? displayName;
   final String? about;
   final DrumCorps? selectedCorps;
