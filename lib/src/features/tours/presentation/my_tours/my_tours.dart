@@ -32,7 +32,7 @@ class _MyToursState extends ConsumerState<MyTours> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AsyncValueWidget(
-                value: ref.watch(ownedToursStreamProvider),
+                value: ref.watch(watchOwnedToursProvider),
                 data: (List<Tour> tours) => MyToursContents(
                   myTours: tours,
                   title: 'My Tours',
@@ -40,7 +40,7 @@ class _MyToursState extends ConsumerState<MyTours> {
               ),
               gapH16,
               AsyncValueWidget(
-                value: ref.watch(joinedToursStreamProvider),
+                value: ref.watch(watchJoinedToursProvider),
                 data: (List<Tour> tours) => MyToursContents(
                   myTours: tours,
                   title: 'Joined Tours',

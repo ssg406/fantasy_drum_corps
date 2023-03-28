@@ -11,13 +11,11 @@ class PlayerTourService {
   final PlayersRepository _playerRepo;
   final ToursRepository _tourRepo;
 
-  Future<List<Player>> fetchTourPlayers(String tourId) async {
-    final tour = await _tourRepo.fetchTour(tourId: tourId);
-    if (tour == null) {
-      throw AssertionError('Tour cannot be null when fetching members');
-    }
-    final List<Player> tourPlayers = [];
-    for (final member in tour.members) {
+  Future<List<Player>> fetchTourPlayers(List<String> members) async {
+
+    final tourPlayers = <Player>[];
+
+    for (final member in members) {
       final player = await _playerRepo.fetchPlayer(member);
       if (player == null) {
         throw StateError('The player ID found in the tour does not exist');

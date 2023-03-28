@@ -4,10 +4,13 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'create_tour_controller.g.dart';
 
 /// Controller for [CreateTour]
-class CreateTourController extends AutoDisposeAsyncNotifier<void> {
+@riverpod
+class CreateTourController extends _$CreateTourController {
   @override
   FutureOr<void> build() {}
 
@@ -39,6 +42,3 @@ class CreateTourController extends AutoDisposeAsyncNotifier<void> {
     return tourRepository.addTour(tour);
   }
 }
-
-final createTourControllerProvider =
-    AutoDisposeAsyncNotifierProvider(CreateTourController.new);

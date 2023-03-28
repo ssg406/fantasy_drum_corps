@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:async';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'tour_repository.g.dart';
 
 /// Provides CRUD functionality for player tours. Data saved to and served from
 /// Firebase Firestore database
@@ -52,21 +56,10 @@ class ToursRepository {
     final tourRef = _database.doc(tourPath(tourId));
     tourRef.get().then((doc) async {
       final tour = Tour.fromJson(doc.data()!, doc.id);
-      // TODO validate tour size
+      tour.addPlayer(playerId);
       await updateTour(tour);
     });
   }
-
-  // Get single league document as stream
-  Stream<Tour> watchTour({required TourID tourId}) => _database
-      .doc(tourPath(tourId))
-      .withConverter<Tour>(
-        fromFirestore: (snapshot, _) =>
-            Tour.fromJson(snapshot.data()!, snapshot.id),
-        toFirestore: (tour, _) => tour.toJson(),
-      )
-      .snapshots()
-      .map((snapshot) => snapshot.data()!);
 
   // Query either all leagues or only public leagues
   Stream<List<Tour>> watchTours(bool watchPublicOnly) {
@@ -94,12 +87,6 @@ class ToursRepository {
         .toList());
   }
 
-  // Get list of all leagues
-  Future<List<Tour>> fetchTours() async {
-    final tours = await queryTours().get();
-    return tours.docs.map((doc) => doc.data()).toList();
-  }
-
   // Fetch single tour
   Future<Tour?> fetchTour({required String tourId}) async {
     final ref = _database.collection(toursPath).doc(tourId).withConverter(
@@ -112,56 +99,35 @@ class ToursRepository {
   }
 }
 
-/// Providers
-final firebaseDatabaseProvider =
-    Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
+@riverpod
+FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) => FirebaseFirestore.instance;
 
-final toursRepositoryProvider = Provider<ToursRepository>(
-    (ref) => ToursRepository(ref.watch(firebaseDatabaseProvider)));
+@riverpod
+ToursRepository toursRepository(ToursRepositoryRef ref) =>
+    ToursRepository(ref.watch(firebaseFirestoreProvider));
 
-final addPlayerToTourProvider =
-    Provider.family.autoDispose<Future<void>, String>((ref, tourId) {
+@riverpod
+Future<Tour?> fetchTour(FetchTourRef ref, String tourId) =>
+    ref.watch(toursRepositoryProvider).fetchTour(tourId: tourId);
+
+@riverpod
+Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
-    throw AssertionError('User cannot  be null when joining tours');
-  }
-  return ref
-      .watch(toursRepositoryProvider)
-      .addPlayerToTour(tourId: tourId, playerId: user.uid);
-});
-
-final joinedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot  be null when finding tours');
+    throw AssertionError('Unable to add null user to tour');
   }
   return ref.watch(toursRepositoryProvider).watchJoinedTours(user.uid);
-});
+}
 
-final ownedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
+@riverpod
+Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
-    throw AssertionError('User cannot be null when querying tours');
+    throw AssertionError('Unable to add null user to tour');
   }
   return ref.watch(toursRepositoryProvider).watchOwnTours(user.uid);
-});
+}
 
-final tourStreamProvider =
-    StreamProvider.autoDispose.family<Tour, TourID>((ref, tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null when streaming league data');
-  }
-  final repository = ref.watch(toursRepositoryProvider);
-  return repository.watchTour(tourId: tourId);
-});
+@riverpod
+Stream<List<Tour>> watchAllTours(WatchAllToursRef ref, bool watchPublicOnly) => ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
 
-final allToursStreamProvider =
-    StreamProvider.autoDispose.family<List<Tour>, bool>((ref, watchPublicOnly) {
-  return ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
-});
-
-final fetchTourProvider =
-    FutureProvider.autoDispose.family<Tour?, String>((ref, tourId) {
-  return ref.read(toursRepositoryProvider).fetchTour(tourId: tourId);
-});

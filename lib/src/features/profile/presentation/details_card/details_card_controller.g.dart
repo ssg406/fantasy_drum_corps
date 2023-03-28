@@ -7,7 +7,7 @@ part of 'details_card_controller.dart';
 // **************************************************************************
 
 String _$detailsCardControllerHash() =>
-    r'16b0ca4c8933845ee3b159cfd5e3e0cfc171d1e3';
+    r'adb2ac1b5017dcb8bcdaa486cf1c0740e09b5d0a';
 
 /// See also [DetailsCardController].
 @ProviderFor(DetailsCardController)

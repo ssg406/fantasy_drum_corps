@@ -56,7 +56,7 @@ class _JoinTourState extends ConsumerState<JoinTour> {
                   onSearched: handleSearchText),
               gapH32,
               AsyncValueWidget(
-                value: ref.watch(allToursStreamProvider(watchPublicOnly)),
+                value: ref.watch(watchAllToursProvider(watchPublicOnly)),
                 data: (List<Tour>? tours) {
                   return ResultsContainer(
                     tours: tours!,

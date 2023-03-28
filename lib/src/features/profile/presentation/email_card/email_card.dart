@@ -37,7 +37,7 @@ class _EmailCardState extends ConsumerState<EmailCard>
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(emailCardControllerProvider);
     return AsyncValueWidget(
-      value: ref.watch(userChangesStreamProvider),
+      value: ref.watch(userChangesStreamProvider), //ref.watch(userChangesStreamProvider),
       data: (User? user) {
         return TitledSectionCard(
           title: 'Email Address',

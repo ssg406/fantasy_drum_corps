@@ -25,10 +25,11 @@ class TourDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
-      value: ref.watch(tourStreamProvider(tourId)),
-      data: (Tour tour) {
+      value: ref.watch(fetchTourProvider(tourId)),
+      data: (Tour? tour) {
         final currentUser = ref.watch(authRepositoryProvider).currentUser;
-        return TourDetailContents(tour: tour, user: currentUser!);
+        return tour == null ? Container() :
+        TourDetailContents(tour: tour, user: currentUser!);
       },
     );
   }

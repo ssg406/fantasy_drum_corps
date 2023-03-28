@@ -26,7 +26,7 @@ class DetailsCardController extends _$DetailsCardController {
     String fileName = result.files.first.name;
     String imageUrl =
         await ref.read(storageRepositoryProvider).uploadImage(fileName, bytes);
-    ref.read(setPhotoUrlProvider(url: imageUrl));
+    ref.read(playerServiceProvider).setPhotoUrl(imageUrl);
   }
 
   Future<void> clearUploadedImage(String photoUrl) async {
@@ -35,7 +35,7 @@ class DetailsCardController extends _$DetailsCardController {
       return ref
           .read(storageRepositoryProvider)
           .deleteImage(photoUrl)
-          .then((_) => ref.read(clearPhotoUrlProvider));
+          .then((_) => ref.read(playerServiceProvider).clearPhotoUrl());
     });
   }
 

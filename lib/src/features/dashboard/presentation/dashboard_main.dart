@@ -51,7 +51,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
               ),
               gapH16,
               AsyncValueWidget(
-                value: ref.watch(joinedToursStreamProvider),
+                value: ref.watch(watchJoinedToursProvider),
                 data: (List<Tour> tours) {
                   if (tours.isEmpty) {
                     return const NewMemberCard();
