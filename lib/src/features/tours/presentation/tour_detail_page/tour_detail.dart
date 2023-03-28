@@ -98,7 +98,10 @@ class TourDetailContents extends StatelessWidget {
         if (tour.owner == user.uid)
           TextButton.icon(
             icon: const Icon(Icons.edit),
-            onPressed: () => debugPrint('edit tour'),
+            onPressed: () {
+              context.pushNamed(AppRoutes.editTour.name,
+                  params: {'tid': tour.id!}, extra: tour);
+            },
             label: const Text('Edit Tour'),
           ),
         if (tour.members.contains(user.uid))

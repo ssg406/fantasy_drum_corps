@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiver/core.dart';
 
 typedef TourID = String;
 
@@ -85,5 +86,33 @@ class Tour {
     } else {
       throw StateError('Tour already has $maxTourSize members');
     }
+  }
+
+  @override
+  String toString() => 'Tour(id: $id, '
+      'name: $name, '
+      'description: $description, '
+      'isPublic: $isPublic, '
+      'owner: $owner, '
+      'members: ${members.join(', ')}, '
+      'password: $password, '
+      'draftDateTime: $draftDateTime)';
+
+  @override
+  int get hashCode => hash4(id, name, owner, members);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+
+    return other is Tour &&
+        other.id == id &&
+        other.name == name &&
+        other.description == description &&
+        other.isPublic == isPublic &&
+        other.owner == owner &&
+        other.members == members &&
+        other.password == password &&
+        other.draftDateTime == draftDateTime;
   }
 }

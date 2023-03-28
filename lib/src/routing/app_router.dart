@@ -7,6 +7,7 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/subcapt
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
+import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
@@ -41,7 +42,8 @@ enum AppRoutes {
   rules,
   faqs,
   contact,
-  terms
+  terms,
+  editTour,
 }
 
 final goRouterProvider = Provider<GoRouter>(
@@ -140,6 +142,17 @@ final goRouterProvider = Provider<GoRouter>(
                     );
                   },
                   routes: [
+                    GoRoute(
+                        path: 'edit',
+                        name: AppRoutes.editTour.name,
+                        pageBuilder: (context, state) {
+                          final tourId = state.params['tid']!;
+                          final tour = state.extra as Tour?;
+                          return NoTransitionPage(
+                            key: state.pageKey,
+                            child: CreateTour(tourId: tourId, tour: tour),
+                          );
+                        }),
                     GoRoute(
                       path: 'draft',
                       name: AppRoutes.draft.name,

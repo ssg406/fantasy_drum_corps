@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
+import 'package:quiver/core.dart';
 
 class Player {
   const Player({
@@ -50,5 +51,27 @@ class Player {
       selectedCorps: selectedCorps ?? this.selectedCorps,
       photoUrl: photoUrl ?? this.photoUrl,
     );
+  }
+
+  @override
+  String toString() => 'Player(playerId: $playerId, '
+      'displayName: $displayName, '
+      'about: $about, '
+      'selectedCorps: $selectedCorps, '
+      'photoUrl: $photoUrl)';
+
+  @override
+  int get hashCode => hash4(playerId, displayName, selectedCorps, photoUrl);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+
+    return other is Player &&
+        other.playerId == playerId &&
+        other.displayName == displayName &&
+        other.about == about &&
+        other.selectedCorps == selectedCorps &&
+        other.photoUrl == photoUrl;
   }
 }

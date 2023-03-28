@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_service.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class AuthenticateScreenController extends AutoDisposeAsyncNotifier<void> {
+part 'authentication_screen_controller.g.dart';
+
+@riverpod
+class AuthenticateScreenController extends _$AuthenticateScreenController {
   @override
   FutureOr<void> build() {}
 
@@ -38,5 +41,5 @@ class AuthenticateScreenController extends AutoDisposeAsyncNotifier<void> {
   }
 }
 
-final authenticateScreenControllerProvider =
-    AutoDisposeAsyncNotifierProvider(AuthenticateScreenController.new);
+// final authenticateScreenControllerProvider =
+//     AutoDisposeAsyncNotifierProvider(AuthenticateScreenController.new);

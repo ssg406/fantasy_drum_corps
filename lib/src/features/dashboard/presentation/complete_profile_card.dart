@@ -26,7 +26,7 @@ class CompleteProfileCard extends StatelessWidget {
             ),
             gapH16,
             Text(
-                'Adding a display name makes it easier for other players to find you. Make sure to select a corps so we can route your donation correctly.',
+                'Choose or update your display name to make it easy for other players to find you and your tours! Make sure to select a corps to sponsor as well so we can route your donation correctly.',
                 style: Theme.of(context).textTheme.bodyLarge),
             Align(
               alignment: Alignment.bottomRight,
