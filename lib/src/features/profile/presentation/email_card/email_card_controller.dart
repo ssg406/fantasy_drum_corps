@@ -16,4 +16,5 @@ class EmailCardController extends _$EmailCardController {
     state = await AsyncValue.guard(
         () => ref.read(authRepositoryProvider).setEmail(newEmail, password));
   }
+
 }

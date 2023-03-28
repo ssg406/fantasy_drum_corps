@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:fantasy_drum_corps/src/features/authentication/application/auth_service.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,7 +20,4 @@ class PasswordCardController extends _$PasswordCardController {
         .setPassword(oldPassword: currentPassword, newPassword: newPassword));
   }
 
-  bool getIsGoogleProvider() {
-    return ref.read(authServiceProvider).getUserProvider();
-  }
 }

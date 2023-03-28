@@ -36,8 +36,6 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
     ref.listen<AsyncValue>(passwordCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(passwordCardControllerProvider);
-    final isGoogleAuth =
-        ref.read(passwordCardControllerProvider.notifier).getIsGoogleProvider();
     return AsyncValueWidget(
       value: ref.watch(userChangesStreamProvider),
       data: (User? user) {
@@ -47,12 +45,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
             key: _formKey,
             child: Column(
               children: [
-                if (isGoogleAuth) ...[
-                  const Text('Your account is being managed by Google'),
-                  gapH24,
-                ],
                 TextFormField(
-                  enabled: !isGoogleAuth,
                   controller: _currentPasswordController,
                   validator: (input) {
                     if (input == null || input.isEmpty) {
@@ -69,7 +62,6 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
                 ),
                 gapH24,
                 TextFormField(
-                  enabled: !isGoogleAuth,
                   validator: (input) => getPasswordErrors(input ?? ''),
                   obscureText: true,
                   controller: _newPasswordController,
@@ -79,7 +71,6 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
                 ),
                 gapH32,
                 PrimaryButton(
-                  isDisabled: isGoogleAuth,
                   onSurface: true,
                   onPressed: _submitPassword,
                   label: 'Update',
