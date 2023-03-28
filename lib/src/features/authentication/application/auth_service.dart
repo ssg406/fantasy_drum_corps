@@ -2,7 +2,9 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_service.g.dart';
 
 /// Auth service interacts with both auth repository and players repository
 /// to create player data that is not related to authentication in a
@@ -47,8 +49,10 @@ class AuthService {
 
     // Add new players to PlayersRepository, get existing display name and photoURL from Google
     if (existingPlayer == null) {
-      final player =
-      Player(playerId: credential.user!.uid, displayName: credential.user?.displayName, photoUrl: credential.user?.photoURL);
+      final player = Player(
+          playerId: credential.user!.uid,
+          displayName: credential.user?.displayName,
+          photoUrl: credential.user?.photoURL);
       _playersRepo.addPlayer(player);
     }
   }
@@ -68,9 +72,6 @@ class AuthService {
   }
 }
 
-/// Riverpod Providers
-final authServiceProvider = Provider<AuthService>((ref) {
-  final authRepo = ref.watch(authRepositoryProvider);
-  final playersRepo = ref.watch(playersRepositoryProvider);
-  return AuthService(authRepo, playersRepo);
-});
+@riverpod
+AuthService authService(AuthServiceRef ref) => AuthService(
+    ref.watch(authRepositoryProvider), ref.watch(playersRepositoryProvider));

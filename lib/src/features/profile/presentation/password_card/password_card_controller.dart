@@ -1,13 +1,15 @@
 import 'dart:async';
 
+import 'package:fantasy_drum_corps/src/features/authentication/application/auth_service.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_service.dart';
-import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'password_card_controller.g.dart';
 
 /// [AsyncNotifier] controller for [PasswordCard] on profile page. Communicates
 /// with [AuthRepository] to update password
-class PasswordCardController extends AutoDisposeAsyncNotifier<void> {
+@riverpod
+class PasswordCardController extends _$PasswordCardController {
   @override
   FutureOr<void> build() {}
 
@@ -23,7 +25,3 @@ class PasswordCardController extends AutoDisposeAsyncNotifier<void> {
     return ref.read(authServiceProvider).getUserProvider();
   }
 }
-/// Riverpod Providers
-final passwordControllerCardProvider =
-    AutoDisposeAsyncNotifierProvider<PasswordCardController, void>(
-        PasswordCardController.new);

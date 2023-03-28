@@ -44,7 +44,7 @@ class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
   DateTime? _draftDate;
   TimeOfDay? _draftTime;
 
-  //List<String>? _members;
+  List<String>? _members;
 
   String get name => _nameController.text;
 

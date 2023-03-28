@@ -19,11 +19,26 @@ class TourMembers extends ConsumerWidget {
               .copyWith(color: Theme.of(context).colorScheme.inversePrimary),
         ),
         gapH8,
+        Row(
+          children: [],
+        ),
         Text(
           members.join(', '),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
+  }
+}
+
+class PlayerWidget extends StatelessWidget {
+  const PlayerWidget({super.key, this.name, this.photoUrl});
+
+  final String? name;
+  final String? photoUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

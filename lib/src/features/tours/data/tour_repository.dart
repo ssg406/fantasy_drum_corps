@@ -121,7 +121,7 @@ final toursRepositoryProvider = Provider<ToursRepository>(
 
 final addPlayerToTourProvider =
     Provider.family.autoDispose<Future<void>, String>((ref, tourId) {
-  final user = ref.watch(authDatabaseProvider).currentUser;
+  final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot  be null when joining tours');
   }
@@ -131,7 +131,7 @@ final addPlayerToTourProvider =
 });
 
 final joinedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
-  final user = ref.watch(authDatabaseProvider).currentUser;
+  final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot  be null when finding tours');
   }
@@ -139,7 +139,7 @@ final joinedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
 });
 
 final ownedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
-  final user = ref.watch(authDatabaseProvider).currentUser;
+  final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when querying tours');
   }
@@ -148,7 +148,7 @@ final ownedToursStreamProvider = StreamProvider.autoDispose<List<Tour>>((ref) {
 
 final tourStreamProvider =
     StreamProvider.autoDispose.family<Tour, TourID>((ref, tourId) {
-  final user = ref.watch(authDatabaseProvider).currentUser;
+  final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when streaming league data');
   }

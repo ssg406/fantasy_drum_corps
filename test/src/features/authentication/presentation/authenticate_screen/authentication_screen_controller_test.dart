@@ -1,4 +1,4 @@
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_service.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/application/auth_service.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,7 +42,7 @@ void main() {
       fireImmediately: true,
     );
     verify(
-          () => listener(null, const AsyncData<void>(null)),
+      () => listener(null, const AsyncData<void>(null)),
     );
 
     // Listener is no longer being called
@@ -68,16 +68,16 @@ void main() {
     verify(() => listener(null, data));
 
     final controller =
-    container.read(authenticateScreenControllerProvider.notifier);
+        container.read(authenticateScreenControllerProvider.notifier);
 
     await controller.authenticateWithGoogle();
 
     verifyInOrder([
       // set loading state
       // * use matcher since AsyncLoading != AsyncLoading with data
-          () => listener(data, any(that: isA<AsyncLoading>())),
+      () => listener(data, any(that: isA<AsyncLoading>())),
       // data when complete
-          () => listener(any(that: isA<AsyncLoading>()), data),
+      () => listener(any(that: isA<AsyncLoading>()), data),
     ]);
 
     verifyNoMoreInteractions(listener);
@@ -105,11 +105,10 @@ void main() {
     verifyInOrder([
       // set loading state
       // * use matchers
-          () => listener(data, any(that: isA<AsyncLoading>())),
+      () => listener(data, any(that: isA<AsyncLoading>())),
       // get error when complete
-          () =>
-          listener(
-              any(that: isA<AsyncLoading>()), any(that: isA<AsyncError>())),
+      () => listener(
+          any(that: isA<AsyncLoading>()), any(that: isA<AsyncError>())),
     ]);
 
     verifyNoMoreInteractions(listener);

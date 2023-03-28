@@ -33,12 +33,13 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue>(passwordControllerCardProvider,
+    ref.listen<AsyncValue>(passwordCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
-    final state = ref.watch(passwordControllerCardProvider);
-    final isGoogleAuth = ref.read(passwordControllerCardProvider.notifier).getIsGoogleProvider();
+    final state = ref.watch(passwordCardControllerProvider);
+    final isGoogleAuth =
+        ref.read(passwordCardControllerProvider.notifier).getIsGoogleProvider();
     return AsyncValueWidget(
-      value: ref.watch(authStateChangesProvider),
+      value: ref.watch(userChangesStreamProvider),
       data: (User? user) {
         return TitledSectionCard(
           title: 'Password',
@@ -46,11 +47,10 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
             key: _formKey,
             child: Column(
               children: [
-                if (isGoogleAuth)
-                  ...[
-                    const Text('Your account is being managed by Google'),
-                    gapH24,
-                  ],
+                if (isGoogleAuth) ...[
+                  const Text('Your account is being managed by Google'),
+                  gapH24,
+                ],
                 TextFormField(
                   enabled: !isGoogleAuth,
                   controller: _currentPasswordController,
@@ -95,7 +95,7 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
 
   // Submit updated password to controller
   Future<void> _submitPassword() async {
-    final controller = ref.read(passwordControllerCardProvider.notifier);
+    final controller = ref.read(passwordCardControllerProvider.notifier);
     await controller.updatePassword(
         currentPassword: _currentPasswordController.text,
         newPassword: _newPasswordController.text);

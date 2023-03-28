@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:fantasy_drum_corps/src/features/players/application/player_service.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/profile/data/storage_repository.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class DetailsCardController extends AutoDisposeAsyncNotifier<void> {
+part 'details_card_controller.g.dart';
+
+@riverpod
+class DetailsCardController extends _$DetailsCardController {
   @override
   FutureOr<void> build() {}
 
@@ -22,7 +26,7 @@ class DetailsCardController extends AutoDisposeAsyncNotifier<void> {
     String fileName = result.files.first.name;
     String imageUrl =
         await ref.read(storageRepositoryProvider).uploadImage(fileName, bytes);
-    await ref.read(setPhotoUrlProvider(imageUrl));
+    ref.read(setPhotoUrlProvider(url: imageUrl));
   }
 
   Future<void> clearUploadedImage(String photoUrl) async {
@@ -38,10 +42,6 @@ class DetailsCardController extends AutoDisposeAsyncNotifier<void> {
   Future<void> setDisplayName(String displayName) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-        () => ref.read(setDisplayNameProvider(displayName)));
+        () => ref.read(playerServiceProvider).setDisplayName(displayName));
   }
 }
-
-final detailsCardControllerProvider =
-    AutoDisposeAsyncNotifierProvider<DetailsCardController, void>(
-        DetailsCardController.new);

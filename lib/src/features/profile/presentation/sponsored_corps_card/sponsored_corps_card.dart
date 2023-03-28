@@ -30,8 +30,8 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
     final state = ref.watch(sponsoredCorpsCardControllerProvider);
     return AsyncValueWidget(
       value: ref.watch(playerStreamProvider),
-      data: (Player player) {
-        final selectedCorps = player.selectedCorps;
+      data: (Player? player) {
+        final selectedCorps = player?.selectedCorps;
         return TitledSectionCard(
           title: 'Sponsored Drum Corps',
           child: Column(

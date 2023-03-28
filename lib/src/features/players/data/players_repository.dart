@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
-import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'players_repository.g.dart';
 
 /// Stores non authentication related player data in Firebase
 class PlayersRepository {
@@ -28,12 +29,6 @@ class PlayersRepository {
         .collection(playersPath)
         .doc(player.playerId)
         .set(player.toJson());
-  }
-
-  Stream<List<Player>> watchPlayers() {
-    return queryPlayers()
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
   Future<void> updatePlayer({required Player player}) async {
@@ -85,7 +80,7 @@ class PlayersRepository {
     return snapshot.data();
   }
 
-  Stream<Player> watchPlayer(String playerId) => _db
+  Stream<Player?> watchPlayer(String playerId) => _db
       .doc(playerPath(playerId))
       .withConverter(
           fromFirestore: (snapshot, _) =>
@@ -95,35 +90,35 @@ class PlayersRepository {
       .map((snapshot) => snapshot.data()!);
 }
 
-/// Riverpod providers
-final playersRepositoryProvider = Provider<PlayersRepository>((ref) {
-  final db = ref.watch(firebaseDatabaseProvider);
-  return PlayersRepository(db);
-});
+@riverpod
+FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) =>
+    FirebaseFirestore.instance;
 
-// Watch all players with live updates and dispose when done
-final playersStreamProvider = StreamProvider.autoDispose<List<Player>>((ref) {
-  return ref.watch(playersRepositoryProvider).watchPlayers();
-});
+@riverpod
+PlayersRepository playersRepository(PlayersRepositoryRef ref) =>
+    PlayersRepository(ref.watch(firebaseFirestoreProvider));
 
-final playerStreamProvider = StreamProvider.autoDispose<Player>((ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null');
-  }
-  return ref.watch(playersRepositoryProvider).watchPlayer(user.uid);
-});
-
-final fetchPlayerProvider = FutureProvider<Player?>((ref) {
+@riverpod
+Future<Player?> fetchPlayer(FetchPlayerRef ref) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null');
   }
   return ref.watch(playersRepositoryProvider).fetchPlayer(user.uid);
-});
+}
 
-final setDisplayNameProvider =
-    Provider.family<Future<void>, String>((ref, displayName) {
+@riverpod
+Stream<Player?> playerStream(PlayerStreamRef ref) {
+  final user = ref.watch(authRepositoryProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('Player cannot be null');
+  }
+  return ref.watch(playersRepositoryProvider).watchPlayer(user.uid);
+}
+
+@riverpod
+Future<void> setDisplayName(SetDisplayNameRef ref,
+    {required String displayName}) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
@@ -131,10 +126,11 @@ final setDisplayNameProvider =
   return ref
       .watch(playersRepositoryProvider)
       .setDisplayName(playerId: user.uid, displayName: displayName);
-});
+}
 
-final setSelectedCorpsProvider =
-    Provider.family<Future<void>, DrumCorps>((ref, selectedCorps) {
+@riverpod
+Future<void> setSelectedCorps(SetSelectedCorpsRef ref,
+    {required DrumCorps selectedCorps}) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
@@ -142,9 +138,10 @@ final setSelectedCorpsProvider =
   return ref
       .watch(playersRepositoryProvider)
       .setSelectedCorps(playerId: user.uid, corps: selectedCorps);
-});
+}
 
-final setPhotoUrlProvider = Provider.family<Future<void>, String>((ref, url) {
+@riverpod
+Future<void> setPhotoUrl(SetPhotoUrlRef ref, {required String url}) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
@@ -152,20 +149,13 @@ final setPhotoUrlProvider = Provider.family<Future<void>, String>((ref, url) {
   return ref
       .watch(playersRepositoryProvider)
       .setPhotoUrl(playerId: user.uid, url: url);
-});
+}
 
-final clearPhotoUrlProvider = Provider<Future<void>>((ref) {
+@riverpod
+Future<void> clearPhotoUrl(ClearPhotoUrlRef ref) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
   }
   return ref.watch(playersRepositoryProvider).clearPhotoUrl(playerId: user.uid);
-});
-
-final fetchCurrentPlayerProvider = FutureProvider<Player?>((ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null when setting display name');
-  }
-  return ref.watch(playersRepositoryProvider).fetchPlayer(user.uid);
-});
+}

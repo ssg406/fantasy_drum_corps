@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class EmailCardController extends AutoDisposeAsyncNotifier<void> {
+part 'email_card_controller.g.dart';
+
+@riverpod
+class EmailCardController extends _$EmailCardController {
   @override
   FutureOr<void> build() {}
 
@@ -13,7 +17,3 @@ class EmailCardController extends AutoDisposeAsyncNotifier<void> {
         () => ref.read(authRepositoryProvider).setEmail(newEmail, password));
   }
 }
-
-final emailCardControllerProvider =
-    AutoDisposeAsyncNotifierProvider<EmailCardController, void>(
-        EmailCardController.new);

@@ -34,17 +34,19 @@ class _DashboardState extends ConsumerState<Dashboard> {
             children: [
               AsyncValueWidget(
                 value: ref.watch(playerStreamProvider),
-                data: (Player player) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GreetingCard(displayName: player.displayName),
-                      gapH16,
-                      if (player.displayName == null ||
-                          player.selectedCorps == null)
-                        const CompleteProfileCard()
-                    ],
-                  );
+                data: (Player? player) {
+                  return player == null
+                      ? Container()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GreetingCard(displayName: player.displayName),
+                            gapH16,
+                            if (player.displayName == null ||
+                                player.selectedCorps == null)
+                              const CompleteProfileCard()
+                          ],
+                        );
                 },
               ),
               gapH16,

@@ -28,7 +28,8 @@ class DetailsCard extends ConsumerWidget {
     // Get player object and pass to widget
     return AsyncValueWidget(
       value: ref.watch(playerStreamProvider),
-      data: (Player player) => DetailsCardContents(player: player),
+      data: (Player? player) =>
+          player == null ? Container() : DetailsCardContents(player: player),
     );
   }
 }
@@ -187,6 +188,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     final controller = ref.read(detailsCardControllerProvider.notifier);
     await controller.uploadAvatarImage(result);
   }
+
   // Check file is an image and under the given max size
   bool _validateImage(FilePickerResult result) {
     final bytes = result.files.first.bytes;
@@ -197,17 +199,20 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
 
   // Inform the user the file has not been accepted for upload
   void _showImageErrorDialog() async {
-    await showDialog(context: context, builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Invalid File'),
-        content: const Text('Please make sure you have selected a valid image under 5MB in size'),
-        actions: [
-          TextButton(
-            onPressed: () => context.pop(),
-            child: const Text('Okay'),
-          )
-        ],
-      );
-    });
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Invalid File'),
+            content: const Text(
+                'Please make sure you have selected a valid image under 5MB in size'),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Text('Okay'),
+              )
+            ],
+          );
+        });
   }
 }

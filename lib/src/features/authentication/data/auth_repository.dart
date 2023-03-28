@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'auth_repository.g.dart';
 
 class AuthRepository {
   const AuthRepository(this._auth);
@@ -27,7 +29,7 @@ class AuthRepository {
   Future<void> setEmail(String newEmail, String password) async {
     final user = _auth.currentUser;
     if (user != null) {
-      final validated = await _validatePassword(password);
+      await _validatePassword(password);
       return user.updateEmail(newEmail);
     } else {
       throw AssertionError('User cannot be null when updating email');
@@ -49,7 +51,7 @@ class AuthRepository {
       {required String oldPassword, required String newPassword}) async {
     final user = _auth.currentUser;
     if (user != null) {
-      final validated = await _validatePassword(oldPassword);
+      await _validatePassword(oldPassword);
       return user.updatePassword(newPassword);
     } else {
       throw AssertionError('User cannot be null when updating password.');
@@ -85,32 +87,19 @@ class AuthRepository {
   }
 }
 
-/// Provider for Firebase Auth Instance
-final authDatabaseProvider = Provider<FirebaseAuth>((ref) {
+@riverpod
+FirebaseAuth firebaseAuth(FirebaseAuthRef ref) {
   final auth = FirebaseAuth.instance;
   auth.setPersistence(Persistence.LOCAL);
   return auth;
-});
+}
 
-/// Provider for [AuthRepository]
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepository(ref.watch(authDatabaseProvider));
-});
+@riverpod
+AuthRepository authRepository(AuthRepositoryRef ref) =>
+    AuthRepository(ref.watch(firebaseAuthProvider));
 
-/// Provider for Stream of [User?] that changes when authorization state
-/// changes
-final authStateChangesProvider = StreamProvider.autoDispose<User?>((ref) {
-  return ref.watch(authRepositoryProvider).authStateChanges();
-});
-
-/// Provider for Stream of [User?] that updates on ID token changes as
-/// well as auth state changes.
-final authDetailsChangesProvider = StreamProvider.autoDispose<User?>((ref) {
-  return ref.watch(authRepositoryProvider).userChanges();
-});
-
-/// Provider for Stream of [User?] that updates on all auth state changes, ID
-/// token changes, and user profile changes
-final userChangesProvider = StreamProvider.autoDispose<User?>((ref) {
-  return ref.watch(authDatabaseProvider).userChanges();
-});
+@riverpod
+Stream<User?> userChangesStream(UserChangesStreamRef ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return repository.userChanges();
+}
