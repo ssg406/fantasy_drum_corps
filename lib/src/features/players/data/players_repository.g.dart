@@ -38,20 +38,6 @@ final playersRepositoryProvider =
 );
 
 typedef PlayersRepositoryRef = AutoDisposeProviderRef<PlayersRepository>;
-String _$fetchPlayerHash() => r'717be8d792d6c6fb867690a74fbb4ff010dcdb74';
-
-/// See also [fetchPlayer].
-@ProviderFor(fetchPlayer)
-final fetchPlayerProvider = AutoDisposeFutureProvider<Player?>.internal(
-  fetchPlayer,
-  name: r'fetchPlayerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$fetchPlayerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef FetchPlayerRef = AutoDisposeFutureProviderRef<Player?>;
 String _$playerStreamHash() => r'adb28a689a70e68348dac2d5487b84bfa8db88e1';
 
 /// See also [playerStream].
@@ -66,7 +52,7 @@ final playerStreamProvider = AutoDisposeStreamProvider<Player?>.internal(
 );
 
 typedef PlayerStreamRef = AutoDisposeStreamProviderRef<Player?>;
-String _$setDisplayNameHash() => r'e3b78350bd2c9af10ac3ee8d5089380de38dc962';
+String _$playerStreamByIdHash() => r'f8a61e629dca28e8f8423201a11eae219049678f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -89,6 +75,88 @@ class _SystemHash {
   }
 }
 
+typedef PlayerStreamByIdRef = AutoDisposeStreamProviderRef<Player?>;
+
+/// See also [playerStreamById].
+@ProviderFor(playerStreamById)
+const playerStreamByIdProvider = PlayerStreamByIdFamily();
+
+/// See also [playerStreamById].
+class PlayerStreamByIdFamily extends Family<AsyncValue<Player?>> {
+  /// See also [playerStreamById].
+  const PlayerStreamByIdFamily();
+
+  /// See also [playerStreamById].
+  PlayerStreamByIdProvider call(
+    String id,
+  ) {
+    return PlayerStreamByIdProvider(
+      id,
+    );
+  }
+
+  @override
+  PlayerStreamByIdProvider getProviderOverride(
+    covariant PlayerStreamByIdProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'playerStreamByIdProvider';
+}
+
+/// See also [playerStreamById].
+class PlayerStreamByIdProvider extends AutoDisposeStreamProvider<Player?> {
+  /// See also [playerStreamById].
+  PlayerStreamByIdProvider(
+    this.id,
+  ) : super.internal(
+          (ref) => playerStreamById(
+            ref,
+            id,
+          ),
+          from: playerStreamByIdProvider,
+          name: r'playerStreamByIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$playerStreamByIdHash,
+          dependencies: PlayerStreamByIdFamily._dependencies,
+          allTransitiveDependencies:
+              PlayerStreamByIdFamily._allTransitiveDependencies,
+        );
+
+  final String id;
+
+  @override
+  bool operator ==(Object other) {
+    return other is PlayerStreamByIdProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$setDisplayNameHash() => r'e3b78350bd2c9af10ac3ee8d5089380de38dc962';
 typedef SetDisplayNameRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [setDisplayName].

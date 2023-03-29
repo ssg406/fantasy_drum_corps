@@ -22,7 +22,7 @@ final playerTourServiceProvider =
 );
 
 typedef PlayerTourServiceRef = AutoDisposeProviderRef<PlayerTourService>;
-String _$fetchTourPlayersHash() => r'87e9cc1809e8d0a89b928a202349c7d1c0947ba9';
+String _$fetchTourPlayersHash() => r'9b7945746aae4986cc1d7136e516fb3c0557684f';
 
 /// Copied from Dart SDK
 class _SystemHash {

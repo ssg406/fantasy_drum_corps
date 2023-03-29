@@ -99,21 +99,17 @@ PlayersRepository playersRepository(PlayersRepositoryRef ref) =>
     PlayersRepository(ref.watch(firebaseFirestoreProvider));
 
 @riverpod
-Future<Player?> fetchPlayer(FetchPlayerRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null');
-  }
-  return ref.watch(playersRepositoryProvider).fetchPlayer(user.uid);
-}
-
-@riverpod
 Stream<Player?> playerStream(PlayerStreamRef ref) {
   final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('Player cannot be null');
   }
   return ref.watch(playersRepositoryProvider).watchPlayer(user.uid);
+}
+
+@riverpod
+Stream<Player?> playerStreamById(PlayerStreamByIdRef ref, String id) {
+  return ref.watch(playersRepositoryProvider).watchPlayer(id);
 }
 
 @riverpod

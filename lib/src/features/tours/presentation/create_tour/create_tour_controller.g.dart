@@ -7,7 +7,7 @@ part of 'create_tour_controller.dart';
 // **************************************************************************
 
 String _$createTourControllerHash() =>
-    r'a3d02ac52ff154b4aef9106054aa0e0944d0ccc7';
+    r'fd8d41bcb1a4f7cb58d50729b77325b668615385';
 
 /// Controller for [CreateTour]
 ///

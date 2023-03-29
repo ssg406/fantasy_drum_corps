@@ -10,6 +10,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_p
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/draft_slots.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_description.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_members.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_owner_widget.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_visibility.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,6 +64,8 @@ class TourDetailContents extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    TourOwner(ownerId: tour.owner),
+                    gapH24,
                     TourVisibility(isPublic: isPublic),
                     gapH24,
                     TourDescription(description: description),
