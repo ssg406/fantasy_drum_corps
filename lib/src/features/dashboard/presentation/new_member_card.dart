@@ -43,7 +43,7 @@ class NewMemberCard extends StatelessWidget {
                 ),
                 TextButton.icon(
                   style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  onPressed: () => context.goNamed(AppRoutes.joinTour.name),
+                  onPressed: () => context.goNamed(AppRoutes.searchTours.name),
                   icon: const Icon(Icons.people_alt_rounded),
                   label: const Text('Join Tour'),
                 )

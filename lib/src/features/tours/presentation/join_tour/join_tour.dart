@@ -1,139 +1,125 @@
-import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/custom_tour_tile.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour_controller.dart';
+import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
+import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-/// This search page should fetch all tours from the repository
 class JoinTour extends ConsumerStatefulWidget {
   const JoinTour({
     Key? key,
+    required this.tourId,
+    this.tour,
   }) : super(key: key);
 
+  final String tourId;
+  final Tour? tour;
+
   @override
-  ConsumerState createState() => _JoinTourState();
+  ConsumerState<JoinTour> createState() => _JoinTourState();
 }
 
 class _JoinTourState extends ConsumerState<JoinTour> {
-  bool watchPublicOnly = false;
-  String searchText = '';
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  late bool _isPublic;
+  late String? _password;
+  late String _tourId;
+  late String _name;
 
-  void setPublicFilter(bool input) {
-    setState(() {
-      watchPublicOnly = input;
-    });
-  }
-
-  void handleSearchText(String input) {
-    setState(() {
-      searchText = input;
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (widget.tour != null) {
+      _isPublic = widget.tour!.isPublic;
+      _password = widget.tour?.password;
+      _tourId = widget.tourId;
+      _name = widget.tour!.name;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue>(joinTourControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context));
+    final state = ref.watch(joinTourControllerProvider);
     return SingleChildScrollView(
       child: ResponsiveCenter(
-        maxContentWidth: 1200,
+        maxContentWidth: 800,
         child: Padding(
           padding: pagePadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Be a Part of a Fantasy Corps Tour',
-                  style: Theme.of(context).textTheme.titleLarge),
-              Text(
-                'Find your friends\' tour or join a public tour to meet new  drum corps fans!',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              gapH32,
-              SearchBar(
-                  onPublicOnlyChecked: setPublicFilter,
-                  onSearched: handleSearchText),
-              gapH32,
-              AsyncValueWidget(
-                value: ref.watch(watchAllToursProvider(watchPublicOnly)),
-                data: (List<Tour>? tours) {
-                  return ResultsContainer(
-                    tours: tours!,
-                    searchText: searchText,
-                  );
-                },
-              ),
-            ],
-          ),
+          child: widget.tour != null
+              ? TitledSectionCard(
+                  title: 'Are you sure?',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Are you ready to join this tour?',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      gapH24,
+                      if (_isPublic) ...[
+                        Text(
+                          'Enter tour password',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        gapH8,
+                        Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: _passwordController,
+                            validator: (input) {
+                              if (_isPublic) {
+                                return null;
+                              }
+                              return input == _password
+                                  ? null
+                                  : 'Incorrect Password';
+                            },
+                            decoration: const InputDecoration(
+                                icon: Icon(Icons.lock_outline_rounded),
+                                labelText: 'Password'),
+                          ),
+                        ),
+                        gapH24,
+                      ],
+                      Row(
+                        children: [
+                          PrimaryButton(
+                              onPressed: () => _submit(),
+                              label: 'JOIN',
+                              isLoading: state.isLoading)
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              : const Text('Unable to join tour'),
         ),
       ),
     );
   }
-}
 
-class ResultsContainer extends StatelessWidget {
-  const ResultsContainer(
-      {Key? key, required this.tours, required this.searchText})
-      : super(key: key);
-  final List<Tour> tours;
-  final String searchText;
-
-  @override
-  Widget build(BuildContext context) {
-    final filteredTours = tours.where((tour) {
-      final lowerName = tour.name.toLowerCase();
-      final lowerDesc = tour.description.toLowerCase();
-      final lowerSearch = searchText.toLowerCase();
-      return lowerName.contains(lowerSearch) || lowerDesc.contains(lowerSearch);
-    });
-
-    return Card(
-      color: Theme.of(context).colorScheme.surface,
-      child: Padding(
-        padding: cardPadding,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: ListView(
-            children: [
-              for (final tour in filteredTours) CustomTourTile(tour: tour),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  const SearchBar(
-      {Key? key, required this.onSearched, required this.onPublicOnlyChecked})
-      : super(key: key);
-  final void Function(String) onSearched;
-  final void Function(bool) onPublicOnlyChecked;
-
-  @override
-  Widget build(BuildContext context) {
-    return Flex(
-      direction: Axis.horizontal,
-      children: [
-        Flexible(
-          flex: 1,
-          child: TextField(
-            onChanged: onSearched,
-            decoration: const InputDecoration(
-              hintText: 'Search tours...',
-              labelText: 'Search',
-            ),
-          ),
-        ),
-        gapW16,
-        Flexible(
-          flex: 3,
-          child:
-              LabelCheckbox('Show Public Only', onChecked: onPublicOnlyChecked),
-        )
-      ],
-    );
+  void _submit() async {
+    final controller = ref.read(joinTourControllerProvider.notifier);
+    if (_formKey.currentState!.validate()) {
+      await controller.joinTour(tourId: _tourId);
+    }
+    if (mounted) {
+      showAlertDialog(
+          context: context,
+          title: 'Joined Tour!',
+          content: 'Tour joined successfully!');
+    }
+    if (mounted) {
+      context.goNamed(AppRoutes.searchTours.name);
+    }
   }
 }

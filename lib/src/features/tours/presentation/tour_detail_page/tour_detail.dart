@@ -94,10 +94,15 @@ class TourDetailContents extends StatelessWidget {
   Widget _getButtonBar(BuildContext context) {
     return ButtonBar(
       children: [
-        if (tour.owner != user.uid && !tour.members.contains(user.uid))
+        if (tour.owner != user.uid &&
+            !tour.members.contains(user.uid) &&
+            tour.slotsAvailable > 0)
           TextButton.icon(
             icon: const Icon(Icons.add),
-            onPressed: () => debugPrint('join tour'),
+            onPressed: () {
+              context.pushNamed(AppRoutes.joinTour.name,
+                  params: {'tid': tour.id!}, extra: tour);
+            },
             label: const Text('Jour Tour'),
           ),
         if (tour.owner == user.uid)

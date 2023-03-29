@@ -170,6 +170,88 @@ final watchOwnedToursProvider = AutoDisposeStreamProvider<List<Tour>>.internal(
 );
 
 typedef WatchOwnedToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
+String _$addSelfToTourHash() => r'f731e602a9ee68b6020d71084142b928464ca75c';
+typedef AddSelfToTourRef = AutoDisposeFutureProviderRef<void>;
+
+/// See also [addSelfToTour].
+@ProviderFor(addSelfToTour)
+const addSelfToTourProvider = AddSelfToTourFamily();
+
+/// See also [addSelfToTour].
+class AddSelfToTourFamily extends Family<AsyncValue<void>> {
+  /// See also [addSelfToTour].
+  const AddSelfToTourFamily();
+
+  /// See also [addSelfToTour].
+  AddSelfToTourProvider call(
+    dynamic tourId,
+  ) {
+    return AddSelfToTourProvider(
+      tourId,
+    );
+  }
+
+  @override
+  AddSelfToTourProvider getProviderOverride(
+    covariant AddSelfToTourProvider provider,
+  ) {
+    return call(
+      provider.tourId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'addSelfToTourProvider';
+}
+
+/// See also [addSelfToTour].
+class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [addSelfToTour].
+  AddSelfToTourProvider(
+    this.tourId,
+  ) : super.internal(
+          (ref) => addSelfToTour(
+            ref,
+            tourId,
+          ),
+          from: addSelfToTourProvider,
+          name: r'addSelfToTourProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$addSelfToTourHash,
+          dependencies: AddSelfToTourFamily._dependencies,
+          allTransitiveDependencies:
+              AddSelfToTourFamily._allTransitiveDependencies,
+        );
+
+  final dynamic tourId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is AddSelfToTourProvider && other.tourId == tourId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tourId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
 String _$watchAllToursHash() => r'd5fa1216969e9d74068b771cc3aa1f9aa39e352d';
 typedef WatchAllToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
 

@@ -11,6 +11,7 @@ import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/search_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
@@ -32,7 +33,7 @@ enum AppRoutes {
   createTour,
   register,
   myTours,
-  joinTour,
+  searchTours,
   tourDetail,
   draft,
   competitionSchedule,
@@ -46,6 +47,7 @@ enum AppRoutes {
   contact,
   terms,
   editTour,
+  joinTour,
 }
 
 @riverpod
@@ -69,6 +71,16 @@ GoRouter goRouter(GoRouterRef ref) {
             state.subloc.startsWith('/tours') ||
             state.subloc.startsWith('/about')) {
           return '/signIn';
+        }
+      }
+      if (state.subloc.endsWith('/edit')) {
+        if (state.extra == null) {
+          return '/tours/myTours';
+        }
+      }
+      if (state.subloc.endsWith('/join')) {
+        if (state.extra == null) {
+          return '/tours/searchTours';
         }
       }
       return null;
@@ -124,12 +136,12 @@ GoRouter goRouter(GoRouterRef ref) {
                 ),
               ),
               GoRoute(
-                path: 'joinTour',
-                name: AppRoutes.joinTour.name,
+                path: 'searchTours',
+                name: AppRoutes.searchTours.name,
                 pageBuilder: (context, state) => MaterialPage(
                   key: state.pageKey,
                   fullscreenDialog: true,
-                  child: const JoinTour(),
+                  child: const SearchTours(),
                 ),
               ),
               GoRoute(
@@ -144,6 +156,20 @@ GoRouter goRouter(GoRouterRef ref) {
                   );
                 },
                 routes: [
+                  GoRoute(
+                      path: 'join',
+                      name: AppRoutes.joinTour.name,
+                      pageBuilder: (context, state) {
+                        final tourId = state.params['tid']!;
+                        final tour = state.extra as Tour?;
+                        return NoTransitionPage(
+                          key: state.pageKey,
+                          child: JoinTour(
+                            tourId: tourId,
+                            tour: tour,
+                          ),
+                        );
+                      }),
                   GoRoute(
                       path: 'edit',
                       name: AppRoutes.editTour.name,

@@ -22,7 +22,7 @@ class TourOwner extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.inversePrimary),
               ),
-              gapH16,
+              gapH8,
               Text(
                 player?.displayName ?? 'Unknown Owner',
                 style: Theme.of(context).textTheme.bodyLarge,

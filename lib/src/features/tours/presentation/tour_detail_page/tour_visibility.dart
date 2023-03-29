@@ -17,14 +17,14 @@ class TourVisibility extends StatelessWidget {
               .titleMedium!
               .copyWith(color: Theme.of(context).colorScheme.inversePrimary),
         ),
-        gapH16,
+        gapH8,
         Row(
           children: [
             Icon(
               isPublic ? Icons.lock_open : Icons.lock,
               color: isPublic ? Colors.green[300] : Colors.red[300],
             ),
-            gapW16,
+            gapW8,
             Text(
               isPublic ? 'Public' : 'Private',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(

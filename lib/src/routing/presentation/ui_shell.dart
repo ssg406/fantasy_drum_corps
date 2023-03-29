@@ -31,9 +31,7 @@ class _NavShellState extends ConsumerState<NavShell> {
   }
 
   void _showUserMenu(clickPosition) async {
-    Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    Size screenSize = MediaQuery.of(context).size;
     double left = clickPosition.dx;
     double top = clickPosition.dy;
     double right = screenSize.width - left;
@@ -64,7 +62,7 @@ class _NavShellState extends ConsumerState<NavShell> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(uiShellControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(uiShellControllerProvider);
     return Scaffold(
       key: _scaffoldStateKey,
@@ -93,22 +91,20 @@ class _NavShellState extends ConsumerState<NavShell> {
                         return player == null
                             ? Container()
                             : CircleAvatar(
-                          backgroundImage: player.photoUrl != null
-                              ? NetworkImage(player.photoUrl!)
-                              : null,
-                          backgroundColor: Theme
-                              .of(context)
-                              .primaryColorDark,
-                          child: player.photoUrl == null
-                              ? Icon(
-                            Icons.account_circle,
-                            color: Theme
-                                .of(context)
-                                .colorScheme
-                                .surfaceVariant,
-                          )
-                              : null,
-                        );
+                                backgroundImage: player.photoUrl != null
+                                    ? NetworkImage(player.photoUrl!)
+                                    : null,
+                                backgroundColor:
+                                    Theme.of(context).primaryColorDark,
+                                child: player.photoUrl == null
+                                    ? Icon(
+                                        Icons.account_circle,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                      )
+                                    : null,
+                              );
                       },
                     )),
               ),
@@ -126,7 +122,7 @@ class _NavShellState extends ConsumerState<NavShell> {
             Container(
               height: 300,
               padding:
-              const EdgeInsets.symmetric(vertical: 35.0, horizontal: 20.0),
+                  const EdgeInsets.symmetric(vertical: 35.0, horizontal: 20.0),
               child: Image.asset(
                 'fc_logo_sm.png',
                 fit: BoxFit.contain,
@@ -155,7 +151,7 @@ class _NavShellState extends ConsumerState<NavShell> {
                 ),
                 ListTile(
                   title: const Text('Join Tour'),
-                  onTap: () => _onDrawerClick(AppRoutes.joinTour),
+                  onTap: () => _onDrawerClick(AppRoutes.searchTours),
                 ),
               ],
             ),

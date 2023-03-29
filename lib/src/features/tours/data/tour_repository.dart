@@ -100,7 +100,8 @@ class ToursRepository {
 }
 
 @riverpod
-FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) => FirebaseFirestore.instance;
+FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) =>
+    FirebaseFirestore.instance;
 
 @riverpod
 ToursRepository toursRepository(ToursRepositoryRef ref) =>
@@ -129,5 +130,16 @@ Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
 }
 
 @riverpod
-Stream<List<Tour>> watchAllTours(WatchAllToursRef ref, bool watchPublicOnly) => ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);
+Future<void> addSelfToTour(AddSelfToTourRef ref, tourId) {
+  final user = ref.watch(authRepositoryProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('Unable to add null user to tour');
+  }
+  return ref
+      .read(toursRepositoryProvider)
+      .addPlayerToTour(tourId: tourId, playerId: user.uid);
+}
 
+@riverpod
+Stream<List<Tour>> watchAllTours(WatchAllToursRef ref, bool watchPublicOnly) =>
+    ref.watch(toursRepositoryProvider).watchTours(watchPublicOnly);

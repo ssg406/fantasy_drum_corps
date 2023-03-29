@@ -117,7 +117,7 @@ class EmptyTourContainerActions extends StatelessWidget {
               TextButton.icon(
                 icon: const FaIcon(FontAwesomeIcons.userGroup),
                 label: const Text('Join Tour'),
-                onPressed: () => context.goNamed(AppRoutes.joinTour.name),
+                onPressed: () => context.goNamed(AppRoutes.searchTours.name),
               )
             ],
           )
