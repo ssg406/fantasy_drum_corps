@@ -9,13 +9,13 @@ mixin TourValidators {
 
   bool canSubmitName(String name) {
     // Allow 4-30 alphanumeric characters
-    final RegExp nameExp = RegExp(r'^[a-zA-Z\d]{4,30}$');
+    final RegExp nameExp = RegExp(r'^[a-zA-Z\d\s]{4,30}$');
     return _testRegExp(nameExp, name);
   }
 
   bool canSubmitDescription(String description) {
     // Allow 4-75 alphanumeric characters
-    final RegExp descExp = RegExp(r'^[a-zA-Z\d]{4,75}$');
+    final RegExp descExp = RegExp(r'^[a-zA-Z\d\s]{4,75}$');
     return _testRegExp(descExp, description);
   }
 
@@ -28,11 +28,6 @@ mixin TourValidators {
   bool _testRegExp(RegExp regExp, String input) {
     RegExpMatch? matchedInput = regExp.firstMatch(input);
     return matchedInput?[0] != null;
-  }
-
-  bool canSubmitDate(DateTime date) {
-    // Date must be before season begins
-    return date.isBefore(latestDraftDate);
   }
 
   String? getNameErrors(String name) {
@@ -55,7 +50,7 @@ mixin TourValidators {
     final bool showPasswordErrors = !canSubmitTourPassword(password);
     final String passwordError = password.isEmpty
         ? 'Please enter a password for private tours'
-        : 'Please make sure the password is between 4-10 letters and numbers';
+        : 'Please make sure the password is between 4-10 letters and numbers with no spaces';
     return showPasswordErrors ? passwordError : null;
   }
 

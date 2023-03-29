@@ -14,27 +14,39 @@ class CreateTourController extends _$CreateTourController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> submitTour(
-      {required String name,
-      required String description,
-      required bool isPublic,
-      String? password,
-      required DateTime draftDateTime}) async {
+  Future<void> updateTour(Tour tour) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _updateTour(tour));
+  }
+
+  Future<void> _updateTour(Tour tour) {
+    final toursRepository = ref.read(toursRepositoryProvider);
+    return toursRepository.updateTour(tour);
+  }
+
+  Future<void> submitTour({required String name,
+    required String description,
+    required bool isPublic,
+    String? password,
+    required DateTime draftDateTime}) async {
     state = const AsyncValue.loading();
-    final user = ref.watch(authRepositoryProvider).currentUser;
-    if (user != null) {
-      final owner = user.uid;
-      final members = [owner];
-      final tour = Tour(
-          name: name,
-          description: description,
-          isPublic: isPublic,
-          password: password,
-          owner: owner,
-          members: members,
-          draftDateTime: draftDateTime);
-      state = await AsyncValue.guard(() => _submitLeague(tour));
+    final user = ref
+        .watch(authRepositoryProvider)
+        .currentUser;
+    if (user == null) {
+      throw AssertionError('User cannot be null when creating tour');
     }
+    final owner = user.uid;
+    final members = [owner];
+    final tour = Tour(
+        name: name,
+        description: description,
+        isPublic: isPublic,
+        password: password,
+        owner: owner,
+        members: members,
+        draftDateTime: draftDateTime);
+    state = await AsyncValue.guard(() => _submitLeague(tour));
   }
 
   Future<void> _submitLeague(Tour tour) {

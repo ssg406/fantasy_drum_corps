@@ -33,3 +33,9 @@ PlayerTourService playerTourService(PlayerTourServiceRef ref) {
     ref.watch(toursRepositoryProvider),
   );
 }
+
+@riverpod
+Future<List<Player>> fetchTourPlayers(FetchTourPlayersRef ref, List<String> members) {
+  final service = ref.watch(playerTourServiceProvider);
+  return service.fetchTourPlayers(members);
+}
