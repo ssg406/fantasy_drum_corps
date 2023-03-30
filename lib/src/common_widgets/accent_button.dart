@@ -2,12 +2,12 @@ import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class AccentButton extends StatelessWidget {
-  const AccentButton(
-      {Key? key,
-      required this.onPressed,
-      required this.label,
-      this.isLoading = false})
-      : super(key: key);
+  const AccentButton({
+    Key? key,
+    required this.onPressed,
+    required this.label,
+    this.isLoading = false,
+  }) : super(key: key);
   final VoidCallback onPressed;
   final String label;
   final bool isLoading;

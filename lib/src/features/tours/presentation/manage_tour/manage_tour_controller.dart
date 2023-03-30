@@ -18,4 +18,13 @@ class ManageTourController extends _$ManageTourController {
     final repository = ref.read(toursRepositoryProvider);
     return repository.removePlayerFromTour(tourId: tourId, playerId: playerId);
   }
+
+  Future<void> deleteTour({required String tourId}) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _deleteTour(tourId));
+  }
+
+  Future<void> _deleteTour(String tourId) async =>
+      ref.read(deleteTourProvider(tourId));
+
 }

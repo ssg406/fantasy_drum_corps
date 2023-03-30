@@ -140,7 +140,89 @@ class FetchTourProvider extends AutoDisposeFutureProvider<Tour?> {
   }
 }
 
-String _$watchJoinedToursHash() => r'5aad5a23dd6cddb927b877b0337941750255859e';
+String _$deleteTourHash() => r'2fd82ce27683745991d21b98bd7f710aa9fef98c';
+typedef DeleteTourRef = AutoDisposeFutureProviderRef<void>;
+
+/// See also [deleteTour].
+@ProviderFor(deleteTour)
+const deleteTourProvider = DeleteTourFamily();
+
+/// See also [deleteTour].
+class DeleteTourFamily extends Family<AsyncValue<void>> {
+  /// See also [deleteTour].
+  const DeleteTourFamily();
+
+  /// See also [deleteTour].
+  DeleteTourProvider call(
+    String tourId,
+  ) {
+    return DeleteTourProvider(
+      tourId,
+    );
+  }
+
+  @override
+  DeleteTourProvider getProviderOverride(
+    covariant DeleteTourProvider provider,
+  ) {
+    return call(
+      provider.tourId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deleteTourProvider';
+}
+
+/// See also [deleteTour].
+class DeleteTourProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [deleteTour].
+  DeleteTourProvider(
+    this.tourId,
+  ) : super.internal(
+          (ref) => deleteTour(
+            ref,
+            tourId,
+          ),
+          from: deleteTourProvider,
+          name: r'deleteTourProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deleteTourHash,
+          dependencies: DeleteTourFamily._dependencies,
+          allTransitiveDependencies:
+              DeleteTourFamily._allTransitiveDependencies,
+        );
+
+  final String tourId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeleteTourProvider && other.tourId == tourId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tourId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$watchJoinedToursHash() => r'd5809d33d7115878a1d2007f8fb93822623783b6';
 
 /// See also [watchJoinedTours].
 @ProviderFor(watchJoinedTours)
@@ -155,7 +237,7 @@ final watchJoinedToursProvider = AutoDisposeStreamProvider<List<Tour>>.internal(
 );
 
 typedef WatchJoinedToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
-String _$watchOwnedToursHash() => r'8d78735105a8977965f3a2a121b0a106bee9b93e';
+String _$watchOwnedToursHash() => r'80ae4b3476f8e227381d62098d3126451f0558d9';
 
 /// See also [watchOwnedTours].
 @ProviderFor(watchOwnedTours)
@@ -170,7 +252,7 @@ final watchOwnedToursProvider = AutoDisposeStreamProvider<List<Tour>>.internal(
 );
 
 typedef WatchOwnedToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
-String _$addSelfToTourHash() => r'd5fd8659e925c30cb869abccd6f5e67c615b7e33';
+String _$addSelfToTourHash() => r'6523419213a25b8c2f7649a3acaf3a00cec278c5';
 typedef AddSelfToTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [addSelfToTour].
@@ -253,7 +335,7 @@ class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
 }
 
 String _$removeSelfFromTourHash() =>
-    r'2b7a5df3939fdbee6f5415a1d839b78e18528ea1';
+    r'de472e24a39c5cf955db96fc1e2d7c5261a67abc';
 typedef RemoveSelfFromTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [removeSelfFromTour].
