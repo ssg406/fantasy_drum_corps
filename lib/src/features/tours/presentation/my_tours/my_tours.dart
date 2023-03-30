@@ -75,7 +75,7 @@ class _MyToursContentsState extends ConsumerState<MyToursContents> {
         title: widget.title,
         child: SizedBox(
           height: widget.myTours.isEmpty
-              ? MediaQuery.of(context).size.height * 0.1
+              ? MediaQuery.of(context).size.height * 0.2
               : MediaQuery.of(context).size.height * 0.4,
           child: widget.myTours.isEmpty
               ? const EmptyTourContainerActions()
