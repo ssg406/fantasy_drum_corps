@@ -7,10 +7,10 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/subcapt
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
-import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/leave_tour/leave_tour.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/search_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
@@ -50,6 +50,7 @@ enum AppRoutes {
   editTour,
   joinTour,
   leaveTour,
+  manageTour,
 }
 
 @riverpod
@@ -75,27 +76,18 @@ GoRouter goRouter(GoRouterRef ref) {
           return '/signIn';
         }
       }
-      if (state.subloc.endsWith('/edit') && state.extra == null) {
-        return '/tours/myTours';
-      }
-      if (state.subloc.endsWith('/join') && state.extra == null) {
-        return '/tours/searchTours';
-      }
-      if (state.subloc.endsWith('/leave') && state.extra == null) {
-        return '/tours/myTours';
-      }
+
       return null;
     },
     routes: [
       GoRoute(
         path: '/signIn',
         name: AppRoutes.signIn.name,
-        pageBuilder: (context, state) =>
-            NoTransitionPage(
-              key: state.pageKey,
-              child: const AuthenticateScreen(
-                  formType: AuthenticationFormType.register),
-            ),
+        pageBuilder: (context, state) => NoTransitionPage(
+          key: state.pageKey,
+          child: const AuthenticateScreen(
+              formType: AuthenticationFormType.register),
+        ),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
@@ -106,50 +98,45 @@ GoRouter goRouter(GoRouterRef ref) {
           GoRoute(
             path: '/dashboard',
             name: AppRoutes.dashboard.name,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(
-                  key: state.pageKey,
-                  child: const Dashboard(),
-                ),
+            pageBuilder: (context, state) => NoTransitionPage(
+              key: state.pageKey,
+              child: const Dashboard(),
+            ),
           ),
           GoRoute(
             path: '/tours',
             name: AppRoutes.tours.name,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(
-                  key: state.pageKey,
-                  child: const MyTours(),
-                ),
+            pageBuilder: (context, state) => NoTransitionPage(
+              key: state.pageKey,
+              child: const MyTours(),
+            ),
             routes: [
               GoRoute(
                 path: 'create',
                 name: AppRoutes.createTour.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const CreateTour(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const CreateTour(),
+                ),
               ),
               GoRoute(
                 path: 'myTours',
                 name: AppRoutes.myTours.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const MyTours(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const MyTours(),
+                ),
               ),
               GoRoute(
                 path: 'searchTours',
                 name: AppRoutes.searchTours.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const SearchTours(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const SearchTours(),
+                ),
               ),
               GoRoute(
                 path: ':tid',
@@ -164,14 +151,23 @@ GoRouter goRouter(GoRouterRef ref) {
                 },
                 routes: [
                   GoRoute(
+                      path: 'manage',
+                      name: AppRoutes.manageTour.name,
+                      pageBuilder: (context, state) {
+                        final tourId = state.params['tid']!;
+                        return NoTransitionPage(
+                          key: state.pageKey,
+                          child: ManageTour(tourId: tourId),
+                        );
+                      }),
+                  GoRoute(
                       path: 'leave',
                       name: AppRoutes.leaveTour.name,
                       pageBuilder: (context, state) {
                         final tourId = state.params['tid']!;
-                        final tour = state.extra as Tour?;
                         return NoTransitionPage(
                           key: state.pageKey,
-                          child: LeaveTour(tourId: tourId, tour: tour),
+                          child: LeaveTour(tourId: tourId),
                         );
                       }),
                   GoRoute(
@@ -179,13 +175,9 @@ GoRouter goRouter(GoRouterRef ref) {
                       name: AppRoutes.joinTour.name,
                       pageBuilder: (context, state) {
                         final tourId = state.params['tid']!;
-                        final tour = state.extra as Tour?;
                         return NoTransitionPage(
                           key: state.pageKey,
-                          child: JoinTour(
-                            tourId: tourId,
-                            tour: tour,
-                          ),
+                          child: JoinTour(tourId: tourId),
                         );
                       }),
                   GoRoute(
@@ -193,68 +185,61 @@ GoRouter goRouter(GoRouterRef ref) {
                       name: AppRoutes.editTour.name,
                       pageBuilder: (context, state) {
                         final tourId = state.params['tid']!;
-                        final tour = state.extra as Tour?;
                         return NoTransitionPage(
                           key: state.pageKey,
-                          child: CreateTour(tourId: tourId, tour: tour),
+                          child: CreateTour(tourId: tourId),
                         );
                       }),
                   GoRoute(
                     path: 'draft',
                     name: AppRoutes.draft.name,
-                    pageBuilder: (context, state) =>
-                        NoTransitionPage(
-                            key: state.pageKey,
-                            child: const TourDraft() //state.params['id']
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        key: state.pageKey,
+                        child: const TourDraft() //state.params['id']
                         ),
                   ),
                   GoRoute(
                     path: 'competitionSchedule',
                     name: AppRoutes.competitionSchedule.name,
-                    pageBuilder: (context, state) =>
-                        NoTransitionPage(
-                            key: state.pageKey,
-                            child: const Placeholder() //state.params['id']
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        key: state.pageKey,
+                        child: const Placeholder() //state.params['id']
                         ),
                   ),
                   GoRoute(
                     path: 'results',
                     name: AppRoutes.competitionDetail.name,
-                    pageBuilder: (context, state) =>
-                        MaterialPage(
-                            key: state.pageKey,
-                            fullscreenDialog: true,
-                            child: const WeeklyScores() // tid still in params
+                    pageBuilder: (context, state) => MaterialPage(
+                        key: state.pageKey,
+                        fullscreenDialog: true,
+                        child: const WeeklyScores() // tid still in params
                         ),
                     routes: [
                       GoRoute(
                         path: 'subcaptionResults',
                         name: AppRoutes.competitionSubcaptionScores.name,
-                        pageBuilder: (context, state) =>
-                            MaterialPage(
-                              key: state.pageKey,
-                              fullscreenDialog: true,
-                              child: const SubcaptionResults(),
-                            ),
+                        pageBuilder: (context, state) => MaterialPage(
+                          key: state.pageKey,
+                          fullscreenDialog: true,
+                          child: const SubcaptionResults(),
+                        ),
                       ),
                     ],
                   ),
                   GoRoute(
                     path: 'rankings',
                     name: AppRoutes.rankings.name,
-                    pageBuilder: (context, state) =>
-                        NoTransitionPage(
-                            key: state.pageKey,
-                            child: const Standings() //state.params['id']
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        key: state.pageKey,
+                        child: const Standings() //state.params['id']
                         ),
                   ),
                   GoRoute(
                     path: 'allCorps',
                     name: AppRoutes.allCorps.name,
-                    pageBuilder: (context, state) =>
-                        NoTransitionPage(
-                            key: state.pageKey,
-                            child: const Placeholder() //state.params['id']
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        key: state.pageKey,
+                        child: const Placeholder() //state.params['id']
                         ),
                   ),
                 ],
@@ -264,62 +249,56 @@ GoRouter goRouter(GoRouterRef ref) {
           GoRoute(
             path: '/profile',
             name: AppRoutes.profile.name,
-            pageBuilder: (context, state) =>
-                MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const UserProfile(),
-                ),
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              fullscreenDialog: true,
+              child: const UserProfile(),
+            ),
           ),
           GoRoute(
             path: '/about',
             name: AppRoutes.about.name,
-            pageBuilder: (context, state) =>
-                MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const Placeholder(),
-                ),
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              fullscreenDialog: true,
+              child: const Placeholder(),
+            ),
             routes: [
               GoRoute(
                 path: 'terms',
                 name: AppRoutes.terms.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const Placeholder(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const Placeholder(),
+                ),
               ),
               GoRoute(
                 path: 'contact',
                 name: AppRoutes.contact.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const Placeholder(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const Placeholder(),
+                ),
               ),
               GoRoute(
                 path: 'faqs',
                 name: AppRoutes.faqs.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const Placeholder(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const Placeholder(),
+                ),
               ),
               GoRoute(
                 path: 'rules',
                 name: AppRoutes.rules.name,
-                pageBuilder: (context, state) =>
-                    MaterialPage(
-                      key: state.pageKey,
-                      fullscreenDialog: true,
-                      child: const Placeholder(),
-                    ),
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  fullscreenDialog: true,
+                  child: const Placeholder(),
+                ),
               ),
             ],
           ),

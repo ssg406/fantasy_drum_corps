@@ -1,9 +1,10 @@
-import 'dart:developer' as developer;
-
+import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/date_time_picker.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour_controller.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/private_tour_switch.dart';
@@ -16,18 +17,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateTour extends ConsumerStatefulWidget {
-  const CreateTour({super.key, this.tourId, this.tour});
+class CreateTour extends ConsumerWidget {
+  const CreateTour({
+    Key? key,
+    this.tourId,
+  }) : super(key: key);
 
   final String? tourId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return tourId == null
+        ? const CreateTourContents()
+        : AsyncValueWidget(
+            value: ref.watch(fetchTourProvider(tourId!)),
+            data: (Tour? tour) => tour == null
+                ? const NotFound()
+                : CreateTourContents(tour: tour));
+  }
+}
+
+class CreateTourContents extends ConsumerStatefulWidget {
+  const CreateTourContents({Key? key, this.tour}) : super(key: key);
+
   final Tour? tour;
 
   @override
-  ConsumerState<CreateTour> createState() => _CreateTourState();
+  ConsumerState createState() => _CreateTourContentsState();
 }
 
-class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
+class _CreateTourContentsState extends ConsumerState<CreateTourContents>
+    with TourValidators {
   bool _publicSelected = false;
+  String? _id;
   String? _name;
   String? _description;
   String? _password;
@@ -40,24 +62,20 @@ class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
 
   @override
   void initState() {
-    super.initState();
     if (widget.tour != null) {
-      developer.log('Tour did receive non-null tour object',
-          name: 'create-edit-tour');
-      // Set widget state to editing
       editing = true;
-      // Set all properties of tour being edited
+      _id = widget.tour!.id;
       _name = widget.tour!.name;
       _description = widget.tour!.description;
-      _password = widget.tour?.password ?? '';
+      _password = widget.tour?.password;
       pickedDate = DateTimeUtils.dateTimeFromCombinedDateTime(
           widget.tour!.draftDateTime);
       pickedTime = DateTimeUtils.timeOfDayFromCombinedDateTime(
           widget.tour!.draftDateTime);
-      _members = widget.tour!.members;
-      // Set the value of the public switch
       _publicSelected = widget.tour!.isPublic;
+      _members = widget.tour!.members;
     }
+    super.initState();
   }
 
   @override
@@ -134,6 +152,7 @@ class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
                             'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
                         selectedDate: pickedDate,
                         selectedTime: pickedTime,
+                        dateTimeErrorText: _dateTimeErrorText,
                         onSelectedDate: (selectedDate) =>
                             setState(() => pickedDate = selectedDate),
                         onSelectedTime: (selectedTime) =>
@@ -142,7 +161,8 @@ class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
                       gapH32,
                       Center(
                         child: PrimaryButton(
-                            onPressed: _submitTour,
+                            onPressed:
+                                editing ? _submitEditedTour : _submitNewTour,
                             label: editing ? 'UPDATE' : 'CREATE',
                             isLoading: state.isLoading,
                             onSurface: true),
@@ -158,46 +178,60 @@ class _CreateTourState extends ConsumerState<CreateTour> with TourValidators {
     );
   }
 
-  void _submitTour() async {
+  bool _validate() {
     if (_formKey.currentState!.validate()) {
       if (pickedDate == null || pickedTime == null) {
         setState(
             () => _dateTimeErrorText = 'Please enter a draft date and time');
-        return;
+        return false;
       }
-
-      final controller = ref.read(createTourControllerProvider.notifier);
-      final draftDateTime =
-          DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
-
-      if (editing) {
-        final updatedTour = Tour(
-            id: widget.tourId,
-            name: _name!,
-            description: _description!,
-            isPublic: _publicSelected,
-            owner: widget.tour!.owner,
-            members: _members!,
-            draftDateTime: draftDateTime);
-        await controller.updateTour(updatedTour);
-      } else {
-        await controller.submitTour(
-          name: _name!,
-          description: _description!,
-          isPublic: _publicSelected,
-          password: _password,
-          draftDateTime: draftDateTime,
-        );
-      }
-      if (mounted) {
-        showAlertDialog(
-            context: context,
-            title: editing ? 'Tour Updated' : 'Tour Created',
-            content: editing
-                ? 'Tour updated successfully. Have fun!'
-                : 'Tour created successfully! Invite your friends and get ready for the draft!');
-        context.goNamed(AppRoutes.myTours.name);
-      }
+      return true;
     }
+    return false;
+  }
+
+  void _submitEditedTour() async {
+    if (!_validate()) return;
+    debugPrint(
+        'submitted values: name: $_name, description: $_description, public: $_publicSelected, password: $_password, owner: ${widget.tour!.owner},  pickedDate: $pickedDate, pickedTime: $pickedTime');
+    final controller = ref.read(createTourControllerProvider.notifier);
+    final draftDateTime =
+        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+    final updatedTour = Tour(
+        id: _id,
+        name: _name!,
+        description: _description!,
+        isPublic: _publicSelected,
+        password: _password,
+        owner: widget.tour!.owner,
+        members: _members!,
+        draftDateTime: draftDateTime);
+    await controller.updateTour(updatedTour);
+    _showSuccessMessage();
+  }
+
+  void _submitNewTour() async {
+    if (!_validate()) return;
+    final controller = ref.read(createTourControllerProvider.notifier);
+    final draftDateTime =
+        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+    await controller.submitTour(
+      name: _name!,
+      description: _description!,
+      isPublic: _publicSelected,
+      password: _password,
+      draftDateTime: draftDateTime,
+    );
+    _showSuccessMessage();
+  }
+
+  void _showSuccessMessage() async {
+    showAlertDialog(
+        context: context,
+        title: editing ? 'Tour Updated' : 'Tour Created',
+        content: editing
+            ? 'Tour updated successfully. Have fun!'
+            : 'Tour created successfully! Invite your friends and get ready for the draft!');
+    context.goNamed(AppRoutes.myTours.name);
   }
 }

@@ -1,7 +1,10 @@
+import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour_controller.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
@@ -11,21 +14,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class JoinTour extends ConsumerStatefulWidget {
+class JoinTour extends ConsumerWidget {
   const JoinTour({
     Key? key,
-    required this.tourId,
-    this.tour,
+    this.tourId,
   }) : super(key: key);
 
-  final String tourId;
-  final Tour? tour;
+  final String? tourId;
 
   @override
-  ConsumerState<JoinTour> createState() => _JoinTourState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AsyncValueWidget(
+      value: ref.read(fetchTourProvider(tourId!)),
+      data: (Tour? tour) {
+        return tour == null ? const NotFound() : JoinTourContents(tour: tour);
+      },
+    );
+  }
 }
 
-class _JoinTourState extends ConsumerState<JoinTour> {
+class JoinTourContents extends ConsumerStatefulWidget {
+  const JoinTourContents({
+    Key? key,
+    required this.tour,
+  }) : super(key: key);
+
+  final Tour tour;
+
+  @override
+  ConsumerState<JoinTourContents> createState() => _JoinTourContentsState();
+}
+
+class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
   late bool _isPublic;
   late String? _password;
   late String _tourId;
@@ -36,68 +56,71 @@ class _JoinTourState extends ConsumerState<JoinTour> {
   @override
   void initState() {
     super.initState();
-    if (widget.tour != null) {
-      _isPublic = widget.tour!.isPublic;
-      _password = widget.tour?.password;
-      _tourId = widget.tourId;
-      _name = widget.tour!.name;
-    }
+    _isPublic = widget.tour.isPublic;
+    _password = widget.tour.password;
+    _tourId = widget.tour.id!;
+    _name = widget.tour.name;
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(joinTourControllerProvider,
-        (_, state) => state.showAlertDialogOnError(context));
+            (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(joinTourControllerProvider);
     return SingleChildScrollView(
       child: ResponsiveCenter(
         maxContentWidth: 800,
         child: Padding(
           padding: pagePadding,
-          child: widget.tour != null
-              ? TitledSectionCard(
-                  title: 'Are you sure?',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Are you ready to join the tour $_name?',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      gapH24,
-                      if (!_isPublic) ...[
-                        Text(
-                          'Enter tour password',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        gapH8,
-                        TextField(
-                          onChanged: (input) => _enteredPassword = input,
-                          decoration: InputDecoration(
-                            icon: const Icon(Icons.lock_outline_rounded),
-                            labelText: 'Password',
-                            errorText: _errorText,
-                          ),
-                        ),
-                        gapH24,
-                      ],
-                      Row(
-                        children: [
-                          PrimaryButton(
-                              onPressed: () => _submit(),
-                              label: 'JOIN',
-                              isLoading: state.isLoading),
-                          PrimaryButton(
-                            onPressed: () => context.pop(),
-                            label: 'CANCEL',
-                            isLoading: state.isLoading,
-                          )
-                        ],
-                      )
-                    ],
+          child:
+          TitledSectionCard(
+            title: 'Are you sure?',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Are you ready to join the tour $_name?',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .titleMedium,
+                ),
+                gapH24,
+                if (!_isPublic) ...[
+                  Text(
+                    'Enter tour password',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium,
                   ),
+                  gapH8,
+                  TextField(
+                    onChanged: (input) => _enteredPassword = input,
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.lock_outline_rounded),
+                      labelText: 'Password',
+                      errorText: _errorText,
+                    ),
+                  ),
+                  gapH24,
+                ],
+                Row(
+                  children: [
+                    PrimaryButton(
+                        onPressed: () => _submit(),
+                        label: 'JOIN',
+                        isLoading: state.isLoading),
+                    PrimaryButton(
+                      onPressed: () => context.pop(),
+                      label: 'CANCEL',
+                      isLoading: state.isLoading,
+                    )
+                  ],
                 )
-              : const Text('Unable to join tour'),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -108,7 +131,7 @@ class _JoinTourState extends ConsumerState<JoinTour> {
 
     if (!_isPublic && (_enteredPassword != _password)) {
       setState(() =>
-          _errorText = 'Please check that you entered the password correctly.');
+      _errorText = 'Please check that you entered the password correctly.');
       return;
     }
     await controller.joinTour(tourId: _tourId);

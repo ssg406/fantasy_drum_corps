@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
@@ -28,11 +29,9 @@ class TourDetail extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(fetchTourProvider(tourId)),
       data: (Tour? tour) {
-        final currentUser = ref
-            .watch(authRepositoryProvider)
-            .currentUser;
+        final currentUser = ref.watch(authRepositoryProvider).currentUser;
         return tour == null
-            ? Container()
+            ? const NotFound()
             : TourDetailContents(tour: tour, user: currentUser!);
       },
     );
@@ -109,32 +108,36 @@ class TourDetailContents extends StatelessWidget {
           ),
         if (tour.owner == user.uid)
           TextButton.icon(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.settings),
             onPressed: () {
-              context.pushNamed(AppRoutes.editTour.name,
+              context.pushNamed(AppRoutes.manageTour.name,
                   params: {'tid': tour.id!}, extra: tour);
             },
-            label: const Text('Edit Tour'),
+            label: const Text('ManageTour'),
           ),
+        TextButton.icon(
+          icon: const Icon(Icons.edit),
+          onPressed: () {
+            context.pushNamed(AppRoutes.editTour.name,
+                params: {'tid': tour.id!}, extra: tour);
+          },
+          label: const Text('Edit Tour'),
+        ),
         if (tour.members.contains(user.uid))
           TextButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () =>
-                context
-                    .pushNamed(AppRoutes.draft.name, params: {'tid': tour.id!}),
+            onPressed: () => context
+                .pushNamed(AppRoutes.draft.name, params: {'tid': tour.id!}),
             label: const Text('Go to Draft'),
           ),
         if (tour.members.contains(user.uid) && tour.owner != user.uid)
           TextButton.icon(
             icon: const Icon(Icons.remove),
-            onPressed: () =>
-                context.pushNamed(
-                    AppRoutes.leaveTour.name, params: {'tid': tour.id!},
-                    extra: tour),
+            onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
+                params: {'tid': tour.id!}, extra: tour),
             label: const Text('Leave Tour'),
           )
       ],
     );
   }
-
 }

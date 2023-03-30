@@ -1,5 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/player_widget.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/application/player_tour_service.dart';
@@ -26,37 +26,16 @@ class TourMembers extends ConsumerWidget {
             gapH8,
             Row(
               children: [
-                for (final player in players)
+                for (final player in players) ...[
                   PlayerWidget(
-                      name: player.displayName, photoUrl: player.photoUrl)
+                      name: player.displayName, photoUrl: player.photoUrl),
+                  gapW8,
+                ]
               ],
             ),
           ],
         );
       },
-    );
-  }
-}
-
-class PlayerWidget extends StatelessWidget {
-  const PlayerWidget({super.key, this.name, this.photoUrl});
-
-  final String? name;
-  final String? photoUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Avatar(radius: 15, photoUrl: photoUrl),
-        Text(
-          name ?? 'Anonymous',
-          style: const TextStyle(
-            color: Colors.white60,
-          ),
-        ),
-      ],
     );
   }
 }
