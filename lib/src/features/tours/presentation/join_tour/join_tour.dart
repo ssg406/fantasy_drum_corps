@@ -26,12 +26,12 @@ class JoinTour extends ConsumerStatefulWidget {
 }
 
 class _JoinTourState extends ConsumerState<JoinTour> {
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   late bool _isPublic;
   late String? _password;
   late String _tourId;
   late String _name;
+  String? _enteredPassword;
+  String? _errorText;
 
   @override
   void initState() {
@@ -61,31 +61,22 @@ class _JoinTourState extends ConsumerState<JoinTour> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Are you ready to join this tour?',
+                        'Are you ready to join the tour $_name?',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       gapH24,
-                      if (_isPublic) ...[
+                      if (!_isPublic) ...[
                         Text(
                           'Enter tour password',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         gapH8,
-                        Form(
-                          key: _formKey,
-                          child: TextFormField(
-                            controller: _passwordController,
-                            validator: (input) {
-                              if (_isPublic) {
-                                return null;
-                              }
-                              return input == _password
-                                  ? null
-                                  : 'Incorrect Password';
-                            },
-                            decoration: const InputDecoration(
-                                icon: Icon(Icons.lock_outline_rounded),
-                                labelText: 'Password'),
+                        TextField(
+                          onChanged: (input) => _enteredPassword = input,
+                          decoration: InputDecoration(
+                            icon: const Icon(Icons.lock_outline_rounded),
+                            labelText: 'Password',
+                            errorText: _errorText,
                           ),
                         ),
                         gapH24,
@@ -95,7 +86,12 @@ class _JoinTourState extends ConsumerState<JoinTour> {
                           PrimaryButton(
                               onPressed: () => _submit(),
                               label: 'JOIN',
-                              isLoading: state.isLoading)
+                              isLoading: state.isLoading),
+                          PrimaryButton(
+                            onPressed: () => context.pop(),
+                            label: 'CANCEL',
+                            isLoading: state.isLoading,
+                          )
                         ],
                       )
                     ],
@@ -109,9 +105,13 @@ class _JoinTourState extends ConsumerState<JoinTour> {
 
   void _submit() async {
     final controller = ref.read(joinTourControllerProvider.notifier);
-    if (_formKey.currentState!.validate()) {
-      await controller.joinTour(tourId: _tourId);
+
+    if (!_isPublic && (_enteredPassword != _password)) {
+      setState(() =>
+          _errorText = 'Please check that you entered the password correctly.');
+      return;
     }
+    await controller.joinTour(tourId: _tourId);
     if (mounted) {
       showAlertDialog(
           context: context,

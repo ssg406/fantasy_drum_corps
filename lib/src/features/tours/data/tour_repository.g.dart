@@ -170,7 +170,7 @@ final watchOwnedToursProvider = AutoDisposeStreamProvider<List<Tour>>.internal(
 );
 
 typedef WatchOwnedToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
-String _$addSelfToTourHash() => r'f731e602a9ee68b6020d71084142b928464ca75c';
+String _$addSelfToTourHash() => r'd5fd8659e925c30cb869abccd6f5e67c615b7e33';
 typedef AddSelfToTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [addSelfToTour].
@@ -184,7 +184,7 @@ class AddSelfToTourFamily extends Family<AsyncValue<void>> {
 
   /// See also [addSelfToTour].
   AddSelfToTourProvider call(
-    dynamic tourId,
+    String tourId,
   ) {
     return AddSelfToTourProvider(
       tourId,
@@ -236,11 +236,94 @@ class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
               AddSelfToTourFamily._allTransitiveDependencies,
         );
 
-  final dynamic tourId;
+  final String tourId;
 
   @override
   bool operator ==(Object other) {
     return other is AddSelfToTourProvider && other.tourId == tourId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tourId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$removeSelfFromTourHash() =>
+    r'2b7a5df3939fdbee6f5415a1d839b78e18528ea1';
+typedef RemoveSelfFromTourRef = AutoDisposeFutureProviderRef<void>;
+
+/// See also [removeSelfFromTour].
+@ProviderFor(removeSelfFromTour)
+const removeSelfFromTourProvider = RemoveSelfFromTourFamily();
+
+/// See also [removeSelfFromTour].
+class RemoveSelfFromTourFamily extends Family<AsyncValue<void>> {
+  /// See also [removeSelfFromTour].
+  const RemoveSelfFromTourFamily();
+
+  /// See also [removeSelfFromTour].
+  RemoveSelfFromTourProvider call(
+    String tourId,
+  ) {
+    return RemoveSelfFromTourProvider(
+      tourId,
+    );
+  }
+
+  @override
+  RemoveSelfFromTourProvider getProviderOverride(
+    covariant RemoveSelfFromTourProvider provider,
+  ) {
+    return call(
+      provider.tourId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'removeSelfFromTourProvider';
+}
+
+/// See also [removeSelfFromTour].
+class RemoveSelfFromTourProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [removeSelfFromTour].
+  RemoveSelfFromTourProvider(
+    this.tourId,
+  ) : super.internal(
+          (ref) => removeSelfFromTour(
+            ref,
+            tourId,
+          ),
+          from: removeSelfFromTourProvider,
+          name: r'removeSelfFromTourProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$removeSelfFromTourHash,
+          dependencies: RemoveSelfFromTourFamily._dependencies,
+          allTransitiveDependencies:
+              RemoveSelfFromTourFamily._allTransitiveDependencies,
+        );
+
+  final String tourId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is RemoveSelfFromTourProvider && other.tourId == tourId;
   }
 
   @override

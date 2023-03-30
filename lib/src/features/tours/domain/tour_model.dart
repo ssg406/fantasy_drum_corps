@@ -27,9 +27,12 @@ class Tour {
 
   static const maxTourSize = 8;
 
-  void addPlayerToTour(String playerId) {
-    if (members.length >= maxTourSize) {
-      throw StateError('A tour cannot have more than $maxTourSize members');
+  void removePlayerFromTour(String playerId) {
+    if (playerId == owner) {
+      throw StateError('Cannot remove owner from tour');
+    }
+    if (!members.remove(playerId)) {
+      throw StateError('Unable to remove player from tour');
     }
   }
 
@@ -43,13 +46,14 @@ class Tour {
       isPublic: json['isPublic'] as bool,
       owner: json['owner'] as String,
       members:
-          (json['members'] as List<dynamic>).map((e) => e as String).toList(),
+      (json['members'] as List<dynamic>).map((e) => e as String).toList(),
       draftDateTime: (json['draftDateTime'] as Timestamp).toDate(),
       password: json['password'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{
         'name': name,
         'description': description,
         'isPublic': isPublic,
@@ -60,14 +64,13 @@ class Tour {
         'draftDateTime': draftDateTime,
       };
 
-  Tour copyWith(
-      {String? tourName,
-      String? description,
-      bool? isPublic,
-      String? owner,
-      List<String>? members,
-      String? password,
-      DateTime? draftDateTime}) {
+  Tour copyWith({String? tourName,
+    String? description,
+    bool? isPublic,
+    String? owner,
+    List<String>? members,
+    String? password,
+    DateTime? draftDateTime}) {
     return Tour(
       id: id,
       name: tourName ?? name,

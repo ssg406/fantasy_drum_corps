@@ -7,7 +7,7 @@ part of 'tour_detail_controller.dart';
 // **************************************************************************
 
 String _$tourDetailControllerHash() =>
-    r'a2e125e860a04b3654e4fdf95a00de2bffa79066';
+    r'48ba67b120243dd735fc847a8b576f5bae01d76f';
 
 /// See also [TourDetailController].
 @ProviderFor(TourDetailController)

@@ -28,7 +28,9 @@ class TourDetail extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(fetchTourProvider(tourId)),
       data: (Tour? tour) {
-        final currentUser = ref.watch(authRepositoryProvider).currentUser;
+        final currentUser = ref
+            .watch(authRepositoryProvider)
+            .currentUser;
         return tour == null
             ? Container()
             : TourDetailContents(tour: tour, user: currentUser!);
@@ -117,17 +119,22 @@ class TourDetailContents extends StatelessWidget {
         if (tour.members.contains(user.uid))
           TextButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () => context
-                .pushNamed(AppRoutes.draft.name, params: {'tid': tour.id!}),
+            onPressed: () =>
+                context
+                    .pushNamed(AppRoutes.draft.name, params: {'tid': tour.id!}),
             label: const Text('Go to Draft'),
           ),
         if (tour.members.contains(user.uid) && tour.owner != user.uid)
           TextButton.icon(
             icon: const Icon(Icons.remove),
-            onPressed: () => debugPrint('leave tour'),
+            onPressed: () =>
+                context.pushNamed(
+                    AppRoutes.leaveTour.name, params: {'tid': tour.id!},
+                    extra: tour),
             label: const Text('Leave Tour'),
           )
       ],
     );
   }
+
 }

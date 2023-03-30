@@ -21,7 +21,8 @@ class ToursRepository {
   static String toursPath = 'tours';
 
   // Return Firestore query with converter for league collection
-  Query<Tour> queryTours() => _database.collection(toursPath).withConverter(
+  Query<Tour> queryTours() =>
+      _database.collection(toursPath).withConverter(
         fromFirestore: (snapshot, _) =>
             Tour.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (league, _) => league.toJson(),
@@ -61,6 +62,16 @@ class ToursRepository {
     });
   }
 
+  Future<void> removePlayerFromTour(
+      {required String tourId, required String playerId}) async {
+    final tourRef = _database.doc(tourPath(tourId));
+    tourRef.get().then((doc) async {
+      final tour = Tour.fromJson(doc.data()!, doc.id);
+      tour.removePlayerFromTour(playerId);
+      await updateTour(tour);
+    });
+  }
+
   // Query either all leagues or only public leagues
   Stream<List<Tour>> watchTours(bool watchPublicOnly) {
     Query<Tour> query = queryTours();
@@ -74,26 +85,28 @@ class ToursRepository {
 
   // Stream tours associated with user
   Stream<List<Tour>> watchJoinedTours(String userId) {
-    return queryTours().snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => doc.data())
-        .where((tour) => tour.members.contains(userId))
-        .toList());
+    return queryTours().snapshots().map((snapshot) =>
+        snapshot.docs
+            .map((doc) => doc.data())
+            .where((tour) => tour.members.contains(userId))
+            .toList());
   }
 
   Stream<List<Tour>> watchOwnTours(String userId) {
-    return queryTours().snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => doc.data())
-        .where((tour) => tour.owner == userId)
-        .toList());
+    return queryTours().snapshots().map((snapshot) =>
+        snapshot.docs
+            .map((doc) => doc.data())
+            .where((tour) => tour.owner == userId)
+            .toList());
   }
 
   // Fetch single tour
   Future<Tour?> fetchTour({required String tourId}) async {
     final ref = _database.collection(toursPath).doc(tourId).withConverter(
-          fromFirestore: (snapshot, _) =>
-              Tour.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (tour, _) => tour.toJson(),
-        );
+      fromFirestore: (snapshot, _) =>
+          Tour.fromJson(snapshot.data()!, snapshot.id),
+      toFirestore: (tour, _) => tour.toJson(),
+    );
     final snapshot = await ref.get();
     return snapshot.data();
   }
@@ -113,7 +126,9 @@ Future<Tour?> fetchTour(FetchTourRef ref, String tourId) =>
 
 @riverpod
 Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('Unable to add null user to tour');
   }
@@ -122,7 +137,9 @@ Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {
 
 @riverpod
 Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('Unable to add null user to tour');
   }
@@ -130,14 +147,28 @@ Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
 }
 
 @riverpod
-Future<void> addSelfToTour(AddSelfToTourRef ref, tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+Future<void> addSelfToTour(AddSelfToTourRef ref, String tourId) {
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('Unable to add null user to tour');
   }
   return ref
       .read(toursRepositoryProvider)
       .addPlayerToTour(tourId: tourId, playerId: user.uid);
+}
+
+@riverpod
+Future<void> removeSelfFromTour(RemoveSelfFromTourRef ref, String tourId) {
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
+  if (user == null) {
+    throw AssertionError('Unable to add null user to tour');
+  }
+  return ref.read(toursRepositoryProvider).removePlayerFromTour(
+      tourId: tourId, playerId: user.uid);
 }
 
 @riverpod
