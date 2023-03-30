@@ -63,7 +63,6 @@ class _NavShellState extends ConsumerState<NavShell> {
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(uiShellControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
-    final state = ref.watch(uiShellControllerProvider);
     return Scaffold(
       key: _scaffoldStateKey,
       appBar: AppBar(
@@ -78,7 +77,13 @@ class _NavShellState extends ConsumerState<NavShell> {
                 icon: const Icon(Icons.menu),
                 onPressed: () => _scaffoldStateKey.currentState!.openDrawer(),
               ),
-              const LogoText(),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => context.goNamed(AppRoutes.dashboard.name),
+                  child: const LogoText(),
+                ),
+              ),
               GestureDetector(
                 onTapDown: (tapDetails) =>
                     _showUserMenu(tapDetails.globalPosition),
@@ -176,7 +181,7 @@ class _NavShellState extends ConsumerState<NavShell> {
           ],
         ),
       ),
-      body: state.isLoading ? const CircularProgressIndicator() : widget.child,
+      body: widget.child,
     );
   }
 

@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// Dashboard controller
-/// TODO refactor into UI shell controller only
-class UiShellController extends AutoDisposeAsyncNotifier<void> {
+part 'ui_shell_controller.g.dart';
+
+@riverpod
+class UiShellController extends _$UiShellController {
   @override
   FutureOr<void> build() {}
 
@@ -13,7 +14,3 @@ class UiShellController extends AutoDisposeAsyncNotifier<void> {
     return ref.read(authRepositoryProvider).signOut();
   }
 }
-
-final uiShellControllerProvider =
-    AutoDisposeAsyncNotifierProvider<UiShellController, void>(
-        UiShellController.new);

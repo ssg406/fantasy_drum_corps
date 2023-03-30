@@ -8,7 +8,9 @@ part of 'tour_repository.dart';
 
 String _$firebaseFirestoreHash() => r'bcd0de65a93e6108353c348ea0c88ca8795a64ae';
 
-/// See also [firebaseFirestore].
+/// Generated Riverpod providers
+///
+/// Copied from [firebaseFirestore].
 @ProviderFor(firebaseFirestore)
 final firebaseFirestoreProvider =
     AutoDisposeProvider<FirebaseFirestore>.internal(
@@ -140,7 +142,7 @@ class FetchTourProvider extends AutoDisposeFutureProvider<Tour?> {
   }
 }
 
-String _$deleteTourHash() => r'2fd82ce27683745991d21b98bd7f710aa9fef98c';
+String _$deleteTourHash() => r'9c022271495a96254e9382a1998eb9990b29ff87';
 typedef DeleteTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [deleteTour].

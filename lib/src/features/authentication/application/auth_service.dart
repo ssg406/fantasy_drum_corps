@@ -28,6 +28,7 @@ class AuthService {
     if (credential.user != null) {
       final player = Player(playerId: credential.user!.uid);
       _playersRepo.addPlayer(player);
+      credential.user?.sendEmailVerification();
     }
   }
 
