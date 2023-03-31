@@ -12,7 +12,7 @@ class PlayerWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Avatar(size: 15, avatarString: avatarString),
+        Avatar(size: 45, avatarString: avatarString),
         Text(
           name ?? 'Anonymous',
           style: const TextStyle(

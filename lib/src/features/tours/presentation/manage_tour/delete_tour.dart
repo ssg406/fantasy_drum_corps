@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour_controller.dart';
@@ -16,20 +17,11 @@ class DeleteTour extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Delete Tour',
-          style: Theme
-              .of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        const ItemLabel(label: 'Delete Tour'),
         gapH8,
         Text(
           'Deleting a tour is irreversible. Please be sure you want to proceed!',
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyLarge,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         gapH16,
         ElevatedButton(
@@ -44,22 +36,11 @@ class DeleteTour extends ConsumerWidget {
             });
           },
           style: ElevatedButton.styleFrom(
-              backgroundColor:
-              Theme
-                  .of(context)
-                  .colorScheme
-                  .errorContainer),
+              backgroundColor: Theme.of(context).colorScheme.errorContainer),
           child: Text(
             'DELETE TOUR',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .onErrorContainer),
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onErrorContainer),
           ),
         ),
       ],
@@ -70,7 +51,8 @@ class DeleteTour extends ConsumerWidget {
     final result = await showAlertDialog(
       context: context,
       title: 'Delete Tour',
-      content: 'Are you sure you want to delete the tour? This option cannot be undone.',
+      content:
+          'Are you sure you want to delete the tour? This option cannot be undone.',
       defaultActionText: 'Delete',
       cancelActionText: 'Cancel',
     );

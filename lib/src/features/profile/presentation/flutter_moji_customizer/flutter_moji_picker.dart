@@ -25,7 +25,10 @@ class FlutterMojiPicker extends ConsumerWidget {
             child: Center(
               child: Column(
                 children: [
-                  FluttermojiCircleAvatar(),
+                  FluttermojiCircleAvatar(
+                    radius: 100,
+                    backgroundColor: theme.colorScheme.primary,
+                  ),
                   gapH64,
                   FluttermojiCustomizer(
                     scaffoldHeight: MediaQuery.of(context).size.height * 0.8,

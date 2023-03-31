@@ -1,8 +1,9 @@
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class ManageDraft extends StatelessWidget {
@@ -14,40 +15,30 @@ class ManageDraft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          'Manage Draft',
-          style: Theme
-              .of(context)
-              .textTheme
-              .titleMedium,
-        ),
-        gapH8,
-        Text(
-          'Use the links below to get to initiate the draft process and get to the draft. Other players will be notified and the countdown will be started.',
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyLarge,
-        ),
-        gapH8,
+        const ItemLabel(label: 'Manage Draft'),
+        gapW32,
         Row(
           children: [
-            PrimaryButton(
-              onPressed: () => debugPrint('start draft'),
-              isLoading: false,
-              label: 'START DRAFT',
+            Tooltip(
+              message: 'Notify tour members of the draft and begin countdown.',
+              child: TextButton.icon(
+                onPressed: () => debugPrint('start draft'),
+                icon: const FaIcon(FontAwesomeIcons.shieldHalved),
+                label: const Text('START DRAFT'),
+              ),
             ),
-            PrimaryButton(
-              onPressed: () =>
-                  context.goNamed(
-                    AppRoutes.draft.name,
-                    params: {'tid': tourId},
-                  ),
-              isLoading: false,
-              label: 'GO TO DRAFT',
+            gapW24,
+            Tooltip(
+              child: TextButton.icon(
+                onPressed: () => context.goNamed(
+                  AppRoutes.draft.name,
+                  params: {'tid': tourId},
+                ),
+                icon: const FaIcon(FontAwesomeIcons.circlePlay),
+                label: const Text('GO TO DRAFT PAGE'),
+              ),
             ),
           ],
         ),

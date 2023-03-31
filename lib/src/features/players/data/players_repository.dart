@@ -63,7 +63,7 @@ class PlayersRepository {
 
     if (player != null) {
       debugPrint('fetched player in setPhotoUrl: $player');
-      updatePlayer(player: player.copyWith(avatarString: avatarString ?? ''));
+      updatePlayer(player: player.copyWith(avatarString: avatarString));
     }
   }
 

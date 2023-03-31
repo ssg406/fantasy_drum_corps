@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -8,7 +9,6 @@ import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/delete_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_draft.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_members.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,20 +45,15 @@ class ManageTourContents extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    text: 'Tour: ',
-                    style: Theme.of(context).textTheme.titleLarge,
-                    children: [
-                      TextSpan(
-                        text: tour.name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(color: AppColors.customGreen),
-                      )
-                    ],
-                  ),
+                Row(
+                  children: [
+                    const ItemLabel(label: 'Tour Name'),
+                    gapW32,
+                    Text(
+                      tour.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
                 ),
                 gapH16,
                 ManageMembers(

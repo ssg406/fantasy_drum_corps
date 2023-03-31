@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/application/player_service.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'details_card_controller.g.dart';
@@ -22,7 +23,7 @@ class DetailsCardController extends _$DetailsCardController {
     if (user != null) {
       return ref
           .read(playersRepositoryProvider)
-          .setAvatarString(playerId: user.uid);
+          .setAvatarString(playerId: user.uid, avatarString: defaultAvatar);
     }
   }
 

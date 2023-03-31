@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
@@ -14,15 +15,10 @@ class TourOwner extends ConsumerWidget {
     return AsyncValueWidget(
         value: ref.watch(playerStreamByIdProvider(ownerId)),
         data: (Player? player) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          return Row(
             children: [
-              Text(
-                'Tour Owner',
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.inversePrimary),
-              ),
-              gapH8,
+              const ItemLabel(label: 'Tour Owner'),
+              gapW32,
               Text(
                 player?.displayName ?? 'Unknown Owner',
                 style: Theme.of(context).textTheme.bodyLarge,

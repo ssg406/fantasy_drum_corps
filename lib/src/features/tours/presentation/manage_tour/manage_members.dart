@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/player_widget.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
@@ -25,14 +26,10 @@ class ManageMembers extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(fetchTourPlayersProvider(members)),
       data: (List<Player> players) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Row(
           children: [
-            Text(
-              'Member Management',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            gapH16,
+            const ItemLabel(label: 'Member Management'),
+            gapW32,
             Row(
               children: [
                 for (final player in players) ...[
@@ -65,6 +62,7 @@ class ManageMembers extends ConsumerWidget {
                         ),
                     ],
                   ),
+                  // Gap before next player widget
                   gapW8,
                 ],
               ],

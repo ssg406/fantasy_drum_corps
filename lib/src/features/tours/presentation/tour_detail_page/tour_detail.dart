@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -61,10 +62,21 @@ class TourDetailContents extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TitledSectionCard(
-                title: name,
+                title: 'Tour Detail',
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        const ItemLabel(label: 'Tour Name'),
+                        gapW32,
+                        Text(
+                          name,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                    gapH24,
                     TourOwner(ownerId: tour.owner),
                     gapH24,
                     TourVisibility(isPublic: isPublic),

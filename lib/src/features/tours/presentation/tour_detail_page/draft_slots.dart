@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
@@ -7,22 +8,15 @@ class DraftSlots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          'Slots Available',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Theme.of(context).colorScheme.inversePrimary),
-        ),
-        gapH8,
+        const ItemLabel(label: 'Slots Available'),
+        gapW32,
         Text(
           _getSlotsText(slots),
           style: Theme.of(context)
               .textTheme
-              .bodyMedium!
+              .bodyLarge!
               .copyWith(color: _getSlotsColor(slots)),
         ),
       ],
