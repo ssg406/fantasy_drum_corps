@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/profile/presentation/delete_account_card.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/details_card/details_card.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/email_card/email_card.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/password_card/password_card.dart';
@@ -14,28 +15,28 @@ class UserProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(profileScreenControllerProvider.notifier);
-    final isGoogleAuth = controller.getIsGoogleAuth();
-      return SingleChildScrollView(
-        child: ResponsiveCenter(
-          child: Padding(
-            padding: pagePadding,
-            child: Column(
-              children: [
-                const DetailsCard(),
+    final isGoogleAuth = controller.getIsOAuthAccount();
+    return SingleChildScrollView(
+      child: ResponsiveCenter(
+        child: Padding(
+          padding: pagePadding,
+          child: Column(
+            children: [
+              const DetailsCard(),
+              gapH24,
+              const SponsoredCorpsCard(),
+              gapH24,
+              if (!isGoogleAuth) ...[
+                const EmailCard(),
                 gapH24,
-                const SponsoredCorpsCard(),
-                gapH24,
-                if (!isGoogleAuth)
-                ...[
-                  const EmailCard(),
-                  gapH24,
-                  const PasswordCard(),
-                ],
+                const PasswordCard(),
+                gapH24
               ],
-            ),
+              const DeleteAccountCard(),
+            ],
           ),
         ),
-      );
-
+      ),
+    );
   }
 }

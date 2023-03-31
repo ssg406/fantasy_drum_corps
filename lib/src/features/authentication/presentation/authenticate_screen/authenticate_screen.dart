@@ -2,6 +2,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
@@ -54,9 +55,9 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     }
   }
 
-  void _submitSSO() async {
+  void _submitSSO(OAuthSignInProvider provider) async {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
-    await controller.authenticateWithGoogle();
+    await controller.authenticateWithOAuthProvider(provider);
   }
 
   void _emailEditingComplete() {
@@ -111,7 +112,17 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                     _formType.title,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  gapH32,
+                  gapH16,
+                  Row(
+                    children: [
+                      Text(_formType.secondaryFormText),
+                      PrimaryTextButton(
+                          isLoading: state.isLoading,
+                          onPressed: _toggleFormType,
+                          label: _formType.toggleFormButtonText),
+                    ],
+                  ),
+                  gapH16,
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -147,23 +158,31 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                   PrimaryButton(
                       isLoading: state.isLoading,
                       onPressed: _submit,
-                      label: 'Sign In'),
-                  gapH48,
-                  TextButton.icon(
-                    onPressed: _submitSSO,
-                    icon: const FaIcon(FontAwesomeIcons.google),
-                    label: Text('Continue with Google'.hardcoded),
-                  ),
-                  gapH20,
-                  const Divider(thickness: 1.0),
+                      label: _formType.submitButtonText),
+                  gapH24,
+                  // const Divider(thickness: 1.0),
+                  gapH24,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_formType.secondaryFormText),
-                      PrimaryTextButton(
-                          isLoading: state.isLoading,
-                          onPressed: _toggleFormType,
-                          label: _formType.toggleFormButtonText),
+                      TextButton.icon(
+                        onPressed: () => _submitSSO(OAuthSignInProvider.google),
+                        icon: const FaIcon(FontAwesomeIcons.google),
+                        label: Text(
+                          'Continue with Google',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      ),
+                      gapW8,
+                      TextButton.icon(
+                        onPressed: () =>
+                            _submitSSO(OAuthSignInProvider.facebook),
+                        icon: const FaIcon(FontAwesomeIcons.facebook),
+                        label: Text(
+                          'Continue with Facebook',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      )
                     ],
                   ),
                 ],

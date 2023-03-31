@@ -7,14 +7,14 @@ class Player {
     this.displayName,
     this.about,
     this.selectedCorps,
-    this.photoUrl,
+    this.avatarString,
   });
 
   final String? playerId;
   final String? displayName;
   final String? about;
   final DrumCorps? selectedCorps;
-  final String? photoUrl;
+  final String? avatarString;
 
   factory Player.fromJson(Map<String, dynamic> json, String playerId) {
     return Player(
@@ -24,7 +24,7 @@ class Player {
       selectedCorps: json['selectedCorps'] == null
           ? null
           : DrumCorps.values.byName(json['selectedCorps']),
-      photoUrl: json['photoUrl'] as String?,
+      avatarString: json['avatarString'] as String?,
     );
   }
 
@@ -34,7 +34,7 @@ class Player {
       'displayName': displayName,
       'about': about,
       'selectedCorps': selectedCorps?.name,
-      'photoUrl': photoUrl,
+      'avatarString': avatarString,
     };
   }
 
@@ -42,14 +42,14 @@ class Player {
     String? displayName,
     String? about,
     DrumCorps? selectedCorps,
-    String? photoUrl,
+    String? avatarString,
   }) {
     return Player(
       playerId: playerId,
       displayName: displayName ?? this.displayName,
       about: about ?? this.about,
       selectedCorps: selectedCorps ?? this.selectedCorps,
-      photoUrl: photoUrl ?? this.photoUrl,
+      avatarString: avatarString ?? this.avatarString,
     );
   }
 
@@ -58,10 +58,10 @@ class Player {
       'displayName: $displayName, '
       'about: $about, '
       'selectedCorps: $selectedCorps, '
-      'photoUrl: $photoUrl)';
+      'avatarString: $avatarString)';
 
   @override
-  int get hashCode => hash4(playerId, displayName, selectedCorps, photoUrl);
+  int get hashCode => hash4(playerId, displayName, selectedCorps, avatarString);
 
   @override
   bool operator ==(Object other) {
@@ -72,6 +72,6 @@ class Player {
         other.displayName == displayName &&
         other.about == about &&
         other.selectedCorps == selectedCorps &&
-        other.photoUrl == photoUrl;
+        other.avatarString == avatarString;
   }
 }

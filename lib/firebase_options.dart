@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '865655864882',
     projectId: 'fantasy-drum-corps-54ddc',
     storageBucket: 'fantasy-drum-corps-54ddc.appspot.com',
-    iosClientId: '865655864882-3c4pqfapdioutpgmn0aecfg2t6mmlkq2.apps.googleusercontent.com',
+    iosClientId:
+        '865655864882-3c4pqfapdioutpgmn0aecfg2t6mmlkq2.apps.googleusercontent.com',
     iosBundleId: 'com.fantasydrumcorps.fantasyDrumCorps',
   );
 }

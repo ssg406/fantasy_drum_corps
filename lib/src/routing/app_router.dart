@@ -6,6 +6,7 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/standin
 import 'package:fantasy_drum_corps/src/features/competition/presentation/subcaption_results.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
+import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
@@ -51,6 +52,7 @@ enum AppRoutes {
   joinTour,
   leaveTour,
   manageTour,
+  createFluttermoji,
 }
 
 @riverpod
@@ -254,6 +256,16 @@ GoRouter goRouter(GoRouterRef ref) {
               fullscreenDialog: true,
               child: const UserProfile(),
             ),
+            routes: [
+              GoRoute(
+                path: ':uid/createAvatar',
+                name: AppRoutes.createFluttermoji.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
+                  child: FlutterMojiPicker(playerId: state.params['uid']!),
+                ),
+              ),
+            ],
           ),
           GoRoute(
             path: '/about',

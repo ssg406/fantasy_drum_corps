@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell_controller.dart';
@@ -88,30 +89,20 @@ class _NavShellState extends ConsumerState<NavShell> {
                 onTapDown: (tapDetails) =>
                     _showUserMenu(tapDetails.globalPosition),
                 child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: AsyncValueWidget(
-                      showLoading: false,
-                      value: ref.watch(playerStreamProvider),
-                      data: (Player? player) {
-                        return player == null
-                            ? Container()
-                            : CircleAvatar(
-                                backgroundImage: player.photoUrl != null
-                                    ? NetworkImage(player.photoUrl!)
-                                    : null,
-                                backgroundColor:
-                                    Theme.of(context).primaryColorDark,
-                                child: player.photoUrl == null
-                                    ? Icon(
-                                        Icons.account_circle,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .surfaceVariant,
-                                      )
-                                    : null,
-                              );
-                      },
-                    )),
+                  cursor: SystemMouseCursors.click,
+                  child: AsyncValueWidget(
+                    showLoading: false,
+                    value: ref.watch(playerStreamProvider),
+                    data: (Player? player) {
+                      return player == null
+                          ? Container()
+                          : Avatar(
+                              size: 40.0,
+                              avatarString: player.avatarString,
+                            );
+                    },
+                  ),
+                ),
               ),
             ],
           ),

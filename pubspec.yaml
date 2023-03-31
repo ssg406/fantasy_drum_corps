@@ -38,6 +38,9 @@ dependencies:
   riverpod_annotation: ^2.0.2
   quiver: ^3.2.1
   build_runner: ^2.3.3
+  fluttermoji: ^1.0.2
+  flutter_svg: ^2.0.4
+  get: ^4.6.5
 
 
 dev_dependencies:

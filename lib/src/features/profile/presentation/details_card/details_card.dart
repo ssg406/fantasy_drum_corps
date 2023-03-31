@@ -7,14 +7,11 @@ import 'package:fantasy_drum_corps/src/features/authentication/presentation/auth
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/details_card/details_card_controller.dart';
+import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
-import 'package:file_picker/_internal/file_picker_web.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mime/mime.dart';
 
 /// [DetailsCard] presents a UI that allows the user to change their display
 /// name and update or remove their profile image
@@ -83,9 +80,12 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
                   cursor: SystemMouseCursors.click,
                   child: state.isLoading
                       ? const CircularProgressIndicator()
-                      : Avatar(
-                          radius: 50,
-                          photoUrl: widget.player.photoUrl,
+                      : Tooltip(
+                          message: 'Edit Avatar',
+                          child: Avatar(
+                            size: 100,
+                            avatarString: widget.player.avatarString,
+                          ),
                         ),
                 ),
               ),
@@ -137,18 +137,19 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
       position: RelativeRect.fromLTRB(left, top, right, bottom),
       items: [
         PopupMenuItem(
-          onTap: _getImageFile,
+          onTap: () => context.pushNamed(AppRoutes.createFluttermoji.name,
+              params: {'uid': widget.player.playerId!}),
           child: const ListTile(
             leading: Icon(Icons.upload),
-            title: Text('Upload Image'),
+            title: Text('Create Avatar'),
           ),
         ),
         PopupMenuItem(
-          enabled: widget.player.photoUrl != null,
-          onTap: _clearProfileImage,
+          enabled: widget.player.avatarString != null,
+          onTap: _clearUserAvatar,
           child: const ListTile(
             leading: Icon(Icons.delete_forever),
-            title: Text('Clear Image'),
+            title: Text('Clear Avatar'),
           ),
         ),
       ],
@@ -164,55 +165,8 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
   }
 
   // Clear the existing profile image from the application
-  Future<void> _clearProfileImage() async {
+  Future<void> _clearUserAvatar() async {
     final controller = ref.read(detailsCardControllerProvider.notifier);
-    await controller.clearUploadedImage(widget.player.photoUrl!);
-  }
-
-  // Display file upload dialog to user and retrieve selected file
-  Future<void> _getImageFile() async {
-    FilePickerResult? result;
-    if (kIsWeb) {
-      result = await FilePickerWeb.platform.pickFiles();
-    } else {
-      result = await FilePicker.platform.pickFiles();
-    }
-    if (result == null) {
-      return;
-    }
-
-    if (!_validateImage(result)) {
-      _showImageErrorDialog();
-      return;
-    }
-    final controller = ref.read(detailsCardControllerProvider.notifier);
-    await controller.uploadAvatarImage(result);
-  }
-
-  // Check file is an image and under the given max size
-  bool _validateImage(FilePickerResult result) {
-    final bytes = result.files.first.bytes;
-    final size = result.files.single.size;
-    final mimeType = lookupMimeType('', headerBytes: bytes) ?? '';
-    return mimeType.startsWith('image') && size < imageMaxSize;
-  }
-
-  // Inform the user the file has not been accepted for upload
-  void _showImageErrorDialog() async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Invalid File'),
-            content: const Text(
-                'Please make sure you have selected a valid image under 5MB in size'),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text('Okay'),
-              )
-            ],
-          );
-        });
+    await controller.clearUserAvatar();
   }
 }

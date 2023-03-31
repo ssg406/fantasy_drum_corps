@@ -28,7 +28,8 @@ class TourMembers extends ConsumerWidget {
               children: [
                 for (final player in players) ...[
                   PlayerWidget(
-                      name: player.displayName, photoUrl: player.photoUrl),
+                      name: player.displayName,
+                      avatarString: player.avatarString),
                   gapW8,
                 ]
               ],

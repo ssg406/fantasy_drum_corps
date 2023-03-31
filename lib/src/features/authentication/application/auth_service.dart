@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,18 @@ class AuthService {
 
   final AuthRepository _authRepo;
   final PlayersRepository _playersRepo;
+
+  // Remove user and associated data
+  Future<void> deleteCurrentUser() async {
+    final user = _authRepo.currentUser;
+    if (user != null) {
+      Future.wait([
+        _playersRepo.setAvatarString(playerId: user.uid),
+        _playersRepo.setDisplayName(playerId: user.uid, displayName: 'Player'),
+      ]);
+      // user.delete();
+    }
+  }
 
   // Create a new user and save to Firebase auth and player repository
   Future<void> registerWithEmailAndPassword({
@@ -38,11 +51,11 @@ class AuthService {
   }
 
   // Sign in with Google
-  Future<void> registerWithGoogle() async {
-    final credential = await _authRepo.signInWithGoogle();
+  Future<void> registerWithOAuthProvider(OAuthSignInProvider provider) async {
+    final credential = await _authRepo.signInWithOAuthProvider(provider);
 
     if (credential.user == null) {
-      throw StateError('No credential was returned from Google sign in');
+      throw StateError('No credential was returned from SSO provider');
     }
 
     // Check if player already exists
@@ -51,9 +64,9 @@ class AuthService {
     // Add new players to PlayersRepository, get existing display name and photoURL from Google
     if (existingPlayer == null) {
       final player = Player(
-          playerId: credential.user!.uid,
-          displayName: credential.user?.displayName,
-          photoUrl: credential.user?.photoURL);
+        playerId: credential.user!.uid,
+        displayName: credential.user?.displayName,
+      );
       _playersRepo.addPlayer(player);
     }
   }
@@ -65,7 +78,8 @@ class AuthService {
       throw AssertionError('User cannot be null when checking auth provider');
     }
     for (final userInfo in user.providerData) {
-      if (userInfo.providerId == GoogleAuthProvider.PROVIDER_ID) {
+      if (userInfo.providerId == GoogleAuthProvider.PROVIDER_ID ||
+          userInfo.providerId == FacebookAuthProvider.PROVIDER_ID) {
         return true;
       }
     }

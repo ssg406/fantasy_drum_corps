@@ -5,11 +5,16 @@ part 'profile_screen_controller.g.dart';
 
 @riverpod
 class ProfileScreenController extends _$ProfileScreenController {
-
   @override
   FutureOr<void> build() {}
 
-  bool getIsGoogleAuth() {
+  bool getIsOAuthAccount() {
     return ref.read(authServiceProvider).getUserProvider();
+  }
+
+  Future<void> deleteAccount() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+        () => ref.read(authServiceProvider).deleteCurrentUser());
   }
 }

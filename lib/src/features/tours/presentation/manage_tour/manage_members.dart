@@ -40,7 +40,7 @@ class ManageMembers extends ConsumerWidget {
                     children: [
                       PlayerWidget(
                         name: player.displayName,
-                        photoUrl: player.photoUrl,
+                        avatarString: player.avatarString,
                       ),
                       if (player.playerId != owner)
                         Tooltip(

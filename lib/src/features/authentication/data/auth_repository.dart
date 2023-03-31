@@ -1,6 +1,5 @@
+import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repository.g.dart';
@@ -58,27 +57,19 @@ class AuthRepository {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    if (kIsWeb) {
-      GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      googleProvider.addScope('email');
-      return await _auth.signInWithPopup(googleProvider);
-    } else {
-      // Trigger authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential> signInWithOAuthProvider(
+      OAuthSignInProvider provider) async {
+    switch (provider) {
+      case OAuthSignInProvider.google:
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        return await _auth.signInWithPopup(googleProvider);
 
-      // Obtain auth details from request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      // Create credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      // Complete authentication with firebase
-      return await _auth.signInWithCredential(credential);
+      case OAuthSignInProvider.facebook:
+        FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+        // facebookProvider.addScope('email');
+        // facebookProvider.addScope('user_profile');
+        return await _auth.signInWithPopup(facebookProvider);
     }
   }
 

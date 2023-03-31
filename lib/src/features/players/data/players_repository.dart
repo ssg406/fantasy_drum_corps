@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'players_repository.g.dart';
@@ -31,43 +32,39 @@ class PlayersRepository {
         .set(player.toJson());
   }
 
-  Future<void> updatePlayer({required Player player}) async {
+  Future<void> updatePlayer({required Player player}) {
+    debugPrint('in updatePlayer received: $player');
     return _db.doc(playerPath(player.playerId!)).update(player.toJson());
   }
 
+  Future<void> deletePlayer(String playerId) {
+    return _db.doc(playerPath(playerId)).delete();
+  }
+
   Future<void> setDisplayName(
-      {required String playerId, required String displayName}) async {
-    final playerRef = _db.doc(playerPath(playerId));
-    playerRef.get().then((doc) async {
-      final player = Player.fromJson(doc.data()!, doc.id);
-      await updatePlayer(player: player.copyWith(displayName: displayName));
-    });
+      {required String playerId, required String? displayName}) async {
+    final player = await fetchPlayer(playerId);
+    if (player != null) {
+      updatePlayer(player: player.copyWith(displayName: displayName));
+    }
   }
 
   Future<void> setSelectedCorps(
       {required String playerId, required DrumCorps corps}) async {
-    final playerRef = _db.doc(playerPath(playerId));
-    playerRef.get().then((doc) async {
-      final player = Player.fromJson(doc.data()!, doc.id);
-      await updatePlayer(player: player.copyWith(selectedCorps: corps));
-    });
+    final player = await fetchPlayer(playerId);
+    if (player != null) {
+      updatePlayer(player: player.copyWith(selectedCorps: corps));
+    }
   }
 
-  Future<void> setPhotoUrl(
-      {required String playerId, required String url}) async {
-    final playerRef = _db.doc(playerPath(playerId));
-    playerRef.get().then((doc) async {
-      final player = Player.fromJson(doc.data()!, doc.id);
-      await updatePlayer(player: player.copyWith(photoUrl: url));
-    });
-  }
+  Future<void> setAvatarString(
+      {required String playerId, String? avatarString}) async {
+    final player = await fetchPlayer(playerId);
 
-  Future<void> clearPhotoUrl({required String playerId}) async {
-    final playerRef = _db.doc(playerPath(playerId));
-    playerRef.get().then((doc) async {
-      final player = Player.fromJson(doc.data()!, doc.id);
-      await updatePlayer(player: player.copyWith(photoUrl: null));
-    });
+    if (player != null) {
+      debugPrint('fetched player in setPhotoUrl: $player');
+      updatePlayer(player: player.copyWith(avatarString: avatarString ?? ''));
+    }
   }
 
   Future<Player?> fetchPlayer(String playerId) async {
@@ -134,24 +131,4 @@ Future<void> setSelectedCorps(SetSelectedCorpsRef ref,
   return ref
       .watch(playersRepositoryProvider)
       .setSelectedCorps(playerId: user.uid, corps: selectedCorps);
-}
-
-@riverpod
-Future<void> setPhotoUrl(SetPhotoUrlRef ref, {required String url}) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null when setting display name');
-  }
-  return ref
-      .watch(playersRepositoryProvider)
-      .setPhotoUrl(playerId: user.uid, url: url);
-}
-
-@riverpod
-Future<void> clearPhotoUrl(ClearPhotoUrlRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null when setting display name');
-  }
-  return ref.watch(playersRepositoryProvider).clearPhotoUrl(playerId: user.uid);
 }

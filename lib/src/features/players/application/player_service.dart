@@ -21,13 +21,13 @@ class PlayerService {
         playerId: user.uid, displayName: displayName);
   }
 
-  Future<void> setPhotoUrl(String photoUrl) {
+  Future<void> setAvatarString(String avatarString) {
     final user = _authRepo.currentUser;
     if (user == null) {
-      throw AssertionError(
-          'Current user cannot be null when setting photo URL');
+      throw AssertionError('Current user cannot be null when setting avatar');
     }
-    return _playerRepo.setPhotoUrl(playerId: user.uid, url: photoUrl);
+    return _playerRepo.setAvatarString(
+        playerId: user.uid, avatarString: avatarString);
   }
 
   Future<void> setSelectedCorps(DrumCorps selectedCorps) {
@@ -38,15 +38,6 @@ class PlayerService {
     }
     return _playerRepo.setSelectedCorps(
         playerId: user.uid, corps: selectedCorps);
-  }
-
-  Future<void> clearPhotoUrl() {
-    final user = _authRepo.currentUser;
-    if (user == null) {
-      throw AssertionError(
-          'Current user cannot be null when setting photo URL');
-    }
-    return _playerRepo.clearPhotoUrl(playerId: user.uid);
   }
 }
 

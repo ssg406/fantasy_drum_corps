@@ -1,0 +1,1 @@
+enum OAuthSignInProvider { google, facebook }

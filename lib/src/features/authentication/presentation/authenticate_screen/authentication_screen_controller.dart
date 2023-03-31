@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/application/auth_service.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,7 +37,10 @@ class AuthenticateScreenController extends _$AuthenticateScreenController {
     }
   }
 
-  Future<void> authenticateWithGoogle() async {
-    ref.read(authServiceProvider).registerWithGoogle();
+  Future<void> authenticateWithOAuthProvider(
+      OAuthSignInProvider provider) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() =>
+        ref.read(authServiceProvider).registerWithOAuthProvider(provider));
   }
 }
