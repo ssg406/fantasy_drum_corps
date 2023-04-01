@@ -17,9 +17,9 @@ class TitledSectionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title, style: Theme.of(context).textTheme.titleLarge),
-            gapH20,
+            gapH16,
             const Divider(thickness: 0.5),
-            gapH20,
+            gapH16,
             child,
           ],
         ),

@@ -125,34 +125,27 @@ class _NavShellState extends ConsumerState<NavShell> {
               ),
             ),
             ListTile(
-              leading: const FaIcon(
-                FontAwesomeIcons.gaugeHigh,
-              ),
+              leading: const FaIcon(FontAwesomeIcons.gaugeHigh),
               title: const Text('Dashboard'),
               onTap: () => _onDrawerClick(AppRoutes.dashboard),
             ),
-            ExpansionTile(
-              leading: const FaIcon(
-                FontAwesomeIcons.users,
-              ),
-              title: const Text('Tours'),
-              children: [
-                ListTile(
-                  title: const Text('Create Tour'),
-                  onTap: () => _onDrawerClick(AppRoutes.createTour),
-                ),
-                ListTile(
-                  title: const Text('My Tours'),
-                  onTap: () => _onDrawerClick(AppRoutes.myTours),
-                ),
-                ListTile(
-                  title: const Text('Join Tour'),
-                  onTap: () => _onDrawerClick(AppRoutes.searchTours),
-                ),
-              ],
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.circlePlus),
+              title: const Text('Create Tour'),
+              onTap: () => _onDrawerClick(AppRoutes.createTour),
+            ),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.users),
+              title: const Text('My Tours'),
+              onTap: () => _onDrawerClick(AppRoutes.myTours),
+            ),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.magnifyingGlassPlus),
+              title: const Text('Find Tours'),
+              onTap: () => _onDrawerClick(AppRoutes.searchTours),
             ),
             const ExpansionTile(
-              leading: FaIcon(FontAwesomeIcons.info),
+              leading: FaIcon(FontAwesomeIcons.circleInfo),
               title: Text('About'),
               children: [
                 ListTile(

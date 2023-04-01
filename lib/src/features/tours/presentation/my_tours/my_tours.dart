@@ -37,7 +37,7 @@ class _MyToursState extends ConsumerState<MyTours> {
                 value: ref.watch(watchJoinedToursProvider),
                 data: (List<Tour> tours) => MyToursContents(
                   myTours: tours,
-                  title: 'Joined Tours',
+                  title: 'My Tours',
                 ),
               ),
             ],
@@ -66,7 +66,7 @@ class MyToursContents extends StatelessWidget {
         TitledSectionCard(
           title: title,
           child: SizedBox(
-            height: 150,
+            height: 200,
             child: myTours.isEmpty
                 ? const EmptyTourContainerActions()
                 : ListView.builder(

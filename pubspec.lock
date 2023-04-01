@@ -893,6 +893,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.6"
+  round_icon:
+    dependency: "direct main"
+    description:
+      name: round_icon
+      sha256: ed3b35f418d24a38ed500a21d489b883907c4c7f32aaa5eba201d7b4b5fcb045
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   rxdart:
     dependency: transitive
     description:

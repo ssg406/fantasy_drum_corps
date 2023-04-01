@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:round_icon/round_icon.dart';
 
 class CustomTourTile extends ConsumerWidget {
   const CustomTourTile({Key? key, required this.tour}) : super(key: key);
@@ -20,25 +22,50 @@ class CustomTourTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authRepositoryProvider).currentUser;
-    return SizedBox(
-      width: 250,
-      height: 250,
-      child: ListTile(
-        mouseCursor: SystemMouseCursors.click,
-        onTap: () => context
-            .pushNamed(AppRoutes.tourDetail.name, params: {'tid': tour.id!}),
-        leading: Tooltip(
-          message: tour.isPublic ? 'Public Tour' : 'Private Tour',
-          child: tour.isPublic
-              ? const FaIcon(FontAwesomeIcons.lock)
-              : const FaIcon(FontAwesomeIcons.lockOpen),
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: cardPadding,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Tooltip(
+                message: tour.isPublic ? 'Public Tour' : 'Private Tour',
+                child: RoundIcon(
+                    size: 30.0,
+                    padding: 13.0,
+                    icon: tour.isPublic
+                        ? FontAwesomeIcons.lockOpen
+                        : FontAwesomeIcons.lock,
+                    backgroundColor: theme.colorScheme.tertiary,
+                    iconColor: theme.colorScheme.onTertiary)),
+            gapW16,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tour.name,
+                  style: theme.textTheme.titleMedium!
+                      .copyWith(color: theme.colorScheme.tertiary),
+                ),
+                gapH4,
+                Text(tour.description),
+                gapH4,
+                if (user != null) _getSubtitle(user.uid == tour.owner),
+                gapH4,
+                Text('Available Slots: ${tour.slotsAvailable}'),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: () => context.pushNamed(AppRoutes.tourDetail.name,
+                    params: {'tid': tour.id!}),
+                icon: const FaIcon(FontAwesomeIcons.ellipsis),
+              ),
+            ),
+          ],
         ),
-        title: Text(
-          tour.name,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        subtitle: user != null ? _getSubtitle(user.uid == tour.owner) : null,
-        trailing: const FaIcon(FontAwesomeIcons.ellipsis),
       ),
     );
   }
