@@ -12,6 +12,7 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 /// [AuthenticateScreen] shows sign in and registration form and allows the user
 /// to toggle between each function.
@@ -80,6 +81,38 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
       _formType = _formType.toggledFormAction;
       _passwordController.clear();
     });
+  }
+
+  void _showResetPasswordDialog(BuildContext context) async {
+    final fieldController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Enter Email Address'),
+          content: TextField(
+            controller: fieldController,
+            decoration: const InputDecoration(labelText: 'Email Address'),
+          ),
+          actions: [
+            // Cancel
+            TextButton(
+              onPressed: () => context.pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => _sendPasswordResetEmail(fieldController.text),
+              child: const Text('Reset'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _sendPasswordResetEmail(String email) async {
+    final controller = ref.read(authenticateScreenControllerProvider.notifier);
+    await controller.sendPasswordResetMail(email: email);
   }
 
   @override
@@ -154,7 +187,12 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                   PrimaryButton(
                       isLoading: state.isLoading,
                       onPressed: _submit,
-                      label: _formType.submitButtonText),
+                      label: _formType.submitButtonText.toUpperCase()),
+                  gapH8,
+                  PrimaryButton(
+                      isLoading: state.isLoading,
+                      onPressed: () => _showResetPasswordDialog(context),
+                      label: 'FORGOT PASSWORD'),
                   gapH24,
                   // const Divider(thickness: 1.0),
                   gapH24,
