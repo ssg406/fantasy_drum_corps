@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
@@ -72,33 +73,41 @@ class _LeaveTourContentsState extends ConsumerState<LeaveTourContents> {
       maxContentWidth: 800,
       child: Padding(
         padding: pagePadding,
-        child: TitledSectionCard(
-          title: 'Leave Tour',
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Are you sure you want to leave $_name?',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Text(
-                  'There\'s only ${_getRemainingTime()} days until the draft! Your tour mates will be sad to lose you.'),
-              gapH24,
-              Row(
+        child: Column(
+          children: [
+            TitledSectionCard(
+              title: 'Leave Tour',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PrimaryButton(
-                    isLoading: state.isLoading,
-                    onPressed: _leaveTour,
-                    label: 'LEAVE',
+                  Text(
+                    'Are you sure you want to leave $_name?',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  PrimaryButton(
-                      isLoading: state.isLoading,
-                      onPressed: () => context.pop(),
-                      label: 'STAY'),
+                  Text(
+                      'There\'s only ${_getRemainingTime()} days until the draft! Your tour mates will be sad to lose you.'),
+                  gapH24,
+                  Row(
+                    children: [
+                      PrimaryButton(
+                        isLoading: state.isLoading,
+                        onPressed: _leaveTour,
+                        label: 'LEAVE',
+                      ),
+                      PrimaryButton(
+                          isLoading: state.isLoading,
+                          onPressed: () => context.pop(),
+                          label: 'STAY'),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            gapH16,
+            CustomBackButton(
+              customOnPressed: () => context.pop(),
+            ),
+          ],
         ),
       ),
     ));

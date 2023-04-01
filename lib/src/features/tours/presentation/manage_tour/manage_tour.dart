@@ -1,5 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -11,6 +11,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/m
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_members.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ManageTour extends ConsumerWidget {
   const ManageTour({Key? key, required this.tourId}) : super(key: key);
@@ -40,33 +41,38 @@ class ManageTourContents extends StatelessWidget {
         maxContentWidth: 1200,
         child: Padding(
           padding: pagePadding,
-          child: TitledSectionCard(
-            title: 'Manage Your Tour',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          child: Column(
+            children: [
+              TitledSectionCard(
+                title: tour.name,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const ItemLabel(label: 'Tour Name'),
-                    gapW32,
-                    Text(
-                      tour.name,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    ManageMembers(
+                      members: tour.members,
+                      tourId: tour.id!,
+                      owner: tour.owner,
                     ),
+                    gapH8,
+                    const Divider(
+                      thickness: 1.0,
+                    ),
+                    gapH8,
+                    ManageDraft(tourId: tour.id!, tour: tour),
+                    gapH8,
+                    const Divider(
+                      thickness: 1.0,
+                    ),
+                    gapH8,
+                    DeleteTour(tour: tour),
                   ],
                 ),
-                gapH16,
-                ManageMembers(
-                  members: tour.members,
-                  tourId: tour.id!,
-                  owner: tour.owner,
-                ),
-                gapH32,
-                ManageDraft(tourId: tour.id!, tour: tour),
-                gapH32,
-                DeleteTour(tour: tour),
-              ],
-            ),
+              ),
+              gapH16,
+              CustomBackButton(
+                customOnPressed: () => context.pop(),
+              ),
+            ],
           ),
         ),
       ),

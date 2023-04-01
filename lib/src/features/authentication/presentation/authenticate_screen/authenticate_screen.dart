@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
@@ -99,13 +100,8 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 300.0,
-                    height: 300.0,
-                    child: Image.asset(
-                      'fc_logo_sm.png',
-                      fit: BoxFit.contain,
-                    ),
+                  const LogoText(
+                    size: 50.0,
                   ),
                   gapH32,
                   Text(

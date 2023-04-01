@@ -6,6 +6,7 @@ import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class DeleteTour extends ConsumerWidget {
@@ -24,7 +25,8 @@ class DeleteTour extends ConsumerWidget {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         gapH16,
-        ElevatedButton(
+        TextButton.icon(
+          icon: const FaIcon(FontAwesomeIcons.trashCan),
           onPressed: () {
             _confirmDelete(context).then((confirmed) {
               if (confirmed ?? false) {
@@ -35,12 +37,15 @@ class DeleteTour extends ConsumerWidget {
               }
             });
           },
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.errorContainer),
-          child: Text(
+          style: TextButton.styleFrom(
+            iconColor: Theme.of(context).colorScheme.error,
+          ),
+          label: Text(
             'DELETE TOUR',
-            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onErrorContainer),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(color: Theme.of(context).colorScheme.error),
           ),
         ),
       ],

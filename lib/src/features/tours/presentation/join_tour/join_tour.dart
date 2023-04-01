@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
@@ -65,61 +66,62 @@ class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(joinTourControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(joinTourControllerProvider);
     return SingleChildScrollView(
       child: ResponsiveCenter(
         maxContentWidth: 800,
         child: Padding(
           padding: pagePadding,
-          child:
-          TitledSectionCard(
-            title: 'Are you sure?',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Are you ready to join the tour $_name?',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .titleMedium,
-                ),
-                gapH24,
-                if (!_isPublic) ...[
-                  Text(
-                    'Enter tour password',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleMedium,
-                  ),
-                  gapH8,
-                  TextField(
-                    onChanged: (input) => _enteredPassword = input,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.lock_outline_rounded),
-                      labelText: 'Password',
-                      errorText: _errorText,
-                    ),
-                  ),
-                  gapH24,
-                ],
-                Row(
+          child: Column(
+            children: [
+              TitledSectionCard(
+                title: 'Are you sure?',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PrimaryButton(
-                        onPressed: () => _submit(),
-                        label: 'JOIN',
-                        isLoading: state.isLoading),
-                    PrimaryButton(
-                      onPressed: () => context.pop(),
-                      label: 'CANCEL',
-                      isLoading: state.isLoading,
+                    Text(
+                      'Are you ready to join the tour $_name?',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    gapH24,
+                    if (!_isPublic) ...[
+                      Text(
+                        'Enter tour password',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      gapH8,
+                      TextField(
+                        onChanged: (input) => _enteredPassword = input,
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.lock_outline_rounded),
+                          labelText: 'Password',
+                          errorText: _errorText,
+                        ),
+                      ),
+                      gapH24,
+                    ],
+                    Row(
+                      children: [
+                        PrimaryButton(
+                            onPressed: () => _submit(),
+                            label: 'JOIN',
+                            isLoading: state.isLoading),
+                        PrimaryButton(
+                          onPressed: () => context.pop(),
+                          label: 'CANCEL',
+                          isLoading: state.isLoading,
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              gapH16,
+              CustomBackButton(
+                customOnPressed: () => context.pop(),
+              ),
+            ],
           ),
         ),
       ),
@@ -131,7 +133,7 @@ class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
 
     if (!_isPublic && (_enteredPassword != _password)) {
       setState(() =>
-      _errorText = 'Please check that you entered the password correctly.');
+          _errorText = 'Please check that you entered the password correctly.');
       return;
     }
     await controller.joinTour(tourId: _tourId);

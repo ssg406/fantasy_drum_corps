@@ -15,29 +15,41 @@ class ManageDraft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const ItemLabel(label: 'Manage Draft'),
-        gapW32,
-        Row(
+        gapH8,
+        Text(
+          'Start the draft to begin the process of building corps with your tour mates. Go to the draft page to acccess the draft if it is in progress.',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        ButtonBar(
+          alignment: MainAxisAlignment.start,
+          buttonMinWidth: 75,
           children: [
-            Tooltip(
-              message: 'Notify tour members of the draft and begin countdown.',
-              child: TextButton.icon(
-                onPressed: () => debugPrint('start draft'),
-                icon: const FaIcon(FontAwesomeIcons.shieldHalved),
-                label: const Text('START DRAFT'),
+            TextButton.icon(
+              onPressed: () => debugPrint('start draft'),
+              icon: const FaIcon(FontAwesomeIcons.shieldHalved),
+              label: const Tooltip(
+                message:
+                    'Notify tour members of the draft and begin countdown.',
+                child: Text(
+                  'START DRAFT',
+                ),
               ),
             ),
-            gapW24,
-            Tooltip(
-              child: TextButton.icon(
-                onPressed: () => context.goNamed(
-                  AppRoutes.draft.name,
-                  params: {'tid': tourId},
+            TextButton.icon(
+              onPressed: () => context.goNamed(
+                AppRoutes.draft.name,
+                params: {'tid': tourId},
+              ),
+              icon: const FaIcon(FontAwesomeIcons.circlePlay),
+              label: const Tooltip(
+                message: 'Go to the draft page.',
+                child: Text(
+                  'GO TO DRAFT PAGE',
                 ),
-                icon: const FaIcon(FontAwesomeIcons.circlePlay),
-                label: const Text('GO TO DRAFT PAGE'),
               ),
             ),
           ],

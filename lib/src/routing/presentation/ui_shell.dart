@@ -116,11 +116,11 @@ class _NavShellState extends ConsumerState<NavShell> {
           padding: EdgeInsets.zero,
           children: [
             Container(
-              height: 300,
+              height: 150,
               padding:
                   const EdgeInsets.symmetric(vertical: 35.0, horizontal: 20.0),
               child: Image.asset(
-                'fc_logo_sm.png',
+                'two_toned_shield.png',
                 fit: BoxFit.contain,
               ),
             ),

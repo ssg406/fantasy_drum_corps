@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class LogoText extends StatelessWidget {
   const LogoText({super.key, this.size = 24.0});
+
   final double size;
 
   @override
@@ -14,9 +15,9 @@ class LogoText extends StatelessWidget {
                 .titleLarge!
                 .copyWith(fontSize: size)),
         Image.asset(
-          'fc_logo_sm_blank_green@0.25x.png',
-          width: 60,
-          height: 60,
+          'two_toned_shield.png',
+          width: size * 2,
+          height: size * 2,
           fit: BoxFit.cover,
         ),
         Text('CORPS',

@@ -65,7 +65,7 @@ class AppTheme {
   /// Returns text theme for both light and dark mode
   /// @param baseTheme theme on which to create [TextTheme]
   static TextTheme _getTextTheme(ThemeData baseTheme) {
-    return GoogleFonts.poppinsTextTheme(
+    return GoogleFonts.leagueSpartanTextTheme(
       (baseTheme.textTheme).copyWith(
         bodyLarge: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyLarge),
         bodyMedium:
@@ -78,39 +78,39 @@ class AppTheme {
             GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelMedium),
         labelSmall:
             GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelSmall),
-        headlineLarge: GoogleFonts.bebasNeue(
+        headlineLarge: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.headlineLarge!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        headlineMedium: GoogleFonts.bebasNeue(
+        headlineMedium: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.headlineMedium!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        headlineSmall: GoogleFonts.bebasNeue(
+        headlineSmall: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.headlineSmall!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        titleSmall: GoogleFonts.bebasNeue(
+        titleSmall: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.titleSmall!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        titleMedium: GoogleFonts.bebasNeue(
+        titleMedium: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.titleMedium!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        titleLarge: GoogleFonts.bebasNeue(
+        titleLarge: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.titleLarge!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
         ),
-        displayLarge: GoogleFonts.bebasNeue(
+        displayLarge: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.displayLarge!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -2.5),
         ),
-        displayMedium: GoogleFonts.bebasNeue(
+        displayMedium: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.displayMedium!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -2.5),
         ),
-        displaySmall: GoogleFonts.bebasNeue(
+        displaySmall: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.displaySmall!
               .copyWith(fontWeight: FontWeight.w600, letterSpacing: -2.5),
         ),

@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/date_time_picker.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
@@ -48,7 +49,7 @@ class CreateTourContents extends ConsumerStatefulWidget {
 
 class _CreateTourContentsState extends ConsumerState<CreateTourContents>
     with TourValidators {
-  bool _publicSelected = false;
+  bool _publicSelected = true;
   String? _id;
   String? _name;
   String? _description;
@@ -87,92 +88,105 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
       child: ResponsiveCenter(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
-          child: Column(children: [
-            Text(editing ? 'Edit Tour' : 'Create Tour',
-                style: Theme.of(context).textTheme.titleLarge),
-            gapH8,
-            const Divider(thickness: 0.5),
-            gapH16,
-            Card(
-              elevation: 2.0,
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 25.0, horizontal: 45.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      gapH16,
-                      TextFormField(
-                        initialValue: _name,
-                        onChanged: (value) => _name = value,
-                        validator: (String? input) =>
-                            getNameErrors(input ?? ''),
-                        decoration: const InputDecoration(
-                          labelText: 'Tour Name',
-                          hintText: 'Fuzzy Tumblers',
-                        ),
-                      ),
-                      gapH32,
-                      TextFormField(
-                        initialValue: _description,
-                        onChanged: (value) => _description = value,
-                        validator: (String? input) =>
-                            getDescriptionErrors(input ?? ''),
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                          hintText: 'A tour for alumni of the 2001 Bluecoats',
-                        ),
-                      ),
-                      gapH32,
-                      PrivateTourSwitch(
-                        publicSelected: _publicSelected,
-                        onChanged: (selected) =>
-                            setState(() => _publicSelected = selected),
-                      ),
-                      if (!_publicSelected) ...[
+          child: Column(
+            children: [
+              Text(editing ? 'Edit Tour' : 'Create Tour',
+                  style: Theme.of(context).textTheme.titleLarge),
+              gapH8,
+              const Divider(thickness: 0.5),
+              gapH16,
+              Card(
+                elevation: 2.0,
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 25.0, horizontal: 45.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        gapH16,
                         TextFormField(
-                            initialValue: _password,
-                            onChanged: (value) => _password = value,
-                            validator: (input) {
-                              if (_publicSelected) {
-                                return null;
-                              }
-                              return getPasswordErrors(input ?? '');
-                            },
-                            decoration: const InputDecoration(
-                                labelText: 'Tour Password',
-                                hintText:
-                                    'Other players will need this password to join')),
-                        gapH32
-                      ],
-                      DateTimePicker(
-                        labelText:
-                            'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
-                        selectedDate: pickedDate,
-                        selectedTime: pickedTime,
-                        dateTimeErrorText: _dateTimeErrorText,
-                        onSelectedDate: (selectedDate) =>
-                            setState(() => pickedDate = selectedDate),
-                        onSelectedTime: (selectedTime) =>
-                            setState(() => pickedTime = selectedTime),
-                      ),
-                      gapH32,
-                      Center(
-                        child: PrimaryButton(
+                          initialValue: _name,
+                          onChanged: (value) => _name = value,
+                          validator: (String? input) =>
+                              getNameErrors(input ?? ''),
+                          decoration: const InputDecoration(
+                            labelText: 'Tour Name',
+                            hintText: 'Cadets Alumni 99',
+                          ),
+                        ),
+                        gapH32,
+                        TextFormField(
+                          initialValue: _description,
+                          onChanged: (value) => _description = value,
+                          validator: (String? input) =>
+                              getDescriptionErrors(input ?? ''),
+                          decoration: const InputDecoration(
+                            labelText: 'Description',
+                            hintText: 'A tour for alumni of the 1999 Cadets',
+                          ),
+                        ),
+                        gapH32,
+                        Row(
+                          children: [
+                            PrivateTourSwitch(
+                              publicSelected: _publicSelected,
+                              onChanged: (selected) =>
+                                  setState(() => _publicSelected = selected),
+                            ),
+                            if (!_publicSelected) gapW32,
+                            if (!_publicSelected)
+                              Expanded(
+                                child: TextFormField(
+                                  initialValue: _password,
+                                  onChanged: (value) => _password = value,
+                                  validator: (input) {
+                                    if (_publicSelected) {
+                                      return null;
+                                    }
+                                    return getPasswordErrors(input ?? '');
+                                  },
+                                  decoration: const InputDecoration(
+                                      labelText: 'Tour Password',
+                                      hintText:
+                                          'Other players will need this password to join'),
+                                ),
+                              ),
+                          ],
+                        ),
+                        DateTimePicker(
+                          labelText:
+                              'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
+                          selectedDate: pickedDate,
+                          selectedTime: pickedTime,
+                          dateTimeErrorText: _dateTimeErrorText,
+                          onSelectedDate: (selectedDate) =>
+                              setState(() => pickedDate = selectedDate),
+                          onSelectedTime: (selectedTime) =>
+                              setState(() => pickedTime = selectedTime),
+                        ),
+                        gapH32,
+                        Center(
+                          child: PrimaryButton(
                             onPressed:
                                 editing ? _submitEditedTour : _submitNewTour,
                             label: editing ? 'UPDATE' : 'CREATE',
                             isLoading: state.isLoading,
-                            onSurface: true),
-                      )
-                    ],
+                            onSurface: true,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            )
-          ]),
+              gapH16,
+              CustomBackButton(
+                customOnPressed: () => context.pop(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/custom_tour_tile.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -29,16 +30,9 @@ class _MyToursState extends ConsumerState<MyTours> {
         child: Padding(
           padding: pagePadding,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AsyncValueWidget(
-                value: ref.watch(watchOwnedToursProvider),
-                data: (List<Tour> tours) => MyToursContents(
-                  myTours: tours,
-                  title: 'My Tours',
-                ),
-              ),
-              gapH16,
               AsyncValueWidget(
                 value: ref.watch(watchJoinedToursProvider),
                 data: (List<Tour> tours) => MyToursContents(
@@ -54,7 +48,7 @@ class _MyToursState extends ConsumerState<MyTours> {
   }
 }
 
-class MyToursContents extends ConsumerStatefulWidget {
+class MyToursContents extends StatelessWidget {
   const MyToursContents({
     Key? key,
     required this.myTours,
@@ -65,29 +59,35 @@ class MyToursContents extends ConsumerStatefulWidget {
   final String title;
 
   @override
-  ConsumerState createState() => _MyToursContentsState();
-}
-
-class _MyToursContentsState extends ConsumerState<MyToursContents> {
-  @override
   Widget build(BuildContext context) {
-    return TitledSectionCard(
-        title: widget.title,
-        child: SizedBox(
-          height: widget.myTours.isEmpty
-              ? MediaQuery.of(context).size.height * 0.2
-              : MediaQuery.of(context).size.height * 0.4,
-          child: widget.myTours.isEmpty
-              ? const EmptyTourContainerActions()
-              : ListView(
-                  children: [
-                    for (final tour in widget.myTours)
-                      CustomTourTile(
-                        tour: tour,
-                      )
-                  ],
-                ),
-        ));
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        TitledSectionCard(
+          title: title,
+          child: SizedBox(
+            height: 150,
+            child: myTours.isEmpty
+                ? const EmptyTourContainerActions()
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    // prototypeItem: const PrototypeTile(),
+                    itemBuilder: (context, index) {
+                      return CustomTourTile(
+                        tour: myTours.elementAt(index),
+                      );
+                    },
+                    itemCount: myTours.length,
+                  ),
+            // :
+          ),
+        ),
+        gapH16,
+        CustomBackButton(
+          customOnPressed: () => context.goNamed(AppRoutes.dashboard.name),
+        ),
+      ],
+    );
   }
 }
 

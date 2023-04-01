@@ -8,10 +8,7 @@ class ItemLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: Theme.of(context)
-          .textTheme
-          .titleMedium!
-          .copyWith(color: Theme.of(context).colorScheme.primary),
+      style: Theme.of(context).textTheme.titleMedium,
     );
   }
 }

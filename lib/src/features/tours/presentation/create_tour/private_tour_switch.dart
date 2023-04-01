@@ -24,7 +24,8 @@ class PrivateTourSwitch extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Make Tour Public', style: Theme.of(context).textTheme.labelLarge),
+        Text(publicSelected ? 'Make Tour Private' : 'Make Tour Public',
+            style: Theme.of(context).textTheme.labelLarge),
         gapH8,
         Row(
           children: [
@@ -34,7 +35,7 @@ class PrivateTourSwitch extends StatelessWidget {
               onChanged: onChanged,
             ),
             gapW8,
-            Text(publicSelected ? 'Public' : 'Private',
+            Text(publicSelected ? 'Tour is Public' : 'Tour is Private',
                 style: Theme.of(context).textTheme.labelLarge),
           ],
         ),

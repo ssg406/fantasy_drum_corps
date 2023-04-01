@@ -26,11 +26,17 @@ class ManageMembers extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(fetchTourPlayersProvider(members)),
       data: (List<Player> players) {
-        return Row(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const ItemLabel(label: 'Member Management'),
-            gapW32,
-            Row(
+            gapH8,
+            Text(
+              'Remove members from your tour or invite new members',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            gapH8,
+            Wrap(
               children: [
                 for (final player in players) ...[
                   Column(
@@ -44,17 +50,19 @@ class ManageMembers extends ConsumerWidget {
                           message: 'Remove Player',
                           child: IconButton(
                             onPressed: () {
-                              _showConfirmationDialog(context).then((result) {
-                                final confirmed = result ?? false;
-                                if (confirmed) {
-                                  ref
-                                      .read(
-                                          manageTourControllerProvider.notifier)
-                                      .removeMember(
-                                          playerId: player.playerId!,
-                                          tourId: tourId);
-                                }
-                              });
+                              _showConfirmationDialog(context).then(
+                                (result) {
+                                  final confirmed = result ?? false;
+                                  if (confirmed) {
+                                    ref
+                                        .read(manageTourControllerProvider
+                                            .notifier)
+                                        .removeMember(
+                                            playerId: player.playerId!,
+                                            tourId: tourId);
+                                  }
+                                },
+                              );
                             },
                             icon:
                                 const Icon(Icons.remove_circle_outline_rounded),
@@ -66,7 +74,7 @@ class ManageMembers extends ConsumerWidget {
                   gapW8,
                 ],
               ],
-            )
+            ),
           ],
         );
       },

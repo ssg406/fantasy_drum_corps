@@ -12,13 +12,8 @@ class DraftSlots extends StatelessWidget {
       children: [
         const ItemLabel(label: 'Slots Available'),
         gapW32,
-        Text(
-          _getSlotsText(slots),
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(color: _getSlotsColor(slots)),
-        ),
+        Text(_getSlotsText(slots),
+            style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }
@@ -28,12 +23,5 @@ class DraftSlots extends StatelessWidget {
       return 'Tour Full';
     }
     return '$openSlots ${openSlots == 1 ? 'slot' : 'slots'}';
-  }
-
-  Color _getSlotsColor(int openSlots) {
-    if (openSlots > 0) {
-      return Colors.red[300]!;
-    }
-    return Colors.green[300]!;
   }
 }
