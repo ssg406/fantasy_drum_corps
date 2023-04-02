@@ -57,9 +57,9 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     }
   }
 
-  void _submitSSO(OAuthSignInProvider provider) async {
+  void _submitSSO(OAuthSignInProvider provider) {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
-    await controller.authenticateWithOAuthProvider(provider);
+    controller.authenticateWithOAuthProvider(provider);
   }
 
   void _emailEditingComplete() {
@@ -130,8 +130,8 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const LogoText(
                     size: 50.0,
@@ -139,7 +139,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                   gapH32,
                   Text(
                     _formType.title,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                   gapH16,
                   Row(
@@ -183,40 +183,40 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                         !_submitted ? null : getPasswordErrors(password ?? ''),
                     onEditingComplete: _passwordEditingComplete,
                   ),
+                  gapH8,
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      onPressed: () => _showResetPasswordDialog(context),
+                      child: Text(
+                        'Forgot Password?',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ),
                   gapH20,
                   PrimaryButton(
                       isLoading: state.isLoading,
                       onPressed: _submit,
                       label: _formType.submitButtonText.toUpperCase()),
-                  gapH8,
-                  PrimaryButton(
-                      isLoading: state.isLoading,
-                      onPressed: () => _showResetPasswordDialog(context),
-                      label: 'FORGOT PASSWORD'),
-                  gapH24,
-                  // const Divider(thickness: 1.0),
-                  gapH24,
+                  gapH32,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextButton.icon(
                         onPressed: () => _submitSSO(OAuthSignInProvider.google),
-                        icon: const FaIcon(FontAwesomeIcons.google),
-                        label: Text(
-                          'Continue with Google',
-                          style: Theme.of(context).textTheme.labelMedium,
+                        icon: const FaIcon(
+                          FontAwesomeIcons.google,
                         ),
+                        label: const Text('Continue with Google'),
                       ),
-                      gapW8,
+                      gapW16,
                       TextButton.icon(
                         onPressed: () =>
                             _submitSSO(OAuthSignInProvider.facebook),
                         icon: const FaIcon(FontAwesomeIcons.facebook),
-                        label: Text(
-                          'Continue with Facebook',
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                      )
+                        label: const Text('Continue with Facebook'),
+                      ),
                     ],
                   ),
                 ],

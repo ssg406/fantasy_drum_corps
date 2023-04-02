@@ -52,23 +52,20 @@ class AuthService {
 
   // Sign in with Google
   Future<void> registerWithOAuthProvider(OAuthSignInProvider provider) async {
-    final credential = await _authRepo.signInWithOAuthProvider(provider);
-
-    if (credential.user == null) {
-      throw StateError('No credential was returned from SSO provider');
-    }
-
-    // Check if player already exists
-    final existingPlayer = await _playersRepo.fetchPlayer(credential.user!.uid);
-
-    // Add new players to PlayersRepository, get existing display name and photoURL from Google
-    if (existingPlayer == null) {
-      final player = Player(
-        playerId: credential.user!.uid,
-        displayName: credential.user?.displayName,
-      );
-      _playersRepo.addPlayer(player);
-    }
+    _authRepo.signInWithOAuthProvider(provider).then((credential) {
+      if (credential.user == null) {
+        throw StateError('User cannot be null');
+      }
+      _playersRepo.fetchPlayer(credential.user!.uid).then((player) {
+        if (player == null) {
+          final player = Player(
+            playerId: credential.user!.uid,
+            displayName: credential.user?.displayName,
+          );
+          _playersRepo.addPlayer(player);
+        }
+      });
+    });
   }
 
   // Return if Google is auth provider or not

@@ -41,8 +41,12 @@ class AuthenticateScreenController extends _$AuthenticateScreenController {
   Future<void> authenticateWithOAuthProvider(
       OAuthSignInProvider provider) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() =>
-        ref.read(authServiceProvider).registerWithOAuthProvider(provider));
+    state =
+        await AsyncValue.guard(() => _authenticateWithOAuthProvider(provider));
+  }
+
+  Future<void> _authenticateWithOAuthProvider(OAuthSignInProvider provider) {
+    return ref.read(authServiceProvider).registerWithOAuthProvider(provider);
   }
 
   Future<void> sendPasswordResetMail({required String email}) async {
