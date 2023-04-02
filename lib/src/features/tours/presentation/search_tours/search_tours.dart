@@ -1,7 +1,7 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/custom_tour_tile.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/tour_search_tile.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
@@ -38,7 +38,7 @@ class _SearchToursState extends ConsumerState<SearchTours> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: ResponsiveCenter(
-        maxContentWidth: 1200,
+        maxContentWidth: 1000,
         child: Padding(
           padding: pagePadding,
           child: Column(
@@ -96,7 +96,12 @@ class ResultsContainer extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.6,
           child: ListView(
             children: [
-              for (final tour in filteredTours) CustomTourTile(tour: tour),
+              for (final tour in filteredTours)
+                TourSearchTile(
+                    name: tour.name,
+                    isPublic: tour.isPublic,
+                    description: tour.description,
+                    slotsAvailable: tour.slotsAvailable),
             ],
           ),
         ),

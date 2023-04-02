@@ -2,7 +2,6 @@ import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/custom_tour_tile.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
@@ -63,8 +62,14 @@ class MyToursContents extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        TitledSectionCard(
-          title: title,
+        Text(
+          'My Tours',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        gapH8,
+        const Divider(thickness: 0.5),
+        gapH16,
+        Card(
           child: SizedBox(
             height: 200,
             child: myTours.isEmpty

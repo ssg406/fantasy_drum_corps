@@ -3,7 +3,6 @@ import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
@@ -59,40 +58,48 @@ class TourDetailContents extends StatelessWidget {
         child: Padding(
           padding: pagePadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TitledSectionCard(
-                title: 'Tour Detail',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const ItemLabel(label: 'Tour Name'),
-                        gapW32,
-                        Text(
-                          name,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ],
-                    ),
-                    gapH24,
-                    TourOwner(ownerId: tour.owner),
-                    gapH24,
-                    TourVisibility(isPublic: isPublic),
-                    gapH24,
-                    TourDescription(description: description),
-                    gapH24,
-                    DraftSlots(slots: slots),
-                    gapH24,
-                    TourMembers(members: members),
-                    gapH24,
-                    DraftDateTime(draftDateTime: draftDateTime),
-                    gapH24,
-                    const Divider(thickness: 0.5),
-                    gapH24,
-                    _getButtonBar(context),
-                  ],
+              Text(
+                'Tour Detail',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              gapH8,
+              const Divider(thickness: 0.5),
+              gapH16,
+              Card(
+                child: Padding(
+                  padding: cardPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const ItemLabel(label: 'Tour Name'),
+                          gapW32,
+                          Text(
+                            name,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
+                      gapH24,
+                      TourOwner(ownerId: tour.owner),
+                      gapH24,
+                      TourVisibility(isPublic: isPublic),
+                      gapH24,
+                      TourDescription(description: description),
+                      gapH24,
+                      DraftSlots(slots: slots),
+                      gapH24,
+                      TourMembers(members: members),
+                      gapH24,
+                      DraftDateTime(draftDateTime: draftDateTime),
+                      gapH24,
+                      const Divider(thickness: 0.5),
+                      gapH24,
+                      _getButtonBar(context),
+                    ],
+                  ),
                 ),
               ),
               gapH16,
