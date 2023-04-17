@@ -24,15 +24,14 @@ class CreateTourController extends _$CreateTourController {
     return toursRepository.updateTour(tour);
   }
 
-  Future<void> submitTour({required String name,
-    required String description,
-    required bool isPublic,
-    String? password,
-    required DateTime draftDateTime}) async {
+  Future<void> submitTour(
+      {required String name,
+      required String description,
+      required bool isPublic,
+      String? password,
+      required DateTime draftDateTime}) async {
     state = const AsyncValue.loading();
-    final user = ref
-        .watch(authRepositoryProvider)
-        .currentUser;
+    final user = ref.watch(authRepositoryProvider).currentUser;
     if (user == null) {
       throw AssertionError('User cannot be null when creating tour');
     }
@@ -45,7 +44,8 @@ class CreateTourController extends _$CreateTourController {
         password: password,
         owner: owner,
         members: members,
-        draftDateTime: draftDateTime);
+        draftDateTime: draftDateTime,
+        draftActive: false);
     state = await AsyncValue.guard(() => _submitLeague(tour));
   }
 

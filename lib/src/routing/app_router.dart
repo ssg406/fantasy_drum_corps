@@ -195,10 +195,11 @@ GoRouter goRouter(GoRouterRef ref) {
                   GoRoute(
                     path: 'draft',
                     name: AppRoutes.draft.name,
-                    pageBuilder: (context, state) => NoTransitionPage(
-                        key: state.pageKey,
-                        child: const TourDraft() //state.params['id']
-                        ),
+                    pageBuilder: (context, state) {
+                      final tourId = state.params['tid'];
+                      return NoTransitionPage(
+                          key: state.pageKey, child: TourDraft(tourId: tourId));
+                    },
                   ),
                   GoRoute(
                     path: 'competitionSchedule',

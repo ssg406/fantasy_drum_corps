@@ -219,7 +219,8 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
         password: _password,
         owner: widget.tour!.owner,
         members: _members!,
-        draftDateTime: draftDateTime);
+        draftDateTime: draftDateTime,
+        draftActive: false);
     await controller.updateTour(updatedTour);
     _showSuccessMessage();
   }

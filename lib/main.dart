@@ -19,8 +19,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  /// Enable/Disable Firebase emulators
   // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-  //await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
+  // await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
 
   // Create error handlers
   registerErrorHandlers();

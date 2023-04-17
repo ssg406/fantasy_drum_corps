@@ -1,28 +1,55 @@
+import 'dart:developer' as dev;
+
 import 'package:fantasy_drum_corps/src/common_widgets/accent_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/draft/domain/socket_events.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
-import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
-/// [TourDraft] is responsible for coordinating the live draft event.
-/// The containing class is the only class which communicates with the Socket.io
-/// server. State of child widgets is updated from here.
-class TourDraft extends ConsumerStatefulWidget {
+class TourDraft extends ConsumerWidget {
   const TourDraft({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+    this.tourId,
+  });
+
+  final String? tourId;
 
   @override
-  ConsumerState createState() => _TourDraftState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(authRepositoryProvider).currentUser?.uid;
+    if (userId == null) {
+      return const NotFound();
+    }
+    if (tourId == null) {
+      return const NotFound();
+    }
+    return TourDraftContents(tourId: tourId!, userId: userId);
+  }
 }
 
-class _TourDraftState extends ConsumerState<TourDraft> {
+class TourDraftContents extends ConsumerStatefulWidget {
+  const TourDraftContents({
+    Key? key,
+    required this.tourId,
+    required this.userId,
+  }) : super(key: key);
+
+  final String tourId;
+  final String userId;
+
+  @override
+  ConsumerState createState() => _TourDraftContentsState();
+}
+
+class _TourDraftContentsState extends ConsumerState<TourDraftContents> {
   // Receive from server
   // List<Caption> availableCaptions;
   // String currentTurn;
@@ -109,6 +136,11 @@ class _TourDraftState extends ConsumerState<TourDraft> {
 
   @override
   void initState() {
+    super.initState();
+    final tourId = widget.tourId;
+    final userId = widget.userId;
+    // Handle tourId == null
+
     // Setup socket
     // onStateUpdate
     //      call _updateDraftState with list update, current turn, next turn
@@ -119,6 +151,21 @@ class _TourDraftState extends ConsumerState<TourDraft> {
     // onDraftOver
     //      Write lineup to repository
     // repeat
+
+    io.Socket socket = io.io('http://localhost:3000');
+    socket.onConnect((_) {
+      dev.log('Socket is connected', name: 'Socket.io');
+      dev.log('emitting userId of $userId and tourId of $tourId',
+          name: 'Socket.io');
+      socket.emit(SocketEvent.onIdentifyClient.name, {
+        'uid': userId,
+        'tourId': tourId,
+      });
+    });
+
+    socket.onError((data) {
+      dev.log('there was a socket error $data', name: 'Socket.io');
+    });
   }
 
   void _updateDraftState() {

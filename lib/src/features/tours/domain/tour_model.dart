@@ -14,6 +14,7 @@ class Tour {
     required this.members,
     required this.draftDateTime,
     this.password,
+    required this.draftActive,
   });
 
   final TourID? id;
@@ -24,6 +25,7 @@ class Tour {
   final List<String> members;
   final DateTime draftDateTime;
   final String? password;
+  final bool draftActive;
 
   static const maxTourSize = 8;
 
@@ -46,14 +48,14 @@ class Tour {
       isPublic: json['isPublic'] as bool,
       owner: json['owner'] as String,
       members:
-      (json['members'] as List<dynamic>).map((e) => e as String).toList(),
+          (json['members'] as List<dynamic>).map((e) => e as String).toList(),
       draftDateTime: (json['draftDateTime'] as Timestamp).toDate(),
       password: json['password'] as String?,
+      draftActive: json['draftActive'] as bool,
     );
   }
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'name': name,
         'description': description,
         'isPublic': isPublic,
@@ -62,15 +64,18 @@ class Tour {
         'members': members,
         'password': password,
         'draftDateTime': draftDateTime,
+        'draftActive': draftActive,
       };
 
-  Tour copyWith({String? tourName,
-    String? description,
-    bool? isPublic,
-    String? owner,
-    List<String>? members,
-    String? password,
-    DateTime? draftDateTime}) {
+  Tour copyWith(
+      {String? tourName,
+      String? description,
+      bool? isPublic,
+      String? owner,
+      List<String>? members,
+      String? password,
+      DateTime? draftDateTime,
+      bool? draftActive}) {
     return Tour(
       id: id,
       name: tourName ?? name,
@@ -80,6 +85,7 @@ class Tour {
       members: members ?? this.members,
       password: password ?? this.password,
       draftDateTime: draftDateTime ?? this.draftDateTime,
+      draftActive: draftActive ?? this.draftActive,
     );
   }
 
