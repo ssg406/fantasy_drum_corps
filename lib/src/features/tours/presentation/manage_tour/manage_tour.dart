@@ -21,7 +21,7 @@ class ManageTour extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
-      value: ref.watch(fetchTourProvider(tourId)),
+      value: ref.watch(watchTourProvider(tourId)),
       data: (Tour? tour) {
         return tour == null ? const NotFound() : ManageTourContents(tour: tour);
       },

@@ -23,61 +23,77 @@ class ManageMembers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AsyncValueWidget(
-      value: ref.watch(fetchTourPlayersProvider(members)),
-      data: (List<Player> players) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ItemLabel(label: 'Member Management'),
-            gapH8,
-            Text(
-              'Remove members from your tour or invite new members',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            gapH8,
-            Wrap(
-              children: [
-                for (final player in players) ...[
-                  Column(
-                    children: [
-                      PlayerWidget(
-                        name: player.displayName,
-                        avatarString: player.avatarString,
-                      ),
-                      if (player.playerId != owner)
-                        Tooltip(
-                          message: 'Remove Player',
-                          child: IconButton(
-                            onPressed: () {
-                              _showConfirmationDialog(context).then(
-                                (result) {
-                                  final confirmed = result ?? false;
-                                  if (confirmed) {
-                                    ref
-                                        .read(manageTourControllerProvider
-                                            .notifier)
-                                        .removeMember(
-                                            playerId: player.playerId!,
-                                            tourId: tourId);
-                                  }
-                                },
-                              );
-                            },
-                            icon:
-                                const Icon(Icons.remove_circle_outline_rounded),
-                          ),
-                        ),
-                    ],
-                  ),
-                  // Gap before next player widget
-                  gapW8,
-                ],
-              ],
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const ItemLabel(label: 'Member Management'),
+        gapH8,
+        Text(
+          'Remove members from your tour or invite new members',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        gapH8,
+        AsyncValueWidget(
+          value: ref.watch(watchTourPlayersProvider(members)),
+          data: (List<Player> players) =>
+              TourMembersView(members: players, owner: owner, tourId: tourId),
+        )
+      ],
+    );
+  }
+}
+
+class TourMembersView extends StatelessWidget {
+  const TourMembersView(
+      {super.key,
+      required this.members,
+      required this.owner,
+      required this.tourId});
+
+  final List<Player> members;
+  final String owner;
+  final String tourId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: [
+        for (final player in members) ...[
+          Column(
+            children: [
+              PlayerWidget(
+                name: player.displayName,
+                avatarString: player.avatarString,
+              ),
+              if (player.playerId != owner)
+                Consumer(builder: (context, ref, child) {
+                  return Tooltip(
+                    message: 'Remove Player',
+                    child: IconButton(
+                      onPressed: () {
+                        _showConfirmationDialog(context).then(
+                          (result) {
+                            final confirmed = result ?? false;
+                            if (confirmed) {
+                              ref
+                                  .read(manageTourControllerProvider.notifier)
+                                  .removeMember(
+                                      playerId: player.playerId!,
+                                      tourId: tourId);
+                            }
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.remove_circle_outline_rounded),
+                    ),
+                  );
+                }),
+            ],
+          ),
+          // Gap before next player widget
+          gapW8,
+        ],
+      ],
     );
   }
 

@@ -12,7 +12,6 @@ class PlayerTourService {
   final ToursRepository _tourRepo;
 
   Future<List<Player>> fetchTourPlayers(List<String> members) async {
-
     final tourPlayers = <Player>[];
 
     for (final member in members) {
@@ -23,6 +22,14 @@ class PlayerTourService {
       tourPlayers.add(player);
     }
     return tourPlayers;
+  }
+
+  Stream<List<Player>> watchTourPlayers(List<String> members) {
+    return _playerRepo.queryPlayers().snapshots().map((snapshot) => snapshot
+        .docs
+        .map((doc) => doc.data())
+        .where((player) => members.contains(player.playerId))
+        .toList());
   }
 }
 
@@ -35,7 +42,15 @@ PlayerTourService playerTourService(PlayerTourServiceRef ref) {
 }
 
 @riverpod
-Future<List<Player>> fetchTourPlayers(FetchTourPlayersRef ref, List<String> members) {
+Stream<List<Player>> watchTourPlayers(
+    WatchTourPlayersRef ref, List<String> members) {
+  final service = ref.watch(playerTourServiceProvider);
+  return service.watchTourPlayers(members);
+}
+
+@riverpod
+Future<List<Player>> fetchTourPlayers(
+    FetchTourPlayersRef ref, List<String> members) {
   final service = ref.watch(playerTourServiceProvider);
   return service.fetchTourPlayers(members);
 }

@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_controller.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ class VerifyEmailCard extends ConsumerWidget {
     final state = ref.watch(dashboardControllerProvider);
     final theme = Theme.of(context);
     return Card(
-      color: theme.colorScheme.primaryContainer.withOpacity(0.5),
       child: Padding(
         padding: cardPadding,
         child: Column(
@@ -25,7 +25,10 @@ class VerifyEmailCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const FaIcon(FontAwesomeIcons.at),
+                const FaIcon(
+                  FontAwesomeIcons.at,
+                  color: AppColors.customBlue,
+                ),
                 gapW16,
                 Text('Verify your email',
                     style: Theme.of(context).textTheme.titleLarge),
@@ -39,7 +42,6 @@ class VerifyEmailCard extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: TextButton.icon(
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 onPressed: () => ref
                     .read(dashboardControllerProvider.notifier)
                     .sendVerificationEmail(user),

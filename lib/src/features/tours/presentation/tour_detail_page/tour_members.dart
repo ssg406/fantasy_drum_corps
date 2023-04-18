@@ -14,7 +14,7 @@ class TourMembers extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
-      value: ref.watch(fetchTourPlayersProvider(members)),
+      value: ref.watch(watchTourPlayersProvider(members)),
       data: (List<Player> players) {
         return Row(
           children: [

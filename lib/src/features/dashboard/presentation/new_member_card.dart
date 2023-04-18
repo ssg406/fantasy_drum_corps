@@ -11,7 +11,6 @@ class NewMemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.customGreen.withOpacity(0.8),
       child: Padding(
         padding: cardPadding,
         child: Column(
@@ -19,10 +18,13 @@ class NewMemberCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const FaIcon(FontAwesomeIcons.shieldHalved),
+                const FaIcon(
+                  FontAwesomeIcons.shieldHalved,
+                  color: AppColors.customGreen,
+                ),
                 gapW16,
                 Text(
-                  'Thanks for joining Fantasy Corps!',
+                  'Create or Join Tours',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
@@ -36,13 +38,11 @@ class NewMemberCard extends StatelessWidget {
             ButtonBar(
               children: [
                 TextButton.icon(
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
                   onPressed: () => context.goNamed(AppRoutes.createTour.name),
                   icon: const Icon(Icons.add_circle_outline_rounded),
                   label: const Text('Create Tour'),
                 ),
                 TextButton.icon(
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
                   onPressed: () => context.goNamed(AppRoutes.searchTours.name),
                   icon: const Icon(Icons.people_alt_rounded),
                   label: const Text('Join Tour'),

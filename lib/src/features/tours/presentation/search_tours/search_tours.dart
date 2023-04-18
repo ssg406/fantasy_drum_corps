@@ -98,10 +98,8 @@ class ResultsContainer extends StatelessWidget {
             children: [
               for (final tour in filteredTours)
                 TourSearchTile(
-                    name: tour.name,
-                    isPublic: tour.isPublic,
-                    description: tour.description,
-                    slotsAvailable: tour.slotsAvailable),
+                  tour: tour,
+                ),
             ],
           ),
         ),

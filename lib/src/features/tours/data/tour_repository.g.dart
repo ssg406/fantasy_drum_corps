@@ -39,7 +39,7 @@ final toursRepositoryProvider = AutoDisposeProvider<ToursRepository>.internal(
 );
 
 typedef ToursRepositoryRef = AutoDisposeProviderRef<ToursRepository>;
-String _$fetchTourHash() => r'86be6826c0efbe83d2723a2e0e7e3ac32f73b1a3';
+String _$watchTourHash() => r'4d77f7b8efbb7c3c6d7140b01916fd4cd1591ec5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -62,6 +62,87 @@ class _SystemHash {
   }
 }
 
+typedef WatchTourRef = AutoDisposeStreamProviderRef<Tour?>;
+
+/// See also [watchTour].
+@ProviderFor(watchTour)
+const watchTourProvider = WatchTourFamily();
+
+/// See also [watchTour].
+class WatchTourFamily extends Family<AsyncValue<Tour?>> {
+  /// See also [watchTour].
+  const WatchTourFamily();
+
+  /// See also [watchTour].
+  WatchTourProvider call(
+    String tourId,
+  ) {
+    return WatchTourProvider(
+      tourId,
+    );
+  }
+
+  @override
+  WatchTourProvider getProviderOverride(
+    covariant WatchTourProvider provider,
+  ) {
+    return call(
+      provider.tourId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'watchTourProvider';
+}
+
+/// See also [watchTour].
+class WatchTourProvider extends AutoDisposeStreamProvider<Tour?> {
+  /// See also [watchTour].
+  WatchTourProvider(
+    this.tourId,
+  ) : super.internal(
+          (ref) => watchTour(
+            ref,
+            tourId,
+          ),
+          from: watchTourProvider,
+          name: r'watchTourProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$watchTourHash,
+          dependencies: WatchTourFamily._dependencies,
+          allTransitiveDependencies: WatchTourFamily._allTransitiveDependencies,
+        );
+
+  final String tourId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is WatchTourProvider && other.tourId == tourId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tourId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$fetchTourHash() => r'86be6826c0efbe83d2723a2e0e7e3ac32f73b1a3';
 typedef FetchTourRef = AutoDisposeFutureProviderRef<Tour?>;
 
 /// See also [fetchTour].

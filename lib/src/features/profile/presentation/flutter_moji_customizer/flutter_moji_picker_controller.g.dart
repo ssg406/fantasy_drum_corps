@@ -7,7 +7,7 @@ part of 'flutter_moji_picker_controller.dart';
 // **************************************************************************
 
 String _$flutterMojiPickerControllerHash() =>
-    r'b6ce74da09c164476a4bca2aec8b48e3d14d5f4c';
+    r'd3f56cf93a49d20020a76f505156065a19e09dbe';
 
 /// See also [FlutterMojiPickerController].
 @ProviderFor(FlutterMojiPickerController)

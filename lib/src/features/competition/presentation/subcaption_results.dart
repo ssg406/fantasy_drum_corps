@@ -46,7 +46,7 @@ class _SubcaptionResultsState extends ConsumerState<SubcaptionResults> {
                       // Corps 1 Score
                       1: FlexColumnWidth(),
                       // Center Label
-                      2: ResponsiveWrapper.of(context).isLargerThan(TABLET)
+                      2: ResponsiveBreakpoints.of(context).largerThan(TABLET)
                           ? FlexColumnWidth()
                           : FixedColumnWidth(0),
                       // Corps 2 Score
@@ -124,10 +124,7 @@ class _SubcaptionResultsState extends ConsumerState<SubcaptionResults> {
           Container(
             color: Colors.blue,
             child: ResponsiveVisibility(
-              visible: false,
-              visibleWhen: [
-                Condition.largerThan(name: TABLET),
-              ],
+              visible: ResponsiveBreakpoints.of(context).largerThan(TABLET),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(

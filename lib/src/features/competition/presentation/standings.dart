@@ -49,15 +49,16 @@ class _StandingsState extends ConsumerState<Standings> {
                       Table(
                         columnWidths: <int, TableColumnWidth>{
                           0: const FlexColumnWidth(),
-                          1: ResponsiveWrapper.of(context).isLargerThan(TABLET)
+                          1: ResponsiveBreakpoints.of(context)
+                                  .largerThan(TABLET)
                               ? const FractionColumnWidth(0.5)
                               : const FlexColumnWidth(2),
-                          2: FlexColumnWidth(ResponsiveWrapper.of(context)
-                                  .isSmallerThan(TABLET)
+                          2: FlexColumnWidth(ResponsiveBreakpoints.of(context)
+                                  .smallerThan(TABLET)
                               ? 2
                               : 1),
-                          3: FlexColumnWidth(ResponsiveWrapper.of(context)
-                                  .isSmallerThan(TABLET)
+                          3: FlexColumnWidth(ResponsiveBreakpoints.of(context)
+                                  .smallerThan(TABLET)
                               ? 2
                               : 1),
                         },

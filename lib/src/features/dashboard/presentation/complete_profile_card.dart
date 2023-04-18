@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +17,10 @@ class CompleteProfileCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const FaIcon(FontAwesomeIcons.user),
+                const FaIcon(
+                  FontAwesomeIcons.user,
+                  color: AppColors.customBlue,
+                ),
                 gapW16,
                 Text('Complete Your Profile',
                     style: Theme.of(context).textTheme.titleLarge),

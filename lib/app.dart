@@ -12,16 +12,13 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
     return MaterialApp.router(
-      builder: (context, child) => ResponsiveWrapper.builder(
-        child,
-        maxWidth: double.infinity,
-        minWidth: 480,
-        defaultScale: true,
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
         breakpoints: [
-          const ResponsiveBreakpoint.resize(480, name: MOBILE),
-          const ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          const ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-          const ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+          const Breakpoint(start: 0, end: 450, name: MOBILE),
+          const Breakpoint(start: 451, end: 800, name: TABLET),
+          const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
         ],
       ),
       debugShowCheckedModeBanner: false,

@@ -22,7 +22,7 @@ final playerTourServiceProvider =
 );
 
 typedef PlayerTourServiceRef = AutoDisposeProviderRef<PlayerTourService>;
-String _$fetchTourPlayersHash() => r'9b7945746aae4986cc1d7136e516fb3c0557684f';
+String _$watchTourPlayersHash() => r'1640ac7df6b6b1b64179d0633da7c3463da4db31';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -45,6 +45,88 @@ class _SystemHash {
   }
 }
 
+typedef WatchTourPlayersRef = AutoDisposeStreamProviderRef<List<Player>>;
+
+/// See also [watchTourPlayers].
+@ProviderFor(watchTourPlayers)
+const watchTourPlayersProvider = WatchTourPlayersFamily();
+
+/// See also [watchTourPlayers].
+class WatchTourPlayersFamily extends Family<AsyncValue<List<Player>>> {
+  /// See also [watchTourPlayers].
+  const WatchTourPlayersFamily();
+
+  /// See also [watchTourPlayers].
+  WatchTourPlayersProvider call(
+    List<String> members,
+  ) {
+    return WatchTourPlayersProvider(
+      members,
+    );
+  }
+
+  @override
+  WatchTourPlayersProvider getProviderOverride(
+    covariant WatchTourPlayersProvider provider,
+  ) {
+    return call(
+      provider.members,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'watchTourPlayersProvider';
+}
+
+/// See also [watchTourPlayers].
+class WatchTourPlayersProvider extends AutoDisposeStreamProvider<List<Player>> {
+  /// See also [watchTourPlayers].
+  WatchTourPlayersProvider(
+    this.members,
+  ) : super.internal(
+          (ref) => watchTourPlayers(
+            ref,
+            members,
+          ),
+          from: watchTourPlayersProvider,
+          name: r'watchTourPlayersProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$watchTourPlayersHash,
+          dependencies: WatchTourPlayersFamily._dependencies,
+          allTransitiveDependencies:
+              WatchTourPlayersFamily._allTransitiveDependencies,
+        );
+
+  final List<String> members;
+
+  @override
+  bool operator ==(Object other) {
+    return other is WatchTourPlayersProvider && other.members == members;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, members.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$fetchTourPlayersHash() => r'9b7945746aae4986cc1d7136e516fb3c0557684f';
 typedef FetchTourPlayersRef = AutoDisposeFutureProviderRef<List<Player>>;
 
 /// See also [fetchTourPlayers].

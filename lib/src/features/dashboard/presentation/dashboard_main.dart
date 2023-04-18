@@ -65,6 +65,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
                   }
                 },
               ),
+              gapH16,
               if (user != null && !user.emailVerified)
                 VerifyEmailCard(user: user),
             ],

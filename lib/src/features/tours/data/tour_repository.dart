@@ -81,6 +81,16 @@ class ToursRepository {
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
+  Stream<Tour?> watchTour(String tourId) => _database
+      .doc(tourPath(tourId))
+      .withConverter(
+        fromFirestore: (snapshot, _) =>
+            Tour.fromJson(snapshot.data()!, snapshot.id),
+        toFirestore: (tour, _) => tour.toJson(),
+      )
+      .snapshots()
+      .map((snapshot) => snapshot.data()!);
+
   // Stream tours associated with user
   Stream<List<Tour>> watchJoinedTours(String userId) {
     return queryTours().snapshots().map((snapshot) => snapshot.docs
@@ -117,6 +127,10 @@ FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) =>
 @riverpod
 ToursRepository toursRepository(ToursRepositoryRef ref) =>
     ToursRepository(ref.watch(firebaseFirestoreProvider));
+
+@riverpod
+Stream<Tour?> watchTour(WatchTourRef ref, String tourId) =>
+    ref.watch(toursRepositoryProvider).watchTour(tourId);
 
 @riverpod
 Future<Tour?> fetchTour(FetchTourRef ref, String tourId) =>
