@@ -8,11 +8,13 @@ class PrimaryTextButton extends StatelessWidget {
     super.key,
     this.onPressed,
     required this.label,
-    required this.isLoading,
+    this.isLoading = false,
   });
+
   final VoidCallback? onPressed;
   final String label;
   final bool isLoading;
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +26,12 @@ class PrimaryTextButton extends StatelessWidget {
       child: isLoading
           ? const CircularProgressIndicator()
           : Text(
-              label,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+        label,
+        style: Theme
+            .of(context)
+            .textTheme
+            .bodyLarge,
+      ),
     );
   }
 }

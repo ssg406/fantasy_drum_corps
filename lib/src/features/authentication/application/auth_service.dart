@@ -23,17 +23,9 @@ class AuthService {
   Future<void> deleteCurrentUser() async {
     final user = _authRepo.currentUser;
     if (user != null) {
-      _resetDisplayName(user.uid).then((_) => _resetAvatarString(user.uid));
+      await _playersRepo.deletePlayer(user.uid);
       user.delete();
     }
-  }
-
-  Future<void> _resetAvatarString(String uid) async {
-    await _playersRepo.setAvatarString(playerId: uid, avatarString: '');
-  }
-
-  Future<void> _resetDisplayName(String uid) async {
-    await _playersRepo.setDisplayName(playerId: uid, displayName: 'Player');
   }
 
   // Create a new user and save to Firebase auth and player repository

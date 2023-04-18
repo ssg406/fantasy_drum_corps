@@ -35,8 +35,13 @@ class PlayersRepository {
     return _db.doc(playerPath(player.playerId!)).update(player.toJson());
   }
 
-  Future<void> deletePlayer(String playerId) {
-    return _db.doc(playerPath(playerId)).delete();
+  Future<void> deletePlayer(String playerId) async {
+    final player = await fetchPlayer(playerId);
+    if (player != null) {
+      updatePlayer(
+          player: player.copyWith(
+              displayName: 'Player', avatarString: '', isActive: false));
+    }
   }
 
   Future<void> setDisplayName(
@@ -52,6 +57,14 @@ class PlayersRepository {
     final player = await fetchPlayer(playerId);
     if (player != null) {
       updatePlayer(player: player.copyWith(selectedCorps: corps));
+    }
+  }
+
+  Future<void> setPlayerState(
+      {required String playerId, required bool isActive}) async {
+    final player = await fetchPlayer(playerId);
+    if (player != null) {
+      updatePlayer(player: player.copyWith(isActive: false));
     }
   }
 

@@ -1,6 +1,5 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +10,6 @@ class CompleteProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.customBlue.withOpacity(0.8),
       child: Padding(
         padding: cardPadding,
         child: Column(
@@ -31,7 +29,6 @@ class CompleteProfileCard extends StatelessWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: TextButton.icon(
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 onPressed: () => context.goNamed(AppRoutes.profile.name),
                 icon: const Icon(Icons.arrow_circle_right_outlined),
                 label: const Text('Go to Profile'),
