@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'players_repository.g.dart';
@@ -33,7 +32,6 @@ class PlayersRepository {
   }
 
   Future<void> updatePlayer({required Player player}) {
-    debugPrint('in updatePlayer received: $player');
     return _db.doc(playerPath(player.playerId!)).update(player.toJson());
   }
 
@@ -58,11 +56,10 @@ class PlayersRepository {
   }
 
   Future<void> setAvatarString(
-      {required String playerId, String? avatarString}) async {
+      {required String playerId, required String avatarString}) async {
     final player = await fetchPlayer(playerId);
 
     if (player != null) {
-      debugPrint('fetched player in setPhotoUrl: $player');
       updatePlayer(player: player.copyWith(avatarString: avatarString));
     }
   }

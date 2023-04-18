@@ -31,8 +31,14 @@ class FlutterMojiPicker extends ConsumerWidget {
                   ),
                   gapH64,
                   FluttermojiCustomizer(
-                    scaffoldHeight: MediaQuery.of(context).size.height * 0.8,
-                    scaffoldWidth: MediaQuery.of(context).size.width * 0.7,
+                    scaffoldHeight: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.8,
+                    scaffoldWidth: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.7,
                     theme: FluttermojiThemeData(
                       primaryBgColor: theme.colorScheme.primary,
                       secondaryBgColor: theme.colorScheme.secondary,
@@ -57,9 +63,9 @@ class FlutterMojiPicker extends ConsumerWidget {
                             .then((svgString) {
                           ref
                               .read(
-                                  flutterMojiPickerControllerProvider.notifier)
-                              .setPlayerAvatarString(svgString)
-                              .then((_) => context.pop);
+                              flutterMojiPickerControllerProvider.notifier)
+                              .setPlayerAvatarString(svgString);
+                          context.pop();
                         });
                       },
                     ),
@@ -70,4 +76,5 @@ class FlutterMojiPicker extends ConsumerWidget {
       ),
     );
   }
+
 }
