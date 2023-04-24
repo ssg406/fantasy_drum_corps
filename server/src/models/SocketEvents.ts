@@ -1,7 +1,11 @@
-enum SocketEvents {
-    onIdentifyClient = 'onIdentifyClient',
-    tourNotFound = 'tourNotFound',
-    initiateDraft = 'initiateDraft',
-    draftNotActive = 'draftNotActive',
+export enum SocketEvents {
+  clientSendsIdentification = 'clientSendsIdentification',
+  tourNotFound = 'tourNotFound',
+  clientInitiatesDraft = 'clientInitiatesDraft',
+  serverInitiatesDraft = 'serverInitiatesDraft',
+  draftNotActive = 'draftNotActive',
+  serverInitiatesTurn = 'serverInitiatesTurn',
+  serverEndsTurn = 'serverEndsTurn',
+  clientSendsPick = 'clientSendsPick',
+  serverEndsDraft = 'serverEndsDraft',
 }
-export default SocketEvents;

@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import 'package:fantasy_drum_corps/src/common_widgets/error_message_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +22,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
       error: (e, st) {
         developer.log('Error: ${e.toString()}\nStack Trace: $st',
             name: 'logs.error', error: e);
-        return Center(child: ErrorMessageWidget(e.toString()));
+        return const NotFound();
       },
       loading: () => Center(
           child: showLoading ? const CircularProgressIndicator() : Container()),

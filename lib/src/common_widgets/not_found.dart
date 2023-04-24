@@ -1,6 +1,7 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class NotFound extends StatefulWidget {
@@ -13,24 +14,24 @@ class NotFound extends StatefulWidget {
 class _NotFoundState extends State<NotFound> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline_rounded,
-              size: 75.0,
+            FaIcon(
+              FontAwesomeIcons.bug,
+              size: 60.0,
+              color: theme.colorScheme.primary,
             ),
             gapH16,
-            Text(
-              'Resource Not Found',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
+            Text('Resource Not Found',
+                style: Theme.of(context).textTheme.displaySmall),
             Text(
               'An error might have occurred and we couldn\'t find what you were looking for. We\'ll redirect you back home in a moment.',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
             )
           ],
         ),

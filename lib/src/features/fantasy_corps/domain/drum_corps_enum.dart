@@ -21,6 +21,7 @@ enum DrumCorps {
   seattleCascades,
   spiritOfAtlanta,
   troopers,
+  empty,
 }
 
 extension DrumCorpsNames on DrumCorps {
@@ -70,6 +71,8 @@ extension DrumCorpsNames on DrumCorps {
         return 'Spirit of Atlanta';
       case DrumCorps.troopers:
         return 'Troopers';
+      case DrumCorps.empty:
+        return 'Empty';
     }
   }
 }

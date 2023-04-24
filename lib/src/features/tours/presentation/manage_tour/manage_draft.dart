@@ -41,7 +41,7 @@ class ManageDraft extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: () => context.goNamed(
-                AppRoutes.draft.name,
+                AppRoutes.draftLobby.name,
                 params: {'tid': tourId},
               ),
               icon: const FaIcon(FontAwesomeIcons.circlePlay),

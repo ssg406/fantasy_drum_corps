@@ -20,21 +20,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class TourDetail extends ConsumerWidget {
-  const TourDetail({Key? key, required this.tourId}) : super(key: key);
+  const TourDetail({Key? key, this.tourId}) : super(key: key);
 
-  final String tourId;
+  final String? tourId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AsyncValueWidget(
-      value: ref.watch(watchTourProvider(tourId)),
-      data: (Tour? tour) {
-        final currentUser = ref.watch(authRepositoryProvider).currentUser;
-        return tour == null
-            ? const NotFound()
-            : TourDetailContents(tour: tour, user: currentUser!);
-      },
-    );
+    return tourId == null
+        ? const NotFound()
+        : AsyncValueWidget(
+            value: ref.watch(watchTourProvider(tourId!)),
+            data: (Tour? tour) {
+              final currentUser = ref.watch(authRepositoryProvider).currentUser;
+              return tour == null
+                  ? const NotFound()
+                  : TourDetailContents(tour: tour, user: currentUser!);
+            },
+          );
   }
 }
 
@@ -145,8 +147,8 @@ class TourDetailContents extends StatelessWidget {
         if (tour.members.contains(user.uid))
           TextButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () => context
-                .pushNamed(AppRoutes.draft.name, params: {'tid': tour.id!}),
+            onPressed: () => context.pushNamed(AppRoutes.draftLobby.name,
+                params: {'tid': tour.id!}),
             label: const Text('Go to Draft'),
           ),
         if (tour.members.contains(user.uid) && tour.owner != user.uid)

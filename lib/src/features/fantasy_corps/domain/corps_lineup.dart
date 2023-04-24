@@ -1,57 +1,135 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 
 class CorpsLineup {
-  CorpsLineup({
+  const CorpsLineup({
+    this.lineupId,
     required this.userId,
-    this.generalEffect1,
-    this.generalEffect2,
-    this.visualProficiency,
-    this.visualAnalysis,
-    this.colorGuard,
-    this.brass,
-    this.musicAnalysis1,
-    this.musicAnalysis2,
-    this.percussion,
+    required this.tourId,
+    this.generalEffect1First,
+    this.generalEffect1Second,
+    this.generalEffect2First,
+    this.generalEffect2Second,
+    this.visualProficiencyFirst,
+    this.visualProficiencySecond,
+    this.visualAnalysisFirst,
+    this.visualAnalysisSecond,
+    this.colorGuardFirst,
+    this.colorGuardSecond,
+    this.brassFirst,
+    this.brassSecond,
+    this.musicAnalysisFirst,
+    this.musicAnalysisSecond,
+    this.percussionFirst,
+    this.percussionSecond,
   });
 
+  final String? lineupId;
   final String userId;
-  DrumCorps? generalEffect1;
-  DrumCorps? generalEffect2;
-  DrumCorps? visualProficiency;
-  DrumCorps? visualAnalysis;
-  DrumCorps? colorGuard;
-  DrumCorps? brass;
-  DrumCorps? musicAnalysis1;
-  DrumCorps? musicAnalysis2;
-  DrumCorps? percussion;
+  final String tourId;
+  final DrumCorps? generalEffect1First;
+  final DrumCorps? generalEffect1Second;
+  final DrumCorps? generalEffect2First;
+  final DrumCorps? generalEffect2Second;
+  final DrumCorps? visualProficiencyFirst;
+  final DrumCorps? visualProficiencySecond;
+  final DrumCorps? visualAnalysisFirst;
+  final DrumCorps? visualAnalysisSecond;
+  final DrumCorps? colorGuardFirst;
+  final DrumCorps? colorGuardSecond;
+  final DrumCorps? brassFirst;
+  final DrumCorps? brassSecond;
+  final DrumCorps? musicAnalysisFirst;
+  final DrumCorps? musicAnalysisSecond;
+  final DrumCorps? percussionFirst;
+  final DrumCorps? percussionSecond;
 
-  factory CorpsLineup.fromJson(Map<String, dynamic> json) {
+  factory CorpsLineup.fromJson(Map<String, dynamic> json, String lineupId) {
     return CorpsLineup(
+      lineupId: lineupId,
       userId: json['userId'] as String,
-      generalEffect1: json['generalEffect1'] as DrumCorps?,
-      generalEffect2: json['generalEffect2'] as DrumCorps?,
-      visualProficiency: json['visualProficiency'] as DrumCorps?,
-      visualAnalysis: json['visualAnalysis'] as DrumCorps?,
-      colorGuard: json['colorGuard'] as DrumCorps?,
-      brass: json['brass'] as DrumCorps?,
-      musicAnalysis1: json['musicAnalysis1'] as DrumCorps?,
-      musicAnalysis2: json['musicAnalysis2'] as DrumCorps?,
-      percussion: json['percussion'] as DrumCorps?,
+      tourId: json['tourId'] as String,
+      generalEffect1First: json['generalEffect1First'] as DrumCorps?,
+      generalEffect1Second: json['generalEffect1Second'] as DrumCorps?,
+      generalEffect2First: json['generalEffect2First'] as DrumCorps?,
+      generalEffect2Second: json['generalEffect2Second'] as DrumCorps?,
+      visualProficiencyFirst: json['visualProficiencyFirst'] as DrumCorps?,
+      visualProficiencySecond: json['visualProficiencySecond'] as DrumCorps?,
+      visualAnalysisFirst: json['visualAnalysisFirst'] as DrumCorps?,
+      visualAnalysisSecond: json['visualAnalysisSecond'] as DrumCorps?,
+      colorGuardFirst: json['colorGuardFirst'] as DrumCorps?,
+      colorGuardSecond: json['colorGuardSecond'] as DrumCorps?,
+      brassFirst: json['brassFirst'] as DrumCorps?,
+      brassSecond: json['brassSecond'] as DrumCorps?,
+      musicAnalysisFirst: json['musicAnalysisFirst'] as DrumCorps?,
+      musicAnalysisSecond: json['musicAnalysisSecond'] as DrumCorps?,
+      percussionFirst: json['percussionFirst'] as DrumCorps?,
+      percussionSecond: json['percussionSecond'] as DrumCorps?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'lineupId': lineupId,
       'userId': userId,
-      'generalEffect1': generalEffect1,
-      'generalEffect2': generalEffect2,
-      'visualProficiency': visualProficiency,
-      'visualAnalysis': visualAnalysis,
-      'colorGuard': colorGuard,
-      'brass': brass,
-      'musicAnalysis1': musicAnalysis1,
-      'musicAnalysis2': musicAnalysis2,
-      'percussion': percussion,
+      'tourId': tourId,
+      'generalEffect1First': generalEffect1First,
+      'generalEffect1Second': generalEffect1Second,
+      'generalEffect2First': generalEffect2First,
+      'generalEffect2Second': generalEffect2Second,
+      'visualProficiencyFirst': visualProficiencyFirst,
+      'visualProficiencySecond': visualProficiencySecond,
+      'visualAnalysisFirst': visualAnalysisFirst,
+      'visualAnalysisSecond': visualAnalysisSecond,
+      'colorGuardFirst': colorGuardFirst,
+      'colorGuardSecond': colorGuardSecond,
+      'brassFirst': brassFirst,
+      'brassSecond': brassSecond,
+      'musicAnalysisFirst': musicAnalysisFirst,
+      'musicAnalysisSecond': musicAnalysisSecond,
+      'percussionFirst': percussionFirst,
+      'percussionSecond': percussionSecond,
     };
   }
+
+  CorpsLineup copyWith({
+    DrumCorps? generalEffect1First,
+    DrumCorps? generalEffect1Second,
+    DrumCorps? generalEffect2First,
+    DrumCorps? generalEffect2Second,
+    DrumCorps? visualProficiencyFirst,
+    DrumCorps? visualProficiencySecond,
+    DrumCorps? visualAnalysisFirst,
+    DrumCorps? visualAnalysisSecond,
+    DrumCorps? colorGuardFirst,
+    DrumCorps? colorGuardSecond,
+    DrumCorps? brassFirst,
+    DrumCorps? brassSecond,
+    DrumCorps? musicAnalysisFirst,
+    DrumCorps? musicAnalysisSecond,
+    DrumCorps? percussionFirst,
+    DrumCorps? percussionSecond,
+  }) =>
+      CorpsLineup(
+        lineupId: lineupId,
+        userId: userId,
+        tourId: tourId,
+        generalEffect1First: generalEffect1First ?? this.generalEffect1First,
+        generalEffect1Second: generalEffect1Second ?? this.generalEffect1Second,
+        generalEffect2First: generalEffect2First ?? this.generalEffect2First,
+        generalEffect2Second: generalEffect2Second ?? this.generalEffect2Second,
+        visualProficiencyFirst:
+            visualProficiencyFirst ?? this.visualProficiencyFirst,
+        visualProficiencySecond:
+            visualProficiencySecond ?? this.visualProficiencySecond,
+        visualAnalysisFirst: visualAnalysisFirst ?? this.visualAnalysisFirst,
+        visualAnalysisSecond: visualAnalysisSecond ?? this.visualAnalysisSecond,
+        colorGuardFirst: colorGuardFirst ?? this.colorGuardFirst,
+        colorGuardSecond: colorGuardSecond ?? this.colorGuardSecond,
+        brassFirst: brassFirst ?? this.brassFirst,
+        brassSecond: brassSecond ?? this.brassSecond,
+        musicAnalysisFirst: musicAnalysisFirst ?? this.musicAnalysisFirst,
+        musicAnalysisSecond: musicAnalysisSecond ?? this.musicAnalysisSecond,
+        percussionFirst: percussionFirst ?? this.percussionFirst,
+        percussionSecond: percussionSecond ?? this.percussionSecond,
+      );
 }

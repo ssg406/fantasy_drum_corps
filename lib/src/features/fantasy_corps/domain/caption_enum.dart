@@ -7,6 +7,7 @@ enum Caption {
   brass,
   musicAnalysis,
   percussion,
+  empty,
 }
 
 extension CaptionName on Caption {
@@ -28,6 +29,8 @@ extension CaptionName on Caption {
         return 'Percussion';
       case Caption.musicAnalysis:
         return 'Music Analysis';
+      case Caption.empty:
+        return 'Empty';
     }
   }
 
@@ -49,6 +52,8 @@ extension CaptionName on Caption {
         return 'Music Anls.';
       case Caption.percussion:
         return 'Percussion';
+      case Caption.empty:
+        return 'Empty';
     }
   }
 }

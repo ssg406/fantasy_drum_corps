@@ -19,7 +19,8 @@ class ToursRepository {
   static String toursPath = 'tours';
 
   // Return Firestore query with converter for league collection
-  Query<Tour> queryTours() => _database.collection(toursPath).withConverter(
+  Query<Tour> queryTours() =>
+      _database.collection(toursPath).withConverter(
         fromFirestore: (snapshot, _) =>
             Tour.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (league, _) => league.toJson(),
@@ -70,6 +71,14 @@ class ToursRepository {
     });
   }
 
+  Future<void> setDraftActive(
+      {required bool draftActive, required String tourId}) async {
+    final tour = await fetchTour(tourId: tourId);
+    if (tour != null) {
+      updateTour(tour.copyWith(draftActive: draftActive));
+    }
+  }
+
   // Query either all leagues or only public leagues
   Stream<List<Tour>> watchTours(bool watchPublicOnly) {
     Query<Tour> query = queryTours();
@@ -81,38 +90,41 @@ class ToursRepository {
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
-  Stream<Tour?> watchTour(String tourId) => _database
-      .doc(tourPath(tourId))
-      .withConverter(
+  Stream<Tour?> watchTour(String tourId) =>
+      _database
+          .doc(tourPath(tourId))
+          .withConverter(
         fromFirestore: (snapshot, _) =>
             Tour.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (tour, _) => tour.toJson(),
       )
-      .snapshots()
-      .map((snapshot) => snapshot.data()!);
+          .snapshots()
+          .map((snapshot) => snapshot.data()!);
 
   // Stream tours associated with user
   Stream<List<Tour>> watchJoinedTours(String userId) {
-    return queryTours().snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => doc.data())
-        .where((tour) => tour.members.contains(userId))
-        .toList());
+    return queryTours().snapshots().map((snapshot) =>
+        snapshot.docs
+            .map((doc) => doc.data())
+            .where((tour) => tour.members.contains(userId))
+            .toList());
   }
 
   Stream<List<Tour>> watchOwnTours(String userId) {
-    return queryTours().snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => doc.data())
-        .where((tour) => tour.owner == userId)
-        .toList());
+    return queryTours().snapshots().map((snapshot) =>
+        snapshot.docs
+            .map((doc) => doc.data())
+            .where((tour) => tour.owner == userId)
+            .toList());
   }
 
   // Fetch single tour
   Future<Tour?> fetchTour({required String tourId}) async {
     final ref = _database.collection(toursPath).doc(tourId).withConverter(
-          fromFirestore: (snapshot, _) =>
-              Tour.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (tour, _) => tour.toJson(),
-        );
+      fromFirestore: (snapshot, _) =>
+          Tour.fromJson(snapshot.data()!, snapshot.id),
+      toFirestore: (tour, _) => tour.toJson(),
+    );
     final snapshot = await ref.get();
     return snapshot.data();
   }
@@ -138,7 +150,9 @@ Future<Tour?> fetchTour(FetchTourRef ref, String tourId) =>
 
 @riverpod
 Future<void> deleteTour(DeleteTourRef ref, String tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when deleting a tour');
   }
@@ -149,7 +163,9 @@ Future<void> deleteTour(DeleteTourRef ref, String tourId) {
 
 @riverpod
 Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when accessing tours');
   }
@@ -158,7 +174,9 @@ Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {
 
 @riverpod
 Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when accessing tours');
   }
@@ -167,7 +185,9 @@ Stream<List<Tour>> watchOwnedTours(WatchOwnedToursRef ref) {
 
 @riverpod
 Future<void> addSelfToTour(AddSelfToTourRef ref, String tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when modifying tours');
   }
@@ -178,7 +198,9 @@ Future<void> addSelfToTour(AddSelfToTourRef ref, String tourId) {
 
 @riverpod
 Future<void> removeSelfFromTour(RemoveSelfFromTourRef ref, String tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when removing from tours');
   }
