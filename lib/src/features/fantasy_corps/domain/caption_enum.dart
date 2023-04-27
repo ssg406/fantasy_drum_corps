@@ -11,7 +11,7 @@ enum Caption {
 }
 
 extension CaptionName on Caption {
-  String get name {
+  String get fullName {
     switch (this) {
       case Caption.ge1:
         return 'General Effect 1';

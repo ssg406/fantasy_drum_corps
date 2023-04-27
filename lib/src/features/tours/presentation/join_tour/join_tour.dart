@@ -26,7 +26,7 @@ class JoinTour extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
-      value: ref.read(fetchTourProvider(tourId!)),
+      value: ref.watch(fetchTourProvider(tourId!)),
       data: (Tour? tour) {
         return tour == null ? const NotFound() : JoinTourContents(tour: tour);
       },

@@ -15,17 +15,18 @@ class DrumCorpsCaption {
   final DrumCorps corps;
   final Caption caption;
 
-  factory DrumCorpsCaption.fromJson(Map<String, dynamic> json, String id) =>
-      DrumCorpsCaption(
-          drumCorpsCaptionId: id,
-          corps: json['corps'] as DrumCorps,
-          caption: json['caption'] as Caption);
+  factory DrumCorpsCaption.fromJson(Map<String, dynamic> json, String id) {
+    return DrumCorpsCaption(
+        drumCorpsCaptionId: id,
+        corps: DrumCorps.values.byName(json['corps']),
+        caption: Caption.values.byName(json['caption']));
+  }
 
   Map<String, dynamic> toJson() {
     return {
       'drumCorpsCaptionId': drumCorpsCaptionId,
-      'corps': corps,
-      'caption': caption,
+      'corps': corps.name,
+      'caption': caption.name,
     };
   }
 
@@ -38,8 +39,7 @@ class DrumCorpsCaption {
 
   @override
   String toString() =>
-      'DrumCorpsCaption(drumCorpsCaptionId: $drumCorpsCaptionId, corps: ${corps
-          .fullName}, caption: ${caption.name})';
+      'DrumCorpsCaption(drumCorpsCaptionId: $drumCorpsCaptionId, corps: ${corps.fullName}, caption: ${caption.name})';
 
   @override
   int get hashCode => hash3(drumCorpsCaptionId, corps, caption);

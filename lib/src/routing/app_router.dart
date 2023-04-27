@@ -6,7 +6,6 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/standin
 import 'package:fantasy_drum_corps/src/features/competition/presentation/subcaption_results.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
@@ -203,18 +202,6 @@ GoRouter goRouter(GoRouterRef ref) {
                           key: state.pageKey,
                           child: DraftLobby(tourId: tourId));
                     },
-                    routes: [
-                      GoRoute(
-                          path: 'draft',
-                          name: AppRoutes.draft.name,
-                          pageBuilder: (context, state) {
-                            final tourId = state.params['tid'];
-                            return NoTransitionPage(
-                              key: state.pageKey,
-                              child: TourDraft(tourId: tourId),
-                            );
-                          })
-                    ],
                   ),
                   GoRoute(
                     path: 'competitionSchedule',

@@ -125,7 +125,7 @@ class TourDetailContents extends StatelessWidget {
               context.pushNamed(AppRoutes.joinTour.name,
                   params: {'tid': tour.id!}, extra: tour);
             },
-            label: const Text('Jour Tour'),
+            label: const Text('Join Tour'),
           ),
         if (tour.owner == user.uid)
           TextButton.icon(
@@ -136,14 +136,15 @@ class TourDetailContents extends StatelessWidget {
             },
             label: const Text('ManageTour'),
           ),
-        TextButton.icon(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            context.pushNamed(AppRoutes.editTour.name,
-                params: {'tid': tour.id!}, extra: tour);
-          },
-          label: const Text('Edit Tour'),
-        ),
+        if (tour.owner == user.uid)
+          TextButton.icon(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              context.pushNamed(AppRoutes.editTour.name,
+                  params: {'tid': tour.id!}, extra: tour);
+            },
+            label: const Text('Edit Tour'),
+          ),
         if (tour.members.contains(user.uid))
           TextButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
