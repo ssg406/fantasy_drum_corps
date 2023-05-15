@@ -21,11 +21,9 @@ enum DrumCorps {
   seattleCascades,
   spiritOfAtlanta,
   troopers,
-  empty,
 }
 
 extension DrumCorpsNames on DrumCorps {
-
   String get fullName {
     switch (this) {
       case DrumCorps.theAcademy:
@@ -72,8 +70,6 @@ extension DrumCorpsNames on DrumCorps {
         return 'Spirit of Atlanta';
       case DrumCorps.troopers:
         return 'Troopers';
-      case DrumCorps.empty:
-        return 'Empty';
     }
   }
 }

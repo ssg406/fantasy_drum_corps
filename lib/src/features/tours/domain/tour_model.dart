@@ -27,7 +27,7 @@ class Tour {
   final String? password;
   final bool draftActive;
 
-  static const maxTourSize = 8;
+  static const maxTourSize = 22;
 
   void removePlayerFromTour(String playerId) {
     if (playerId == owner) {

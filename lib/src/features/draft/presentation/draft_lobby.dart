@@ -5,16 +5,22 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/draft/domain/socket_events.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_waiting_room.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/main_draft.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
+import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 const turnLength = 45;
+
+const rootServerUrl = 'http://localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -23,22 +29,25 @@ class DraftLobby extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerId = ref.watch(authRepositoryProvider).currentUser?.uid;
+    final playerId = ref
+        .watch(authRepositoryProvider)
+        .currentUser
+        ?.uid;
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-            value: ref.watch(watchTourProvider(tourId!)),
-            data: (Tour? tour) {
-              if (tour == null) {
-                return const NotFound();
-              } else if (playerId == null) {
-                return const NotFound();
-              }
-              return DraftLobbyContents(
-                tour: tour,
-                playerId: playerId,
-              );
-            });
+        value: ref.watch(watchTourProvider(tourId!)),
+        data: (Tour? tour) {
+          if (tour == null) {
+            return const NotFound();
+          } else if (playerId == null) {
+            return const NotFound();
+          }
+          return DraftLobbyContents(
+            tour: tour,
+            playerId: playerId,
+          );
+        });
   }
 }
 
@@ -82,7 +91,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         fantasyCorps: fantasyCorps,
         onCaptionSelected: _onCaptionSelected,
         onCancelDraft:
-            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+        widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
     }
     if (showCountdown) {
@@ -94,7 +103,10 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
             gapH24,
             Text(
                 'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme.of(context).textTheme.titleLarge)
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge)
           ],
         ),
       );
@@ -104,7 +116,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         players: players,
         isTourOwner: widget.tour.owner == widget.playerId,
         onOwnerStartsDraft:
-            widget.tour.owner == widget.playerId ? _startDraft : null,
+        widget.tour.owner == widget.playerId ? _startDraft : null,
       );
     }
   }
@@ -114,6 +126,11 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     super.initState();
 
     _initSocket();
+
+    // Set empty lineup
+    for (final caption in Caption.values) {
+      fantasyCorps.addAll({caption: List.empty(growable: true)});
+    }
 
     // Register listeners on socket connection
     socket.onConnect((_) {
@@ -129,7 +146,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   void _initSocket() {
     final tourId = widget.tour.id!;
 
-    socket = io.io('http://localhost:3000/$tourId');
+    socket = io.io('$rootServerUrl/$tourId');
   }
 
   /// Set up socket listeners that process active draft events
@@ -151,6 +168,62 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     socket.on(SERVER_UPDATE_TURN_TIMER, (data) {
       final remainingSeconds = data['remainingTime'] as int;
       setState(() => remainingTime = remainingSeconds);
+    });
+
+    socket.on(SERVER_NO_PICK_RECEIVED, (_) => _autoSelectPick());
+
+    socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
+  }
+
+  /// Iterates through the available picks and adds the first compatible pick
+  /// to the fantasyCorps map.
+  void _autoSelectPick() {
+    debugPrint('Server did not receive a pick this turn.');
+
+    String? pickId;
+
+    // Create a list of indexes representing positions in availableCaptions
+    final availableCaptionsIndices =
+    List.generate(availableCaptions.length, (index) => index);
+
+    // Shuffle the list
+    availableCaptionsIndices.shuffle();
+
+    for (final pickIndex in availableCaptionsIndices) {
+      // Get the pick from availableCaptions at the index
+      final pick = availableCaptions[pickIndex];
+
+      // For this picks caption, get the corps that have already been selected
+      // e.g., selections made for Brass in lineup
+      var currentPicks = fantasyCorps[pick.caption];
+
+      // Get how many slots available for this caption e.g. 1 slot open for Brass
+      final takenSlots = currentPicks?.length ?? 0;
+
+      // If there are no available slots, go to the next loop iteration
+      if (takenSlots > 1) {
+        continue;
+      }
+
+      // Set the pick ID to send to server
+      pickId = pick.drumCorpsCaptionId;
+
+      // Execute the logic for adding a pick to the lineup, same as
+      // when client is making a manual selection
+      if (currentPicks != null) {
+        currentPicks.add(pick.corps);
+        fantasyCorps.addAll({pick.caption: currentPicks});
+      } else {
+        fantasyCorps.addAll({
+          pick.caption: [pick.corps]
+        });
+      }
+      // Exit the loop is a selection was made.
+      break;
+    }
+    socket.emit(CLIENT_SENDS_AUTO_PICK, {
+      'playerId': widget.playerId,
+      'drumCorpsCaption': {'id': pickId},
     });
   }
 
@@ -188,6 +261,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     final currentPickerId = data['currentPick'] as String;
     final currentPickName = data['currentPickName'] as String;
     final nextPickName = data['nextPickName'] as String;
+    final round = data['roundNumber'] as int;
 
     // Create list of [DrumCorpsCaption] from server message
     final List<DrumCorpsCaption> availablePicks = List.empty(growable: true);
@@ -203,6 +277,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       isPlayersTurn = currentPickerId == widget.playerId;
       currentPick = currentPickName;
       nextPick = nextPickName;
+      roundNumber = round;
     });
   }
 
@@ -218,12 +293,50 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     });
   }
 
-  void _onCaptionSelected(DrumCorpsCaption caption) {
+  void _onCaptionSelected(DrumCorpsCaption drumCorpsCaption) {
+    // Get the list of existing picks from the fantasy corps map
+    var existingPicks = fantasyCorps[drumCorpsCaption.caption];
+
+    // Get the number of slots already taken
+    final takenSlots = existingPicks?.length ?? 0;
+
+    // If two slots are occupied show an alert
+    if (takenSlots > 1) {
+      showAlertDialog(
+          context: context,
+          title: 'No ${drumCorpsCaption.caption.name} slots available');
+      return;
+    }
+
     // Send selection back to server
     socket.emit(CLIENT_ENDS_TURN, {
       'playerId': widget.playerId,
-      'drumCorpsCaptionId': caption.drumCorpsCaptionId
+      'drumCorpsCaption': drumCorpsCaption.toJson()
     });
+
+    setState(() {
+      if (existingPicks != null) {
+        existingPicks.add(drumCorpsCaption.corps);
+        fantasyCorps.addAll({drumCorpsCaption.caption: existingPicks});
+      } else {
+        fantasyCorps.addAll({
+          drumCorpsCaption.caption: [drumCorpsCaption.corps]
+        });
+      }
+    });
+  }
+
+  void _onOwnerCancelledDraft() {
+    setState(() {
+      draftStarted = false;
+    });
+    showAlertDialog(
+        context: context,
+        title: 'Draft Cancelled',
+        content: 'The draft was cancelled by the tour owner.');
+
+    context
+        .pushNamed(AppRoutes.tourDetail.name, params: {'tid': widget.tour.id!});
   }
 
   void _onCancelDraft() {
@@ -232,6 +345,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       draftStarted = false;
       showCountdown = false;
     });
+    context.pop();
   }
 
   @override

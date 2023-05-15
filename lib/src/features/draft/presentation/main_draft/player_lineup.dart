@@ -71,7 +71,7 @@ class LineupCaptionSlot extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          caption.name,
+          caption.fullName,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         for (final pick in picks)

@@ -90,7 +90,15 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                     });
                   },
                 ),
-              ),
+              )
+            else
+              const Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  onPressed: null,
+                  child: Text('WAITING'),
+                ),
+              )
           ],
         ),
       ),

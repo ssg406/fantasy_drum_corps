@@ -10,6 +10,16 @@ class TimerCard extends StatelessWidget {
 
   final int remainingTime;
 
+  Color _getTimerColor() {
+    if (remainingTime >= 30) {
+      return Colors.green.shade600;
+    } else if (remainingTime < 30 && remainingTime >= 15) {
+      return Colors.yellow.shade600;
+    } else {
+      return Colors.red.shade600;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('00');
@@ -21,14 +31,18 @@ class TimerCard extends StatelessWidget {
           children: [
             Text(
               'Time Left',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .titleMedium,
             ),
             Text(
               ':${formatter.format(remainingTime)}',
-              style: Theme.of(context)
+              style: Theme
+                  .of(context)
                   .textTheme
                   .displayLarge!
-                  .copyWith(color: Colors.green[600], fontSize: 80.0),
+                  .copyWith(color: _getTimerColor(), fontSize: 80.0),
             ),
           ],
         ),
