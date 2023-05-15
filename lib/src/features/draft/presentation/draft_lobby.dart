@@ -29,25 +29,22 @@ class DraftLobby extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerId = ref
-        .watch(authRepositoryProvider)
-        .currentUser
-        ?.uid;
+    final playerId = ref.watch(authRepositoryProvider).currentUser?.uid;
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-        value: ref.watch(watchTourProvider(tourId!)),
-        data: (Tour? tour) {
-          if (tour == null) {
-            return const NotFound();
-          } else if (playerId == null) {
-            return const NotFound();
-          }
-          return DraftLobbyContents(
-            tour: tour,
-            playerId: playerId,
-          );
-        });
+            value: ref.watch(watchTourProvider(tourId!)),
+            data: (Tour? tour) {
+              if (tour == null) {
+                return const NotFound();
+              } else if (playerId == null) {
+                return const NotFound();
+              }
+              return DraftLobbyContents(
+                tour: tour,
+                playerId: playerId,
+              );
+            });
   }
 }
 
@@ -68,7 +65,8 @@ class DraftLobbyContents extends ConsumerStatefulWidget {
 class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   List<Player> players = List.empty(growable: true);
   List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
-  bool draftStarted = false;
+
+  bool draftStarted = true;
   bool showCountdown = false;
   bool isPlayersTurn = false;
   late io.Socket socket;
@@ -77,6 +75,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   String? currentPick;
   String? nextPick;
   int remainingTime = turnLength;
+  DrumCorpsCaption? lastPlayersPick;
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +85,13 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         roundNumber: roundNumber,
         currentPick: currentPick,
         nextPick: nextPick,
+        lastPlayersPick: lastPlayersPick,
         canPick: isPlayersTurn,
         availablePicks: availableCaptions,
         fantasyCorps: fantasyCorps,
         onCaptionSelected: _onCaptionSelected,
         onCancelDraft:
-        widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
     }
     if (showCountdown) {
@@ -99,14 +99,15 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(),
+            const SizedBox(
+                width: 300,
+                child: LinearProgressIndicator(
+                  semanticsLabel: 'Waiting for players indicator',
+                )),
             gapH24,
             Text(
                 'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge)
+                style: Theme.of(context).textTheme.titleLarge)
           ],
         ),
       );
@@ -116,7 +117,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         players: players,
         isTourOwner: widget.tour.owner == widget.playerId,
         onOwnerStartsDraft:
-        widget.tour.owner == widget.playerId ? _startDraft : null,
+            widget.tour.owner == widget.playerId ? _startDraft : null,
       );
     }
   }
@@ -170,6 +171,15 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       setState(() => remainingTime = remainingSeconds);
     });
 
+    // Server sends the last players pick
+    socket.on(SERVER_SENDS_PLAYER_PICK, (data) {
+      final lastPick = data['lastPick'];
+      debugPrint(data.toString());
+      final pick =
+          DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
+      setState(() => lastPlayersPick = pick);
+    });
+
     socket.on(SERVER_NO_PICK_RECEIVED, (_) => _autoSelectPick());
 
     socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
@@ -184,7 +194,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
-    List.generate(availableCaptions.length, (index) => index);
+        List.generate(availableCaptions.length, (index) => index);
 
     // Shuffle the list
     availableCaptionsIndices.shuffle();
@@ -304,7 +314,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     if (takenSlots > 1) {
       showAlertDialog(
           context: context,
-          title: 'No ${drumCorpsCaption.caption.name} slots available');
+          title: 'No ${drumCorpsCaption.caption.fullName} slots available');
       return;
     }
 

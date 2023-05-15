@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/accent_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
@@ -46,7 +47,7 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                           final corps =
                               widget.availableCaptions![index].corps.fullName;
                           final caption =
-                              widget.availableCaptions![index].caption.name;
+                              widget.availableCaptions![index].caption.fullName;
                           return ListTile(
                             title: Text('$corps - $caption'),
                             selected: index == _selectedIndex,

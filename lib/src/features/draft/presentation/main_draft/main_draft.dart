@@ -19,6 +19,7 @@ class MainDraft extends StatelessWidget {
     required this.roundNumber,
     this.currentPick,
     this.nextPick,
+    this.lastPlayersPick,
     required this.canPick,
     required this.availablePicks,
     required this.fantasyCorps,
@@ -30,6 +31,7 @@ class MainDraft extends StatelessWidget {
   final int roundNumber;
   final String? currentPick;
   final String? nextPick;
+  final DrumCorpsCaption? lastPlayersPick;
   final bool canPick;
   final List<DrumCorpsCaption> availablePicks;
   final Lineup fantasyCorps;
@@ -63,9 +65,9 @@ class MainDraft extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.tight,
                       flex: 2,
-                      child: CurrentPickCard(
-                        currentPick: currentPick,
-                        nextPick: nextPick,
+                      child: CaptionFilterCard(
+                        onFilterSelected: (_, __) =>
+                            debugPrint('filter selected'),
                       ),
                     ),
                   ],
@@ -80,15 +82,16 @@ class MainDraft extends StatelessWidget {
                           : Axis.horizontal,
                   children: [
                     Flexible(
-                      flex: 2,
+                      flex: 1,
                       fit: FlexFit.tight,
-                      child: CaptionFilterCard(
-                        onFilterSelected: (_, __) =>
-                            debugPrint('filter selected'),
+                      child: CurrentPickCard(
+                        currentPick: currentPick,
+                        nextPick: nextPick,
+                        currentPickResult: lastPlayersPick,
                       ),
                     ),
                     Flexible(
-                      flex: 3,
+                      flex: 1,
                       fit: FlexFit.tight,
                       child: AvailableCaptions(
                         canPick: canPick,

@@ -37,9 +37,12 @@ class DrumCorpsCaption {
         caption: caption ?? this.caption);
   }
 
+  String get displayString => '${corps.fullName} ${caption.fullName}';
+
   @override
   String toString() =>
-      'DrumCorpsCaption(drumCorpsCaptionId: $drumCorpsCaptionId, corps: ${corps.fullName}, caption: ${caption.name})';
+      'DrumCorpsCaption(drumCorpsCaptionId: $drumCorpsCaptionId, corps: ${corps
+          .fullName}, caption: ${caption.name})';
 
   @override
   int get hashCode => hash3(drumCorpsCaptionId, corps, caption);
