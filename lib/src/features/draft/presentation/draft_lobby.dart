@@ -29,25 +29,22 @@ class DraftLobby extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerId = ref
-        .watch(authRepositoryProvider)
-        .currentUser
-        ?.uid;
+    final playerId = ref.watch(authRepositoryProvider).currentUser?.uid;
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-        value: ref.watch(watchTourProvider(tourId!)),
-        data: (Tour? tour) {
-          if (tour == null) {
-            return const NotFound();
-          } else if (playerId == null) {
-            return const NotFound();
-          }
-          return DraftLobbyContents(
-            tour: tour,
-            playerId: playerId,
-          );
-        });
+            value: ref.watch(watchTourProvider(tourId!)),
+            data: (Tour? tour) {
+              if (tour == null) {
+                return const NotFound();
+              } else if (playerId == null) {
+                return const NotFound();
+              }
+              return DraftLobbyContents(
+                tour: tour,
+                playerId: playerId,
+              );
+            });
   }
 }
 
@@ -97,7 +94,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         onCaptionSelected: _onCaptionSelected,
         onFilterSelected: _onCaptionFilterSelected,
         onCancelDraft:
-        widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
     }
     if (showCountdown) {
@@ -113,10 +110,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
             gapH24,
             Text(
                 'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge)
+                style: Theme.of(context).textTheme.titleLarge)
           ],
         ),
       );
@@ -126,7 +120,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         players: players,
         isTourOwner: widget.tour.owner == widget.playerId,
         onOwnerStartsDraft:
-        widget.tour.owner == widget.playerId ? _startDraft : null,
+            widget.tour.owner == widget.playerId ? _startDraft : null,
       );
     }
   }
@@ -159,6 +153,11 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     socket = io.io('$rootServerUrl/$tourId');
   }
 
+  int _getOpenLineupSlots() {
+    return fantasyCorps.values.fold(
+        0, (previousValue, element) => previousValue + (2 - element.length));
+  }
+
   /// Set up socket listeners that process active draft events
   void _registerActiveDraftListeners() {
     socket.on(SERVER_BEGIN_DRAFT_COUNTDOWN, (_) {
@@ -185,7 +184,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       final lastPick = data['lastPick'];
       debugPrint(data.toString());
       final pick =
-      DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
+          DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
       setState(() => lastPlayersPick = pick);
     });
 
@@ -201,7 +200,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
-    List.generate(availableCaptions.length, (index) => index);
+        List.generate(availableCaptions.length, (index) => index);
 
     // Shuffle the list
     availableCaptionsIndices.shuffle();
@@ -282,16 +281,22 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     // Create list of [DrumCorpsCaption] from server message
     final List<DrumCorpsCaption> availablePicks = List.empty(growable: true);
     for (var pick in allPicks) {
-      availablePicks.add(DrumCorpsCaption.fromJson(pick, pick['id']));
+      availablePicks
+          .add(DrumCorpsCaption.fromJson(pick, pick['drumCorpsCaptionId']));
     }
-
-    // Set filtered picks
-    filteredCaptions = availablePicks;
 
     debugPrint('Turn started for player $currentPickerId');
 
     // Update widget state
     setState(() {
+      // Re run caption filters
+      if (selectedFilters.isEmpty) {
+        filteredCaptions = availablePicks;
+      } else {
+        filteredCaptions = availablePicks
+            .where((item) => selectedFilters.contains(item.caption))
+            .toList();
+      }
       availableCaptions = availablePicks;
       isPlayersTurn = currentPickerId == widget.playerId;
       currentPick = currentPickName;
@@ -343,6 +348,22 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         });
       }
     });
+
+    if (_getOpenLineupSlots() == 0) {
+      _onLineupComplete();
+    }
+  }
+
+  void _onLineupComplete() {
+    socket.emit(CLIENT_LINEUP_COMPLETE);
+
+    // Create a new fantasy corps object and write it to the server
+    FantasyCorps corps =
+        FantasyCorps(tourId: widget.tour.id!, userId: widget.playerId);
+
+    // Exit draft room and send user to Fantasy Corps main page to enter details
+    context.pushNamed(AppRoutes.createCorps.name,
+        params: {'tid': widget.tour.id!}, extra: corps);
   }
 
   void _onOwnerCancelledDraft() {

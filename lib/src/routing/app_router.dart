@@ -6,6 +6,8 @@ import 'package:fantasy_drum_corps/src/features/competition/presentation/standin
 import 'package:fantasy_drum_corps/src/features/competition/presentation/subcaption_results.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
@@ -54,6 +56,7 @@ enum AppRoutes {
   manageTour,
   createFluttermoji,
   draftLobby,
+  createCorps,
 }
 
 @riverpod
@@ -154,6 +157,16 @@ GoRouter goRouter(GoRouterRef ref) {
                 },
                 routes: [
                   GoRoute(
+                      path: 'createCorps',
+                      name: AppRoutes.createCorps.name,
+                      pageBuilder: (context, state) {
+                        final fantasyCorps = state.extra as FantasyCorps?;
+                        return NoTransitionPage(
+                          key: state.pageKey,
+                          child: CreateFantasyCorps(fantasyCorps: fantasyCorps),
+                        );
+                      }),
+                  GoRoute(
                       path: 'manage',
                       name: AppRoutes.manageTour.name,
                       pageBuilder: (context, state) {
@@ -202,14 +215,6 @@ GoRouter goRouter(GoRouterRef ref) {
                           key: state.pageKey,
                           child: DraftLobby(tourId: tourId));
                     },
-                  ),
-                  GoRoute(
-                    path: 'competitionSchedule',
-                    name: AppRoutes.competitionSchedule.name,
-                    pageBuilder: (context, state) => NoTransitionPage(
-                        key: state.pageKey,
-                        child: const Placeholder() //state.params['id']
-                        ),
                   ),
                   GoRoute(
                     path: 'results',

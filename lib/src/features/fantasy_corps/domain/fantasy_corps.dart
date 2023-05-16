@@ -9,7 +9,7 @@ class FantasyCorps {
   const FantasyCorps({
     this.fantasyCorpsId,
     required this.tourId,
-    required this.name,
+    this.name,
     required this.userId,
     this.showTitle,
     this.repertoire,
@@ -18,7 +18,7 @@ class FantasyCorps {
 
   final String? fantasyCorpsId;
   final String tourId;
-  final String name;
+  final String? name;
   final String userId;
   final String? showTitle;
   final String? repertoire;
@@ -28,7 +28,7 @@ class FantasyCorps {
     return FantasyCorps(
       fantasyCorpsId: id,
       tourId: json['tourId'],
-      name: json['name'] as String,
+      name: json['name'] as String?,
       userId: json['userId'] as String,
       showTitle: json['showTitle'] as String?,
       repertoire: json['repertoire'] as String?,
