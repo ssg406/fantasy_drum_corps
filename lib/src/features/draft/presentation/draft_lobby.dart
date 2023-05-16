@@ -29,22 +29,25 @@ class DraftLobby extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerId = ref.watch(authRepositoryProvider).currentUser?.uid;
+    final playerId = ref
+        .watch(authRepositoryProvider)
+        .currentUser
+        ?.uid;
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-            value: ref.watch(watchTourProvider(tourId!)),
-            data: (Tour? tour) {
-              if (tour == null) {
-                return const NotFound();
-              } else if (playerId == null) {
-                return const NotFound();
-              }
-              return DraftLobbyContents(
-                tour: tour,
-                playerId: playerId,
-              );
-            });
+        value: ref.watch(watchTourProvider(tourId!)),
+        data: (Tour? tour) {
+          if (tour == null) {
+            return const NotFound();
+          } else if (playerId == null) {
+            return const NotFound();
+          }
+          return DraftLobbyContents(
+            tour: tour,
+            playerId: playerId,
+          );
+        });
   }
 }
 
@@ -65,8 +68,10 @@ class DraftLobbyContents extends ConsumerStatefulWidget {
 class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   List<Player> players = List.empty(growable: true);
   List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
+  List<DrumCorpsCaption> filteredCaptions = List.empty(growable: true);
+  List<Caption> selectedFilters = List.empty(growable: true);
 
-  bool draftStarted = true;
+  bool draftStarted = false;
   bool showCountdown = false;
   bool isPlayersTurn = false;
   late io.Socket socket;
@@ -87,11 +92,12 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         nextPick: nextPick,
         lastPlayersPick: lastPlayersPick,
         canPick: isPlayersTurn,
-        availablePicks: availableCaptions,
+        availablePicks: filteredCaptions,
         fantasyCorps: fantasyCorps,
         onCaptionSelected: _onCaptionSelected,
+        onFilterSelected: _onCaptionFilterSelected,
         onCancelDraft:
-            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+        widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
     }
     if (showCountdown) {
@@ -107,7 +113,10 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
             gapH24,
             Text(
                 'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme.of(context).textTheme.titleLarge)
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge)
           ],
         ),
       );
@@ -117,7 +126,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         players: players,
         isTourOwner: widget.tour.owner == widget.playerId,
         onOwnerStartsDraft:
-            widget.tour.owner == widget.playerId ? _startDraft : null,
+        widget.tour.owner == widget.playerId ? _startDraft : null,
       );
     }
   }
@@ -176,7 +185,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       final lastPick = data['lastPick'];
       debugPrint(data.toString());
       final pick =
-          DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
+      DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
       setState(() => lastPlayersPick = pick);
     });
 
@@ -190,11 +199,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   void _autoSelectPick() {
     debugPrint('Server did not receive a pick this turn.');
 
-    String? pickId;
-
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
-        List.generate(availableCaptions.length, (index) => index);
+    List.generate(availableCaptions.length, (index) => index);
 
     // Shuffle the list
     availableCaptionsIndices.shuffle();
@@ -211,15 +218,14 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       final takenSlots = currentPicks?.length ?? 0;
 
       // If there are no available slots, go to the next loop iteration
+      // If the loop proceeds beyond this point then it is the last iteration
       if (takenSlots > 1) {
         continue;
       }
 
-      // Set the pick ID to send to server
-      pickId = pick.drumCorpsCaptionId;
-
       // Execute the logic for adding a pick to the lineup, same as
-      // when client is making a manual selection
+      // when client is making a manual selection and then break out
+      // of the loop
       if (currentPicks != null) {
         currentPicks.add(pick.corps);
         fantasyCorps.addAll({pick.caption: currentPicks});
@@ -228,13 +234,13 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
           pick.caption: [pick.corps]
         });
       }
+      socket.emit(CLIENT_SENDS_AUTO_PICK, {
+        'playerId': widget.playerId,
+        'drumCorpsCaption': pick.toJson(),
+      });
       // Exit the loop is a selection was made.
       break;
     }
-    socket.emit(CLIENT_SENDS_AUTO_PICK, {
-      'playerId': widget.playerId,
-      'drumCorpsCaption': {'id': pickId},
-    });
   }
 
   /// Emit client identification, and listen for initial waiting room state updates
@@ -278,6 +284,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     for (var pick in allPicks) {
       availablePicks.add(DrumCorpsCaption.fromJson(pick, pick['id']));
     }
+
+    // Set filtered picks
+    filteredCaptions = availablePicks;
 
     debugPrint('Turn started for player $currentPickerId');
 
@@ -356,6 +365,26 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       showCountdown = false;
     });
     context.pop();
+  }
+
+  void _onCaptionFilterSelected(bool selected, Caption caption) {
+    // Add or remove from list of filtered captions
+    if (selected) {
+      selectedFilters.add(caption);
+    } else {
+      selectedFilters.remove(caption);
+    }
+
+    // Filter the caption list and set state
+    setState(() {
+      if (selectedFilters.isEmpty) {
+        filteredCaptions = availableCaptions;
+      } else {
+        filteredCaptions = availableCaptions
+            .where((item) => selectedFilters.contains(item.caption))
+            .toList();
+      }
+    });
   }
 
   @override
