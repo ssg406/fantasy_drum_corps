@@ -32,7 +32,7 @@ class FantasyCorps {
       userId: json['userId'] as String,
       showTitle: json['showTitle'] as String?,
       repertoire: json['repertoire'] as String?,
-      lineup: json['lineup'] as Lineup?,
+      lineup: LineupFromJson.call(json['lineup']),
     );
   }
 
@@ -43,8 +43,19 @@ class FantasyCorps {
       'userId': userId,
       'showTitle': showTitle,
       'repertoire': repertoire,
-      'lineup': lineup,
+      'lineup': lineupToJson(),
     };
+  }
+
+
+  Map<String, dynamic> lineupToJson() {
+    final Map<String, dynamic> jsonMap = {};
+    for (final caption in lineup!.keys) {
+      jsonMap.addAll({
+        caption.name: lineup![caption]?.map((e) => e.name).toList()
+      });
+    }
+    return jsonMap;
   }
 
   FantasyCorps copyWith({
@@ -65,5 +76,21 @@ class FantasyCorps {
       repertoire: repertoire ?? this.repertoire,
       lineup: lineup ?? this.lineup,
     );
+  }
+}
+
+class LineupFromJson {
+  static Lineup? call(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+    final Lineup lineup = {};
+    for (final captionKey in json.keys) {
+      lineup.addAll({
+        Caption.values.byName(captionKey): json[captionKey].map((e) =>
+            DrumCorps.values.byName(e)).toList(),
+      });
+    }
+    return lineup;
   }
 }

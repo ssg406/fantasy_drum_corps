@@ -1,13 +1,12 @@
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
-import 'package:fantasy_drum_corps/src/features/competition/presentation/scheduled_matchup.dart';
-import 'package:fantasy_drum_corps/src/features/competition/presentation/standings.dart';
-import 'package:fantasy_drum_corps/src/features/competition/presentation/subcaption_results.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/leaderboard/leaderboard.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/score_detail/score_detail.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
@@ -161,7 +160,8 @@ GoRouter goRouter(GoRouterRef ref) {
                       name: AppRoutes.createCorps.name,
                       pageBuilder: (context, state) {
                         final fantasyCorps = state.extra as FantasyCorps?;
-                        return NoTransitionPage(
+                        return MaterialPage(
+                          fullscreenDialog: true,
                           key: state.pageKey,
                           child: CreateFantasyCorps(fantasyCorps: fantasyCorps),
                         );
@@ -217,32 +217,24 @@ GoRouter goRouter(GoRouterRef ref) {
                     },
                   ),
                   GoRoute(
-                    path: 'results',
+                    path: 'leaderboard',
                     name: AppRoutes.competitionDetail.name,
                     pageBuilder: (context, state) => MaterialPage(
                         key: state.pageKey,
                         fullscreenDialog: true,
-                        child: const WeeklyScores() // tid still in params
+                        child: const Leaderboard() // tid still in params
                         ),
                     routes: [
                       GoRoute(
-                        path: 'subcaptionResults',
+                        path: 'scoreDetail',
                         name: AppRoutes.competitionSubcaptionScores.name,
                         pageBuilder: (context, state) => MaterialPage(
                           key: state.pageKey,
                           fullscreenDialog: true,
-                          child: const SubcaptionResults(),
+                          child: const ScoreDetail(),
                         ),
                       ),
                     ],
-                  ),
-                  GoRoute(
-                    path: 'rankings',
-                    name: AppRoutes.rankings.name,
-                    pageBuilder: (context, state) => NoTransitionPage(
-                        key: state.pageKey,
-                        child: const Standings() //state.params['id']
-                        ),
                   ),
                   GoRoute(
                     path: 'allCorps',

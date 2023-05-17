@@ -358,8 +358,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     socket.emit(CLIENT_LINEUP_COMPLETE);
 
     // Create a new fantasy corps object and write it to the server
-    FantasyCorps corps =
-        FantasyCorps(tourId: widget.tour.id!, userId: widget.playerId);
+    FantasyCorps corps = FantasyCorps(
+        tourId: widget.tour.id!, userId: widget.playerId, lineup: fantasyCorps);
 
     // Exit draft room and send user to Fantasy Corps main page to enter details
     context.pushNamed(AppRoutes.createCorps.name,

@@ -193,14 +193,21 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
   }
 
   bool _validate() {
+    // First check that form validators pass
     if (_formKey.currentState!.validate()) {
+      // Check if either date and time are null
       if (pickedDate == null || pickedTime == null) {
+        // Error if no date or time was saved
         setState(
             () => _dateTimeErrorText = 'Please enter a draft date and time');
+        // Fail validation: missing date
         return false;
+      } else {
+        // Pass: date and time set and form passes
+        return true;
       }
-      return true;
     }
+    // Form validators did not pass
     return false;
   }
 

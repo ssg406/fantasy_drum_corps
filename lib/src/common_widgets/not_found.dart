@@ -21,17 +21,23 @@ class _NotFoundState extends State<NotFound> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FaIcon(
+            const FaIcon(
               FontAwesomeIcons.bug,
               size: 60.0,
-              color: theme.colorScheme.primary,
             ),
             gapH16,
             Text('Resource Not Found',
-                style: Theme.of(context).textTheme.displaySmall),
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium!
+                    .copyWith(color: Theme.of(context).colorScheme.primary)),
             Text(
               'An error might have occurred and we couldn\'t find what you were looking for. We\'ll redirect you back home in a moment.',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontSize: 24.0),
+              textAlign: TextAlign.center,
             )
           ],
         ),
