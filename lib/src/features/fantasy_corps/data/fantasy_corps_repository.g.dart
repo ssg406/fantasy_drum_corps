@@ -43,7 +43,7 @@ final watchAllFantasyCorpsProvider =
 typedef WatchAllFantasyCorpsRef
     = AutoDisposeStreamProviderRef<List<FantasyCorps>>;
 String _$watchTourFantasyCorpsHash() =>
-    r'df1543fb7c304644dd3a3683a29980feb58f3b50';
+    r'00100dd39f6cfae783d78d688b7f1c37e3f868c4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -149,4 +149,23 @@ class WatchTourFantasyCorpsProvider
     return _SystemHash.finish(hash);
   }
 }
+
+String _$watchUserFantasyCorpsHash() =>
+    r'9431846def479ac9ffecccc99af1774289988ce5';
+
+/// See also [watchUserFantasyCorps].
+@ProviderFor(watchUserFantasyCorps)
+final watchUserFantasyCorpsProvider =
+    AutoDisposeStreamProvider<List<FantasyCorps>>.internal(
+  watchUserFantasyCorps,
+  name: r'watchUserFantasyCorpsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$watchUserFantasyCorpsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef WatchUserFantasyCorpsRef
+    = AutoDisposeStreamProviderRef<List<FantasyCorps>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

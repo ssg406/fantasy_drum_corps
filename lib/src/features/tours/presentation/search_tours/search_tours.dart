@@ -1,6 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/tour_search_tile.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
@@ -36,37 +36,32 @@ class _SearchToursState extends ConsumerState<SearchTours> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ResponsiveCenter(
-        maxContentWidth: 1000,
-        child: Padding(
-          padding: pagePadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Be a Part of a Fantasy Corps Tour',
-                  style: Theme.of(context).textTheme.titleLarge),
-              Text(
-                'Find your friends\' tour or join a public tour to meet new  drum corps fans!',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              gapH32,
-              SearchBar(
-                  onPublicOnlyChecked: setPublicFilter,
-                  onSearched: handleSearchText),
-              gapH32,
-              AsyncValueWidget(
-                value: ref.watch(watchAllToursProvider(watchPublicOnly)),
-                data: (List<Tour>? tours) {
-                  return ResultsContainer(
-                    tours: tours!,
-                    searchText: searchText,
-                  );
-                },
-              ),
-            ],
+    return PageScaffolding(
+      pageTitle: 'Find a Tour',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Be a Part of a Fantasy Corps Tour',
+              style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Find your friends\' tour or join a public tour to meet new  drum corps fans!',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-        ),
+          gapH32,
+          SearchBar(
+              onPublicOnlyChecked: setPublicFilter,
+              onSearched: handleSearchText),
+          gapH32,
+          AsyncValueWidget(
+            value: ref.watch(watchAllToursProvider(watchPublicOnly)),
+            data: (List<Tour>? tours) {
+              return ResultsContainer(
+                tours: tours!,
+                searchText: searchText,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -89,19 +84,16 @@ class ResultsContainer extends StatelessWidget {
     });
 
     return Card(
-      color: Theme.of(context).colorScheme.surface,
-      child: Padding(
-        padding: cardPadding,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.6,
-          child: ListView(
-            children: [
-              for (final tour in filteredTours)
-                TourSearchTile(
-                  tour: tour,
-                ),
-            ],
-          ),
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: ListView(
+          children: [
+            for (final tour in filteredTours)
+              TourSearchTile(
+                tour: tour,
+              ),
+          ],
         ),
       ),
     );

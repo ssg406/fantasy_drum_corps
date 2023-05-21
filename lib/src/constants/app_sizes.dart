@@ -16,7 +16,10 @@ class Sizes {
 /// Standardized paddings
 const pagePadding = EdgeInsets.symmetric(vertical: 40.0, horizontal: 50.0);
 const cardPadding = EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0);
-const centerContentPadding = EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0);
+const centerContentPadding =
+    EdgeInsets.symmetric(vertical: 12.0, horizontal: 35.0);
+const mobilePagePadding =
+    EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0);
 
 /// Constant gap widths
 const gapW4 = SizedBox(width: Sizes.p4);

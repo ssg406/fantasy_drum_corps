@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -40,6 +41,12 @@ class FantasyCorpsRepository {
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
+  Stream<List<FantasyCorps>> watchUserFantasyCorps(String userId) =>
+      queryFantasyCorps()
+          .where('userId', isEqualTo: userId)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+
   Stream<FantasyCorps?> watchFantasyCorps(String fantasyCorpsId) => _database
       .doc(userFantasyCorpsPath(fantasyCorpsId))
       .withConverter(
@@ -65,4 +72,15 @@ Stream<List<FantasyCorps>> watchTourFantasyCorps(
   return ref
       .watch(fantasyCorpsRepositoryProvider)
       .watchAllFantasyCorps(tourId: tourId);
+}
+
+@riverpod
+Stream<List<FantasyCorps>> watchUserFantasyCorps(WatchUserFantasyCorpsRef ref) {
+  final user = ref.watch(authRepositoryProvider).currentUser;
+  if (user == null) {
+    throw AssertionError('User cannot be null when accessing Fantasy Corps');
+  }
+  return ref
+      .watch(fantasyCorpsRepositoryProvider)
+      .watchUserFantasyCorps(user.uid);
 }

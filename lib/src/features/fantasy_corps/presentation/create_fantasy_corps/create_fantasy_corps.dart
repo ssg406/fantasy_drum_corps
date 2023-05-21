@@ -1,6 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps_controller.dart';
@@ -24,9 +24,9 @@ class CreateFantasyCorps extends StatelessWidget {
     return fantasyCorps == null
         ? const NotFound()
         : CreateFantasyCorpsContents(
-            corps: fantasyCorps!,
-            isEditing: isEditing,
-          );
+      corps: fantasyCorps!,
+      isEditing: isEditing,
+    );
   }
 }
 
@@ -68,85 +68,69 @@ class _CreateFantasyCorpsContentsState
   @override
   void dispose() {
     super.dispose();
-    // if (!_saved && !_isEditing) {
-    //   _saveFantasyCorps();
-    // }
+    if (!_saved && !_isEditing) {
+      _saveFantasyCorps();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(createFantasyCorpsControllerProvider,
-        (_, state) => state.showAlertDialogOnError(context));
+            (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(createFantasyCorpsControllerProvider);
-    return SingleChildScrollView(
-      child: ResponsiveCenter(
+
+    return PageScaffolding(
+      pageTitle: _isEditing
+          ? 'Edit Your Fantasy Corps'
+          : 'Complete Your Fantasy Corps',
+      child: Form(
+        key: _formKey,
         child: Padding(
-          padding: pagePadding,
+          padding: cardPadding,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  _isEditing
-                      ? 'Edit Your Fantasy Corps'
-                      : 'Complete Your Fantasy Corps',
-                  style: Theme.of(context).textTheme.titleLarge),
-              gapH8,
-              const Divider(thickness: 0.5),
               gapH16,
-              Card(
-                elevation: 2.0,
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: cardPadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        gapH16,
-                        TextFormField(
-                          initialValue: _corpsName,
-                          onChanged: (value) => _corpsName = value,
-                          validator: validateCorpsName,
-                          decoration: const InputDecoration(
-                            labelText: 'Fantasy Corps Name',
-                            hintText: 'Crimson Devils',
-                          ),
-                        ),
-                        gapH32,
-                        TextFormField(
-                          initialValue: _showTitle,
-                          onChanged: (value) => _showTitle = value,
-                          validator: validateShowTitleAndRepertoire,
-                          decoration: const InputDecoration(
-                            labelText: 'Show Title',
-                            hintText: 'Backseat Driver',
-                          ),
-                        ),
-                        gapH32,
-                        TextFormField(
-                          initialValue: _repertoire,
-                          onChanged: (value) => _repertoire = value,
-                          validator: validateShowTitleAndRepertoire,
-                          decoration: const InputDecoration(
-                            labelText: 'Repertoire',
-                            hintText:
-                                'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
-                          ),
-                          maxLines: 4,
-                        ),
-                        gapH32,
-                        Center(
-                          child: PrimaryButton(
-                            onPressed: _submitForm,
-                            label: _isEditing ? 'UPDATE' : 'FINISH',
-                            isLoading: state.isLoading,
-                            onSurface: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              TextFormField(
+                initialValue: _corpsName,
+                onChanged: (value) => _corpsName = value,
+                validator: validateCorpsName,
+                decoration: const InputDecoration(
+                  labelText: 'Fantasy Corps Name',
+                  hintText: 'Crimson Devils',
                 ),
-              )
+              ),
+              gapH32,
+              TextFormField(
+                initialValue: _showTitle,
+                onChanged: (value) => _showTitle = value,
+                validator: validateShowTitleAndRepertoire,
+                decoration: const InputDecoration(
+                  labelText: 'Show Title',
+                  hintText: 'Backseat Driver',
+                ),
+              ),
+              gapH32,
+              TextFormField(
+                initialValue: _repertoire,
+                onChanged: (value) => _repertoire = value,
+                validator: validateShowTitleAndRepertoire,
+                decoration: const InputDecoration(
+                  labelText: 'Repertoire',
+                  hintText:
+                  'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
+                ),
+                maxLines: 4,
+              ),
+              gapH32,
+              Center(
+                child: PrimaryButton(
+                  onPressed: _submitForm,
+                  label: _isEditing ? 'UPDATE' : 'FINISH',
+                  isLoading: state.isLoading,
+                  onSurface: true,
+                ),
+              ),
             ],
           ),
         ),

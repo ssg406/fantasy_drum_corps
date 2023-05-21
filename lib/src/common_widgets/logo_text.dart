@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class LogoText extends StatelessWidget {
@@ -9,22 +10,18 @@ class LogoText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('FANTASY',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontSize: size)),
-        Image.asset(
-          'two_toned_shield.png',
-          width: size * 2,
-          height: size * 2,
-          fit: BoxFit.cover,
+        Text(
+          'FANTASY',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(fontSize: size, color: AppColors.customBlue),
         ),
         Text('CORPS',
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(fontSize: size)),
+                .copyWith(fontSize: size, color: AppColors.customGreen)),
       ],
     );
   }

@@ -1,6 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/accent_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/player_widget.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
@@ -23,43 +23,21 @@ class DraftWaitingRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: pagePadding,
-        child: Center(
-          child: Column(
-            children: [
-              Card(
-                child: Padding(
-                  padding: cardPadding,
-                  child: Column(
-                    children: [
-                      Text(
-                        '$tourName Draft Lobby',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      gapH16,
-                      const Divider(thickness: 0.5),
-                      gapH16,
-                      players.isEmpty
-                          ? _getNoPlayersDisplay(context)
-                          : _getJoinedPlayersDisplay(context),
-                      gapH16,
-                      isTourOwner
-                          ? AccentButton(
-                              label: 'START DRAFT',
-                              onPressed: onOwnerStartsDraft!,
-                            )
-                          : _getNonOwnerWaitingText(context),
-                    ],
-                  ),
-                ),
-              ),
-              gapH16,
-              const CustomBackButton(),
-            ],
-          ),
-        ),
+    return PageScaffolding(
+      pageTitle: '$tourName Draft Lobby',
+      child: Column(
+        children: [
+          players.isEmpty
+              ? _getNoPlayersDisplay(context)
+              : _getJoinedPlayersDisplay(context),
+          gapH16,
+          isTourOwner
+              ? AccentButton(
+                  label: 'START DRAFT',
+                  onPressed: onOwnerStartsDraft!,
+                )
+              : _getNonOwnerWaitingText(context),
+        ],
       ),
     );
   }

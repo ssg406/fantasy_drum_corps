@@ -115,13 +115,12 @@ class _NavShellState extends ConsumerState<NavShell> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            Container(
-              height: 150,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 35.0, horizontal: 20.0),
-              child: Image.asset(
-                'two_toned_shield.png',
-                fit: BoxFit.contain,
+            const DrawerHeader(
+              child: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.shieldHalved,
+                  size: 65.0,
+                ),
               ),
             ),
             ListTile(
@@ -143,6 +142,11 @@ class _NavShellState extends ConsumerState<NavShell> {
               leading: const FaIcon(FontAwesomeIcons.magnifyingGlassPlus),
               title: const Text('Find Tours'),
               onTap: () => _onDrawerClick(AppRoutes.searchTours),
+            ),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.trophy),
+              title: const Text('My Fantasy Corps'),
+              onTap: () => _onDrawerClick(AppRoutes.myCorps),
             ),
             const ExpansionTile(
               leading: FaIcon(FontAwesomeIcons.circleInfo),

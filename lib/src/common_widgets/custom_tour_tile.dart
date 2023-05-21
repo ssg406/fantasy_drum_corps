@@ -21,52 +21,61 @@ class CustomTourTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authRepositoryProvider).currentUser;
+    final user = ref
+        .watch(authRepositoryProvider)
+        .currentUser;
     final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Tooltip(
-                message: tour.isPublic ? 'Public Tour' : 'Private Tour',
-                child: RoundIcon(
-                    size: 30.0,
-                    padding: 13.0,
-                    icon: tour.isPublic
-                        ? FontAwesomeIcons.lockOpen
-                        : FontAwesomeIcons.lock,
-                    backgroundColor: theme.colorScheme.tertiary,
-                    iconColor: theme.colorScheme.onTertiary)),
-            gapW16,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tour.name,
-                  style: theme.textTheme.titleMedium!
-                      .copyWith(color: theme.colorScheme.tertiary),
-                ),
-                gapH4,
-                Text(tour.description),
-                gapH4,
-                if (user != null) _getSubtitle(user.uid == tour.owner),
-                gapH4,
-                Text('Available Slots: ${tour.slotsAvailable}'),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                onPressed: () => context.pushNamed(AppRoutes.tourDetail.name,
-                    params: {'tid': tour.id!}),
-                icon: const FaIcon(FontAwesomeIcons.ellipsis),
+    return GestureDetector(
+      onTap: () => _goToTourPage(context),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Tooltip(
+                  message: tour.isPublic ? 'Public Tour' : 'Private Tour',
+                  child: RoundIcon(
+                      size: 30.0,
+                      padding: 13.0,
+                      icon: tour.isPublic
+                          ? FontAwesomeIcons.lockOpen
+                          : FontAwesomeIcons.lock,
+                      backgroundColor: theme.colorScheme.tertiary,
+                      iconColor: theme.colorScheme.onTertiary)),
+              gapW16,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tour.name,
+                    style: theme.textTheme.titleMedium!
+                        .copyWith(color: theme.colorScheme.tertiary),
+                  ),
+                  gapH4,
+                  Text(tour.description),
+                  gapH4,
+                  if (user != null) _getSubtitle(user.uid == tour.owner),
+                  gapH4,
+                  Text('Available Slots: ${tour.slotsAvailable}'),
+                ],
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                  onPressed: () => _goToTourPage(context),
+                  icon: const FaIcon(FontAwesomeIcons.ellipsis),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _goToTourPage(BuildContext context) {
+    context.pushNamed(AppRoutes.tourDetail.name,
+        params: {'tid': tour.id!});
   }
 }

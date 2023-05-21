@@ -6,6 +6,7 @@ import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.d
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/leaderboard/leaderboard.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/my_corps/my_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/score_detail/score_detail.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
@@ -56,6 +57,7 @@ enum AppRoutes {
   createFluttermoji,
   draftLobby,
   createCorps,
+  myCorps,
 }
 
 @riverpod
@@ -236,17 +238,15 @@ GoRouter goRouter(GoRouterRef ref) {
                       ),
                     ],
                   ),
-                  GoRoute(
-                    path: 'allCorps',
-                    name: AppRoutes.allCorps.name,
-                    pageBuilder: (context, state) => NoTransitionPage(
-                        key: state.pageKey,
-                        child: const Placeholder() //state.params['id']
-                        ),
-                  ),
                 ],
               ),
             ],
+          ),
+          GoRoute(
+            path: '/myCorps',
+            name: AppRoutes.myCorps.name,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const MyCorps()),
           ),
           GoRoute(
             path: '/profile',

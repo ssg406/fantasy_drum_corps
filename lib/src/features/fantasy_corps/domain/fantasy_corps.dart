@@ -32,7 +32,8 @@ class FantasyCorps {
       userId: json['userId'] as String,
       showTitle: json['showTitle'] as String?,
       repertoire: json['repertoire'] as String?,
-      lineup: LineupFromJson.call(json['lineup']),
+      lineup:
+          json['lineup'] != null ? LineupFromJson.call(json['lineup']) : null,
     );
   }
 
@@ -47,13 +48,11 @@ class FantasyCorps {
     };
   }
 
-
   Map<String, dynamic> lineupToJson() {
     final Map<String, dynamic> jsonMap = {};
     for (final caption in lineup!.keys) {
-      jsonMap.addAll({
-        caption.name: lineup![caption]?.map((e) => e.name).toList()
-      });
+      jsonMap.addAll(
+          {caption.name: lineup![caption]?.map((e) => e.name).toList()});
     }
     return jsonMap;
   }
@@ -81,14 +80,13 @@ class FantasyCorps {
 
 class LineupFromJson {
   static Lineup? call(Map<String, dynamic>? json) {
-    if (json == null) {
-      return null;
-    }
     final Lineup lineup = {};
-    for (final captionKey in json.keys) {
+    for (final captionKey in json!.keys) {
+      final stringList = json[captionKey] as List<dynamic>;
+      final drumCorpsList =
+          stringList.map((e) => DrumCorps.values.byName(e)).toList();
       lineup.addAll({
-        Caption.values.byName(captionKey): json[captionKey].map((e) =>
-            DrumCorps.values.byName(e)).toList(),
+        Caption.values.byName(captionKey): drumCorpsList,
       });
     }
     return lineup;

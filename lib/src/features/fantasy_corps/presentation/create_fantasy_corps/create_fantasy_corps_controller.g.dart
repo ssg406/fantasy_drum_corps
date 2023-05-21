@@ -7,7 +7,7 @@ part of 'create_fantasy_corps_controller.dart';
 // **************************************************************************
 
 String _$createFantasyCorpsControllerHash() =>
-    r'694f48a6903aa4d47662d72b48c44b8524af0dc6';
+    r'a3ae337f3805ea46ab3bff39fc4c661994a09695';
 
 /// See also [CreateFantasyCorpsController].
 @ProviderFor(CreateFantasyCorpsController)
