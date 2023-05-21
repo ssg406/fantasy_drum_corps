@@ -359,7 +359,10 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Create a new fantasy corps object and write it to the server
     FantasyCorps corps = FantasyCorps(
-        tourId: widget.tour.id!, userId: widget.playerId, lineup: fantasyCorps);
+        tourId: widget.tour.id!,
+        userId: widget.playerId,
+        lineup: fantasyCorps,
+        name: 'Unnamed Corps');
 
     // Exit draft room and send user to Fantasy Corps main page to enter details
     context.pushNamed(AppRoutes.createCorps.name,
