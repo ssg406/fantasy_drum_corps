@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/padded_table_cell.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
@@ -98,12 +99,74 @@ class _LeaderboardContentsState extends State<LeaderboardContents> {
   }
 }
 
-class TourLeaderboard extends StatelessWidget {
+class TourLeaderboard extends ConsumerWidget {
   const TourLeaderboard({Key? key, required this.tourId}) : super(key: key);
   final String tourId;
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AsyncValueWidget(
+      value: ref.watch(watchTourFantasyCorpsProvider(tourId)),
+      data: (List<FantasyCorps> fantasyCorps) {
+        if (fantasyCorps.isEmpty) {
+          return const Text('No Fantasy Corps Found');
+        } else {
+          fantasyCorps.sort((a, b) => a.totalScore.compareTo(b.totalScore));
+          final standingsMap = fantasyCorps.asMap();
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Rankings',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              gapH16,
+              Table(
+                columnWidths: const <int, TableColumnWidth>{
+                  0: FractionColumnWidth(0.1),
+                  1: FractionColumnWidth(0.2),
+                  2: FlexColumnWidth(),
+                },
+                children: [
+                  _getColumnHeaders(context),
+                  //for (final key in standingsMap.keys)
+                  //_getStandingRow(standingsMap[key]!, key)
+                ],
+              )
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  TableRow _getColumnHeaders(BuildContext context) {
+    final colNames = ['Rank', 'Player', 'Fantasy Corps'];
+
+    return TableRow(
+      children: [
+        for (final name in colNames)
+          TableCellPadded(
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          )
+      ],
+    );
+  }
+
+  TableRow _getStandingRow(FantasyCorps fantasyCorps, int rank) {
+    return TableRow(children: [
+      TableCellPadded(
+        child: Text(rank.toString()),
+      ),
+      TableCellPadded(
+        child: Text(fantasyCorps.userId),
+      ),
+      TableCellPadded(
+        child: Text(fantasyCorps.name),
+      )
+    ]);
   }
 }
