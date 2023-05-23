@@ -79,6 +79,17 @@ class AuthRepository {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+  Future<bool> get currentUserIsAdmin async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw AssertionError('User cannot be null when getting claims');
+    }
+    final idTokenResult = await user.getIdTokenResult();
+    return idTokenResult.claims == null
+        ? false
+        : idTokenResult.claims!['admin'] == true;
+  }
 }
 
 @riverpod
@@ -96,4 +107,9 @@ AuthRepository authRepository(AuthRepositoryRef ref) =>
 Stream<User?> userChangesStream(UserChangesStreamRef ref) {
   final repository = ref.watch(authRepositoryProvider);
   return repository.userChanges();
+}
+
+@riverpod
+Future<bool> currentUserIsAdmin(CurrentUserIsAdminRef ref) async {
+  return ref.watch(authRepositoryProvider).currentUserIsAdmin;
 }

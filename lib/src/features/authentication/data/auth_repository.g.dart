@@ -50,4 +50,20 @@ final userChangesStreamProvider = AutoDisposeStreamProvider<User?>.internal(
 );
 
 typedef UserChangesStreamRef = AutoDisposeStreamProviderRef<User?>;
+String _$currentUserIsAdminHash() =>
+    r'dc8ba90b4b3eeabb88d248288142fc86568e2930';
+
+/// See also [currentUserIsAdmin].
+@ProviderFor(currentUserIsAdmin)
+final currentUserIsAdminProvider = AutoDisposeFutureProvider<bool>.internal(
+  currentUserIsAdmin,
+  name: r'currentUserIsAdminProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentUserIsAdminHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CurrentUserIsAdminRef = AutoDisposeFutureProviderRef<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

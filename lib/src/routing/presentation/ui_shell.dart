@@ -1,6 +1,8 @@
+import 'package:fantasy_drum_corps/src/common_widgets/admin_logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell_controller.dart';
@@ -13,7 +15,7 @@ import 'package:go_router/go_router.dart';
 
 import '../app_router.dart';
 
-class NavShell extends ConsumerStatefulWidget {
+class NavShell extends ConsumerWidget {
   const NavShell({
     super.key,
     required this.child,
@@ -22,51 +24,12 @@ class NavShell extends ConsumerStatefulWidget {
   final Widget child;
 
   @override
-  ConsumerState createState() => _NavShellState();
-}
-
-class _NavShellState extends ConsumerState<NavShell> {
-  final GlobalKey<ScaffoldState> _scaffoldStateKey = GlobalKey();
-
-  Future<void> _logoutUser() async {
-    return ref.read(uiShellControllerProvider.notifier).signOut();
-  }
-
-  void _showUserMenu(clickPosition) async {
-    Size screenSize = MediaQuery.of(context).size;
-    double left = clickPosition.dx;
-    double top = clickPosition.dy;
-    double right = screenSize.width - left;
-    double bottom = screenSize.height - top;
-
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(left, top, right, bottom),
-      items: [
-        PopupMenuItem(
-          onTap: () => context.goNamed(AppRoutes.profile.name),
-          child: const ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Profile'),
-          ),
-        ),
-        PopupMenuItem(
-          onTap: _logoutUser,
-          child: const ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GlobalKey<ScaffoldState> scaffoldStateKey = GlobalKey();
     ref.listen<AsyncValue>(uiShellControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     return Scaffold(
-      key: _scaffoldStateKey,
+      key: scaffoldStateKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Container(
@@ -77,18 +40,50 @@ class _NavShellState extends ConsumerState<NavShell> {
             children: [
               IconButton(
                 icon: const Icon(Icons.menu),
-                onPressed: () => _scaffoldStateKey.currentState!.openDrawer(),
+                onPressed: () => scaffoldStateKey.currentState!.openDrawer(),
               ),
               MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () => context.goNamed(AppRoutes.dashboard.name),
-                  child: const LogoText(),
+                  child: AsyncValueWidget(
+                    showLoading: false,
+                    value: ref.watch(currentUserIsAdminProvider),
+                    data: (bool isAdmin) =>
+                        isAdmin ? const AdminLogoText() : const LogoText(),
+                  ),
                 ),
               ),
               GestureDetector(
-                onTapDown: (tapDetails) =>
-                    _showUserMenu(tapDetails.globalPosition),
+                onTapDown: (tapDetails) async {
+                  final clickPosition = tapDetails.globalPosition;
+                  Size screenSize = MediaQuery.of(context).size;
+                  double left = clickPosition.dx;
+                  double top = clickPosition.dy;
+                  double right = screenSize.width - left;
+                  double bottom = screenSize.height - top;
+
+                  await showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(left, top, right, bottom),
+                    items: [
+                      PopupMenuItem(
+                        onTap: () => context.goNamed(AppRoutes.profile.name),
+                        child: const ListTile(
+                          leading: Icon(Icons.account_circle),
+                          title: Text('Profile'),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        onTap: () => ref.read(authRepositoryProvider).signOut(),
+                        child: const ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                        ),
+                      ),
+                    ],
+                  );
+                },
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: AsyncValueWidget(
@@ -128,32 +123,50 @@ class _NavShellState extends ConsumerState<NavShell> {
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.gaugeHigh),
               title: const Text('Dashboard'),
-              onTap: () => _onDrawerClick(AppRoutes.dashboard),
+              onTap: () {
+                context.pushNamed(AppRoutes.dashboard.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.circlePlus),
               title: const Text('Create Tour'),
-              onTap: () => _onDrawerClick(AppRoutes.createTour),
+              onTap: () {
+                context.pushNamed(AppRoutes.createTour.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.users),
               title: const Text('My Tours'),
-              onTap: () => _onDrawerClick(AppRoutes.myTours),
+              onTap: () {
+                context.pushNamed(AppRoutes.myTours.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.magnifyingGlassPlus),
               title: const Text('Find Tours'),
-              onTap: () => _onDrawerClick(AppRoutes.searchTours),
+              onTap: () {
+                context.pushNamed(AppRoutes.searchTours.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.solidFlag),
               title: const Text('My Fantasy Corps'),
-              onTap: () => _onDrawerClick(AppRoutes.myCorps),
+              onTap: () {
+                context.pushNamed(AppRoutes.myCorps.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.trophy),
               title: const Text('Leaderboard'),
-              onTap: () => _onDrawerClick(AppRoutes.leaderboard),
+              onTap: () {
+                context.pushNamed(AppRoutes.leaderboard.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             const ExpansionTile(
               leading: FaIcon(FontAwesomeIcons.circleInfo),
@@ -172,16 +185,35 @@ class _NavShellState extends ConsumerState<NavShell> {
                   title: Text('Terms'),
                 )
               ],
-            )
+            ),
+            AsyncValueWidget(
+                value: ref.watch(currentUserIsAdminProvider),
+                data: (bool isAdmin) {
+                  return isAdmin
+                      ? const ExpansionTile(
+                          leading: FaIcon(FontAwesomeIcons.exclamation),
+                          title: Text('Admin Menu'),
+                          children: [
+                            ListTile(
+                              title: Text('Users'),
+                            ),
+                            ListTile(
+                              title: Text('Tours'),
+                            ),
+                            ListTile(
+                              title: Text('Fantasy Corps'),
+                            ),
+                            ListTile(
+                              title: Text('Scores'),
+                            )
+                          ],
+                        )
+                      : Container();
+                })
           ],
         ),
       ),
-      body: widget.child,
+      body: child,
     );
-  }
-
-  void _onDrawerClick(AppRoutes route) {
-    context.pushNamed(route.name);
-    _scaffoldStateKey.currentState!.closeDrawer();
   }
 }
