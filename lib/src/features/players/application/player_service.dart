@@ -39,6 +39,7 @@ class PlayerService {
     return _playerRepo.setSelectedCorps(
         playerId: user.uid, corps: selectedCorps);
   }
+
 }
 
 @riverpod

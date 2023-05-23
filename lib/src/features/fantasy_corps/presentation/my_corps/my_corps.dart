@@ -12,9 +12,7 @@ class MyCorps extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
       value: ref.watch(watchUserFantasyCorpsProvider),
-      data: (List<FantasyCorps> corps) {
-        return MyCorpsContents(userCorps: corps);
-      },
+      data: (List<FantasyCorps> corps) => MyCorpsContents(userCorps: corps),
     );
   }
 }

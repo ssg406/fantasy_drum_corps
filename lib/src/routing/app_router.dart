@@ -73,14 +73,18 @@ GoRouter goRouter(GoRouterRef ref) {
     redirect: (context, state) {
       final isLoggedIn = authRepository.currentUser != null;
       if (isLoggedIn) {
+        // If logged in and at the sign in page, go to dashboard
         if (state.subloc.startsWith('/signIn')) {
           return '/dashboard';
         }
+        // If not logged in and at any internal page, go back to sign in
       } else {
         if (state.subloc.startsWith('/dashboard') ||
             state.subloc.startsWith('/profile') ||
             state.subloc.startsWith('/tours') ||
-            state.subloc.startsWith('/about')) {
+            state.subloc.startsWith('/about') ||
+            state.subloc.startsWith('/myCorps') ||
+            state.subloc.startsWith('/leaderboard')) {
           return '/signIn';
         }
       }
@@ -118,6 +122,7 @@ GoRouter goRouter(GoRouterRef ref) {
               key: state.pageKey,
               child: const MyTours(),
             ),
+            // Tours sub routes
             routes: [
               GoRoute(
                 path: 'create',
@@ -157,6 +162,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     child: TourDetail(tourId: tourId),
                   );
                 },
+                // Individual tour sub routes
                 routes: [
                   GoRoute(
                       path: 'createCorps',
@@ -230,10 +236,13 @@ GoRouter goRouter(GoRouterRef ref) {
                 NoTransitionPage(key: state.pageKey, child: const MyCorps()),
           ),
           GoRoute(
-              path: '/leaderboard',
-              name: AppRoutes.leaderboard.name,
-              pageBuilder: (context, state) => NoTransitionPage(
-                  key: state.pageKey, child: const Leaderboard())),
+            path: '/leaderboard',
+            name: AppRoutes.leaderboard.name,
+            pageBuilder: (context, state) => NoTransitionPage(
+              key: state.pageKey,
+              child: const Leaderboard(),
+            ),
+          ),
           GoRoute(
             path: '/testpage',
             name: 'testpage',
@@ -248,6 +257,7 @@ GoRouter goRouter(GoRouterRef ref) {
               fullscreenDialog: true,
               child: const UserProfile(),
             ),
+            // Profile sub route
             routes: [
               GoRoute(
                 path: ':uid/createAvatar',
@@ -267,6 +277,7 @@ GoRouter goRouter(GoRouterRef ref) {
               fullscreenDialog: true,
               child: const Placeholder(),
             ),
+            // About sub routes
             routes: [
               GoRoute(
                 path: 'terms',

@@ -4,6 +4,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell_controller.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -119,6 +120,7 @@ class _NavShellState extends ConsumerState<NavShell> {
               child: Center(
                 child: FaIcon(
                   FontAwesomeIcons.shieldHalved,
+                  color: AppColors.customBlue,
                   size: 65.0,
                 ),
               ),
@@ -144,9 +146,14 @@ class _NavShellState extends ConsumerState<NavShell> {
               onTap: () => _onDrawerClick(AppRoutes.searchTours),
             ),
             ListTile(
-              leading: const FaIcon(FontAwesomeIcons.trophy),
+              leading: const FaIcon(FontAwesomeIcons.solidFlag),
               title: const Text('My Fantasy Corps'),
               onTap: () => _onDrawerClick(AppRoutes.myCorps),
+            ),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.trophy),
+              title: const Text('Leaderboard'),
+              onTap: () => _onDrawerClick(AppRoutes.leaderboard),
             ),
             const ExpansionTile(
               leading: FaIcon(FontAwesomeIcons.circleInfo),
@@ -174,7 +181,7 @@ class _NavShellState extends ConsumerState<NavShell> {
   }
 
   void _onDrawerClick(AppRoutes route) {
-    context.goNamed(route.name);
+    context.pushNamed(route.name);
     _scaffoldStateKey.currentState!.closeDrawer();
   }
 }

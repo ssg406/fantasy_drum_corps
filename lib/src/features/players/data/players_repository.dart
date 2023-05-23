@@ -17,7 +17,8 @@ class PlayersRepository {
   static String playerPath(String playerId) => 'players/$playerId';
 
   // Firestore query with converter for players collection
-  Query<Player> queryPlayers() => _db.collection(playersPath).withConverter(
+  Query<Player> queryPlayers() =>
+      _db.collection(playersPath).withConverter(
         fromFirestore: (snapshot, _) =>
             Player.fromJson(snapshot.data()!, snapshot.id),
         toFirestore: (player, _) => player.toJson(),
@@ -79,22 +80,25 @@ class PlayersRepository {
 
   Future<Player?> fetchPlayer(String playerId) async {
     final ref = _db.collection(playersPath).doc(playerId).withConverter(
-          fromFirestore: (snapshot, _) =>
-              Player.fromJson(snapshot.data()!, snapshot.id),
-          toFirestore: (player, _) => player.toJson(),
-        );
+      fromFirestore: (snapshot, _) =>
+          Player.fromJson(snapshot.data()!, snapshot.id),
+      toFirestore: (player, _) => player.toJson(),
+    );
     final snapshot = await ref.get();
     return snapshot.data();
   }
 
-  Stream<Player?> watchPlayer(String playerId) => _db
-      .doc(playerPath(playerId))
-      .withConverter(
+  Stream<Player?> watchPlayer(String playerId) =>
+      _db
+          .doc(playerPath(playerId))
+          .withConverter(
           fromFirestore: (snapshot, _) =>
               Player.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (player, _) => player.toJson())
-      .snapshots()
-      .map((snapshot) => snapshot.data()!);
+          .snapshots()
+          .map((snapshot) => snapshot.data()!);
+
+
 }
 
 @riverpod
@@ -107,7 +111,9 @@ PlayersRepository playersRepository(PlayersRepositoryRef ref) =>
 
 @riverpod
 Stream<Player?> playerStream(PlayerStreamRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('Player cannot be null');
   }
@@ -122,7 +128,9 @@ Stream<Player?> playerStreamById(PlayerStreamByIdRef ref, String id) {
 @riverpod
 Future<void> setDisplayName(SetDisplayNameRef ref,
     {required String displayName}) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
   }
@@ -134,7 +142,9 @@ Future<void> setDisplayName(SetDisplayNameRef ref,
 @riverpod
 Future<void> setSelectedCorps(SetSelectedCorpsRef ref,
     {required DrumCorps selectedCorps}) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when setting display name');
   }

@@ -4,8 +4,10 @@ import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class Leaderboard extends ConsumerWidget {
   const Leaderboard({Key? key}) : super(key: key);
@@ -44,13 +46,25 @@ class _LeaderboardContentsState extends State<LeaderboardContents> {
       pageTitle: 'Corps Leaderboard',
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Flex(
+            direction:
+                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
+                    ? Axis.horizontal
+                    : Axis.vertical,
+            mainAxisAlignment:
+                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.center,
+            crossAxisAlignment:
+                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
             children: [
               Text(
                 'Select your corps to see your tour\'s leaderboard.',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
+              gapH16,
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.inversePrimary,
@@ -70,13 +84,16 @@ class _LeaderboardContentsState extends State<LeaderboardContents> {
                   dropdownColor: Theme.of(context).colorScheme.inversePrimary,
                   value: selectedCorps,
                   items: widget.corps
-                      .map((corps) => DropdownMenuItem<FantasyCorps>(
+                      .map(
+                        (corps) => DropdownMenuItem<FantasyCorps>(
                           value: corps,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 4, horizontal: 8),
                             child: Text(corps.name),
-                          )))
+                          ),
+                        ),
+                      )
                       .toList(),
                   onChanged: (FantasyCorps? newValue) =>
                       setState(() => selectedCorps = newValue),
@@ -107,33 +124,43 @@ class TourLeaderboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
       value: ref.watch(watchTourFantasyCorpsProvider(tourId)),
-      data: (List<FantasyCorps> fantasyCorps) {
-        if (fantasyCorps.isEmpty) {
+      data: (List<FantasyCorps> tourCorps) {
+        if (tourCorps.isEmpty) {
           return const Text('No Fantasy Corps Found');
         } else {
-          fantasyCorps.sort((a, b) => a.totalScore.compareTo(b.totalScore));
-          final standingsMap = fantasyCorps.asMap();
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Rankings',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              gapH16,
-              Table(
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FractionColumnWidth(0.1),
-                  1: FractionColumnWidth(0.2),
-                  2: FlexColumnWidth(),
-                },
+          tourCorps.sort((a, b) => a.totalScore.compareTo(b.totalScore));
+          final standingsMap = tourCorps.asMap();
+          return Card(
+            elevation: 5.0,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 25.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _getColumnHeaders(context),
-                  //for (final key in standingsMap.keys)
-                  //_getStandingRow(standingsMap[key]!, key)
+                  Center(
+                    child: Text(
+                      'RANKINGS',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  gapH16,
+                  Table(
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FractionColumnWidth(0.1),
+                      1: FractionColumnWidth(0.2),
+                      2: FlexColumnWidth(),
+                      3: FlexColumnWidth(),
+                    },
+                    children: [
+                      _getColumnHeaders(context),
+                      for (final key in standingsMap.keys)
+                        _getStandingRow(standingsMap[key]!, key + 1)
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           );
         }
       },
@@ -141,7 +168,7 @@ class TourLeaderboard extends ConsumerWidget {
   }
 
   TableRow _getColumnHeaders(BuildContext context) {
-    final colNames = ['Rank', 'Player', 'Fantasy Corps'];
+    final colNames = ['Rank', 'Fantasy Corps', 'Score'];
 
     return TableRow(
       children: [
@@ -149,7 +176,10 @@ class TourLeaderboard extends ConsumerWidget {
           TableCellPadded(
             child: Text(
               name,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: AppColors.customGreen,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold),
             ),
           )
       ],
@@ -157,16 +187,18 @@ class TourLeaderboard extends ConsumerWidget {
   }
 
   TableRow _getStandingRow(FantasyCorps fantasyCorps, int rank) {
-    return TableRow(children: [
-      TableCellPadded(
-        child: Text(rank.toString()),
-      ),
-      TableCellPadded(
-        child: Text(fantasyCorps.userId),
-      ),
-      TableCellPadded(
-        child: Text(fantasyCorps.name),
-      )
-    ]);
+    return TableRow(
+      children: [
+        TableCellPadded(
+          child: Text(rank.toString()),
+        ),
+        TableCellPadded(
+          child: Text(fantasyCorps.name),
+        ),
+        TableCellPadded(
+          child: Text(fantasyCorps.totalScore.toStringAsFixed(2)),
+        )
+      ],
+    );
   }
 }
