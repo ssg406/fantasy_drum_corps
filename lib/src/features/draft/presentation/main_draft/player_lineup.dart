@@ -2,6 +2,7 @@ import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
@@ -34,7 +35,7 @@ class PlayerLineup extends StatelessWidget {
                 childAspectRatio: 2,
                 children: [
                   for (final caption in lineup.keys)
-                    LineupCaptionSlot(picks: lineup[caption]!, caption: caption)
+                    LineupCaptionSlot(pick: lineup[caption], caption: caption)
                 ],
               ),
             ),
@@ -46,15 +47,13 @@ class PlayerLineup extends StatelessWidget {
 }
 
 class LineupCaptionSlot extends StatelessWidget {
-  const LineupCaptionSlot(
-      {super.key, required this.picks, required this.caption});
+  const LineupCaptionSlot({super.key, this.pick, required this.caption});
 
   final Caption caption;
-  final List<DrumCorps> picks;
+  final DrumCorps? pick;
 
   @override
   Widget build(BuildContext context) {
-    final slotsAvailable = 2 - picks.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,15 +61,18 @@ class LineupCaptionSlot extends StatelessWidget {
           caption.fullName,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        for (final pick in picks)
-          Text(
-            pick.fullName,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        Text(
-          '$slotsAvailable slots available',
-          style: Theme.of(context).textTheme.bodyLarge,
-        )
+        pick == null
+            ? Text(
+                'OPEN SLOT',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .copyWith(color: AppColors.customBlue),
+              )
+            : Text(
+                pick!.fullName,
+                style: Theme.of(context).textTheme.titleSmall,
+              )
       ],
     );
   }

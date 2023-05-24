@@ -190,33 +190,19 @@ class NavShell extends ConsumerWidget {
                 value: ref.watch(currentUserIsAdminProvider),
                 data: (bool isAdmin) {
                   return isAdmin
-                      ? ExpansionTile(
-                          leading: const FaIcon(FontAwesomeIcons.exclamation),
-                          title: const Text('Admin Menu'),
-                          children: [
-                            ListTile(
-                              title: const Text('Admin Dashboard'),
-                              onTap: () {
-                                context.pushNamed(AppRoutes.adminMain.name);
-                                scaffoldStateKey.currentState!.closeDrawer();
-                              },
-                            ),
-                            ListTile(
-                              title: const Text('Messaging'),
-                              onTap: () {
-                                context
-                                    .pushNamed(AppRoutes.adminAddMessage.name);
-                                scaffoldStateKey.currentState!.closeDrawer();
-                              },
-                            ),
-                            ListTile(
-                              title: const Text('Scores'),
-                              onTap: () {
-                                context.pushNamed(AppRoutes.adminAddScore.name);
-                                scaffoldStateKey.currentState!.closeDrawer();
-                              },
-                            ),
-                          ],
+                      ? ListTile(
+                          leading: FaIcon(
+                            FontAwesomeIcons.asterisk,
+                            color: Colors.red[700],
+                          ),
+                          title: Text(
+                            'Admin Dashboard',
+                            style: TextStyle(color: Colors.red[700]),
+                          ),
+                          onTap: () {
+                            context.pushNamed(AppRoutes.adminMain.name);
+                            scaffoldStateKey.currentState!.closeDrawer();
+                          },
                         )
                       : Container();
                 })

@@ -7,7 +7,7 @@ part of 'admin_messaging_controller.dart';
 // **************************************************************************
 
 String _$adminMessagingControllerHash() =>
-    r'9e34bd884aa7be701f4ec2bfd0a99a03277e1efa';
+    r'be53d34779ab81576ca479e4d0b2e65a8adf2dab';
 
 /// See also [AdminMessagingController].
 @ProviderFor(AdminMessagingController)

@@ -133,13 +133,11 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Set empty lineup
     for (final caption in Caption.values) {
-      fantasyCorps.addAll({caption: List.empty(growable: true)});
+      fantasyCorps.addAll({caption: null});
     }
 
     // Register listeners on socket connection
     socket.onConnect((_) {
-      debugPrint('socket is connected');
-
       _registerDraftSetupListeners();
 
       _registerActiveDraftListeners();
@@ -151,11 +149,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     final tourId = widget.tour.id!;
 
     socket = io.io('$rootServerUrl/$tourId');
-  }
-
-  int _getOpenLineupSlots() {
-    return fantasyCorps.values.fold(
-        0, (previousValue, element) => previousValue + (2 - element.length));
   }
 
   /// Set up socket listeners that process active draft events
@@ -196,8 +189,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   /// Iterates through the available picks and adds the first compatible pick
   /// to the fantasyCorps map.
   void _autoSelectPick() {
-    debugPrint('Server did not receive a pick this turn.');
-
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
         List.generate(availableCaptions.length, (index) => index);
@@ -206,33 +197,15 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     availableCaptionsIndices.shuffle();
 
     for (final pickIndex in availableCaptionsIndices) {
-      // Get the pick from availableCaptions at the index
+      // Get the DrumCorpsCaption pick from the available captions
       final pick = availableCaptions[pickIndex];
 
-      // For this picks caption, get the corps that have already been selected
-      // e.g., selections made for Brass in lineup
-      var currentPicks = fantasyCorps[pick.caption];
+      // Determine if the slot at this caption is available, continue if not
+      if (fantasyCorps[pick.caption] == null) continue;
 
-      // Get how many slots available for this caption e.g. 1 slot open for Brass
-      final takenSlots = currentPicks?.length ?? 0;
+      // Execute the logic for adding a pick to the lineup
+      fantasyCorps.addAll({pick.caption: pick.corps});
 
-      // If there are no available slots, go to the next loop iteration
-      // If the loop proceeds beyond this point then it is the last iteration
-      if (takenSlots > 1) {
-        continue;
-      }
-
-      // Execute the logic for adding a pick to the lineup, same as
-      // when client is making a manual selection and then break out
-      // of the loop
-      if (currentPicks != null) {
-        currentPicks.add(pick.corps);
-        fantasyCorps.addAll({pick.caption: currentPicks});
-      } else {
-        fantasyCorps.addAll({
-          pick.caption: [pick.corps]
-        });
-      }
       socket.emit(CLIENT_SENDS_AUTO_PICK, {
         'playerId': widget.playerId,
         'drumCorpsCaption': pick.toJson(),
@@ -285,8 +258,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
           .add(DrumCorpsCaption.fromJson(pick, pick['drumCorpsCaptionId']));
     }
 
-    debugPrint('Turn started for player $currentPickerId');
-
     // Update widget state
     setState(() {
       // Re run caption filters
@@ -318,17 +289,11 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   }
 
   void _onCaptionSelected(DrumCorpsCaption drumCorpsCaption) {
-    // Get the list of existing picks from the fantasy corps map
-    var existingPicks = fantasyCorps[drumCorpsCaption.caption];
-
-    // Get the number of slots already taken
-    final takenSlots = existingPicks?.length ?? 0;
-
-    // If two slots are occupied show an alert
-    if (takenSlots > 1) {
+    // Check for an existing pick
+    if (fantasyCorps[drumCorpsCaption.caption] != null) {
       showAlertDialog(
           context: context,
-          title: 'No ${drumCorpsCaption.caption.fullName} slots available');
+          title: 'No ${drumCorpsCaption.caption.fullName} slot available');
       return;
     }
 
@@ -338,21 +303,18 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       'drumCorpsCaption': drumCorpsCaption.toJson()
     });
 
+    // Update the lineup locally
     setState(() {
-      if (existingPicks != null) {
-        existingPicks.add(drumCorpsCaption.corps);
-        fantasyCorps.addAll({drumCorpsCaption.caption: existingPicks});
-      } else {
-        fantasyCorps.addAll({
-          drumCorpsCaption.caption: [drumCorpsCaption.corps]
-        });
-      }
+      fantasyCorps.addAll({drumCorpsCaption.caption: drumCorpsCaption.corps});
     });
 
     if (_getOpenLineupSlots() == 0) {
       _onLineupComplete();
     }
   }
+
+  int _getOpenLineupSlots() => fantasyCorps.values.fold(
+      0, (previousValue, element) => previousValue + (element == null ? 1 : 0));
 
   void _onLineupComplete() {
     socket.emit(CLIENT_LINEUP_COMPLETE);
