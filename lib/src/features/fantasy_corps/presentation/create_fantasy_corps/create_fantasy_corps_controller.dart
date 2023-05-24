@@ -24,4 +24,5 @@ class CreateFantasyCorpsController extends _$CreateFantasyCorpsController {
       }
     });
   }
+
 }

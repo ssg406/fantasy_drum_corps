@@ -2,7 +2,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
+import 'package:fantasy_drum_corps/src/features/admin/application/score_service.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps_controller.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/fantasy_corps_validators.dart';
@@ -148,10 +148,9 @@ class _CreateFantasyCorpsContentsState
 
   Future<void> _saveFantasyCorps() async {
     final controller = ref.read(createFantasyCorpsControllerProvider.notifier);
-    LineupScore lineupScore = {};
-    for (final caption in Caption.values) {
-      lineupScore.addAll({caption: 0});
-    }
+    LineupScore lineupScore = await ref
+        .read(scoreServiceProvider)
+        .getCurrentScore(_fantasyCorps.lineup!);
     final newCorps = _fantasyCorps.copyWith(
         name: _corpsName,
         showTitle: _showTitle,

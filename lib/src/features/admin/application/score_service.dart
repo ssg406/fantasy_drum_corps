@@ -2,6 +2,8 @@ import 'package:fantasy_drum_corps/src/features/admin/data/score_repository.dart
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'score_service.g.dart';
@@ -33,6 +35,31 @@ class ScoreService {
       fantasyCorps.copyWith(lineupScore: lineupScore);
       await fantasyCorpsRepo.updateFantasyCorps(updatedFantasyCorps);
     }
+  }
+
+  Future<LineupScore> getCurrentScore(Lineup lineup) async {
+    // Get all scores from server
+    final allCorpsScores = await scoresRepo.fetchAllCorpsScores();
+
+    // Create empty score lookup table and lineup score
+    Map<DrumCorps, LineupScore> scoreLookup = {};
+    LineupScore lineupScore = {};
+
+    // Get current scores and add to lookup table
+    for (final corpsScore in allCorpsScores) {
+      scoreLookup.addAll({corpsScore.corps: corpsScore.scores});
+    }
+
+    // Iterate through all caption slots in the lineup
+    for (final captionSlot in lineup.keys) {
+      // Find the scores for the corps located in this slot
+      final scores = scoreLookup[lineup[captionSlot]];
+
+      // Add the score for the current caption to the lineup score
+      final captionScore = scores?[captionSlot] ?? 0;
+      lineupScore.addAll({captionSlot: captionScore});
+    }
+    return lineupScore;
   }
 }
 

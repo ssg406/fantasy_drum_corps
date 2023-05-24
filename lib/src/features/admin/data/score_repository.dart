@@ -40,6 +40,18 @@ class ScoresRepository {
       )
       .snapshots()
       .map((snapshot) => snapshot.data()!);
+
+  Future<List<CorpsScore>> fetchAllCorpsScores() async {
+    final allCorpsScores = await db
+        .collection(corpsScoresPath)
+        .withConverter(
+          fromFirestore: (snapshot, _) =>
+              CorpsScore.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (corpsScore, _) => corpsScore.toJson(),
+        )
+        .get();
+    return allCorpsScores.docs.map((doc) => doc.data()).toList();
+  }
 }
 
 @riverpod
