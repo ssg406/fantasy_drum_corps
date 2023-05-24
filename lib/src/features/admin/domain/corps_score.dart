@@ -21,7 +21,7 @@ class CorpsScore {
   factory CorpsScore.fromJson(Map<String, dynamic> json, String id) {
     return CorpsScore(
         id: id,
-        corps: DrumCorps.values.byName(json['corps'] as String),
+        corps: DrumCorps.values.byName(json['corps']),
         scores: LineupScoreFromJson.call(json['scores']),
         lastUpdate: (json['lastUpdate'] as Timestamp).toDate());
   }
@@ -34,7 +34,7 @@ class CorpsScore {
     };
   }
 
-  Map<String, dynamic>? lineupScoreToJson() {
+  Map<String, dynamic> lineupScoreToJson() {
     final Map<String, dynamic> jsonMap = {};
     for (final caption in scores.keys) {
       jsonMap.addAll({caption.name: scores[caption]});
@@ -60,7 +60,7 @@ class LineupScoreFromJson {
     final LineupScore lineupScore = {};
     for (final captionKey in json.keys) {
       final caption = Caption.values.byName(captionKey);
-      final score = double.parse(json[caption]);
+      final score = json[captionKey] as double;
       lineupScore.addAll({caption: score});
     }
     return lineupScore;

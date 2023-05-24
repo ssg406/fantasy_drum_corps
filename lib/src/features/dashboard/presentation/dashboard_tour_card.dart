@@ -1,6 +1,7 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,13 +24,11 @@ class DashboardTourCard extends StatelessWidget {
               children: [
                 const FaIcon(
                   FontAwesomeIcons.users,
+                  color: AppColors.customBlue,
                 ),
                 gapW16,
                 Text('Tours Quick Access',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleLarge),
+                    style: Theme.of(context).textTheme.titleLarge),
               ],
             ),
             gapH24,
@@ -46,27 +45,22 @@ class DashboardTourCard extends StatelessWidget {
                         isThreeLine: true,
                         title: Text(
                           tour.name,
-                          style: Theme
-                              .of(context)
+                          style: Theme.of(context)
                               .textTheme
                               .titleLarge!
                               .copyWith(
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary),
+                                  color: Theme.of(context).colorScheme.primary),
                         ),
                         subtitle: Text(
-                          '${tour.description}\n${_getDraftDateText(tour
-                              .draftDateTime)}', style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Colors.white),),
-                        onTap: () =>
-                            context.pushNamed(
-                                AppRoutes.tourDetail.name,
-                                params: {'tid': tour.id!}),
+                          '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: Colors.white),
+                        ),
+                        onTap: () => context.pushNamed(
+                            AppRoutes.tourDetail.name,
+                            params: {'tid': tour.id!}),
                       ),
                     )
                 ],

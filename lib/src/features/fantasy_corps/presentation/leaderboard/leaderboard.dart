@@ -4,7 +4,6 @@ import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -131,10 +130,10 @@ class TourLeaderboard extends ConsumerWidget {
           tourCorps.sort((a, b) => a.totalScore.compareTo(b.totalScore));
           final standingsMap = tourCorps.asMap();
           return Card(
-            elevation: 5.0,
+            elevation: 3,
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 25.0),
+                  const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -177,7 +176,7 @@ class TourLeaderboard extends ConsumerWidget {
             child: Text(
               name,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: AppColors.customGreen,
+                  color: Theme.of(context).colorScheme.primary,
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold),
             ),

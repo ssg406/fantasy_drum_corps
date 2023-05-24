@@ -24,6 +24,7 @@ class DashboardMessages extends ConsumerWidget {
               children: [
                 const FaIcon(
                   FontAwesomeIcons.message,
+                  color: AppColors.customBlue,
                 ),
                 gapW16,
                 Text('Messages from Fantasy Drum Corps',

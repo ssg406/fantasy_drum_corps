@@ -24,6 +24,7 @@ extension AsyncValueUI on AsyncValue {
       /// operation-not-allowed
       /// weak-password
       final message = error.toString();
+      debugPrintStack();
       showExceptionAlertDialog(
           context: context, title: 'Error'.hardcoded, exception: message);
     }

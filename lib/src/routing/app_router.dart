@@ -22,6 +22,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
+import 'package:fantasy_drum_corps/src/testpage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -127,6 +128,11 @@ GoRouter goRouter(GoRouterRef ref) {
           return NavShell(child: child);
         },
         routes: [
+          GoRoute(
+            path: '/testpage',
+            pageBuilder: (context, state) =>
+                const MaterialPage(child: TestPage()),
+          ),
           GoRoute(
             path: '/dashboard',
             name: AppRoutes.dashboard.name,

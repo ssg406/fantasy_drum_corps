@@ -51,6 +51,7 @@ class ScoresCard extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(watchAllCorpsScoreProvider),
       data: (List<CorpsScore> corpsScores) {
+        corpsScores.sort((a, b) => a.corps.name.compareTo(b.corps.name));
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

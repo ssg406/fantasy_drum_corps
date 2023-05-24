@@ -13,6 +13,13 @@ class AdminScoresController extends _$AdminScoresController {
   Future<void> updateScores(CorpsScore score) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-        () => ref.read(scoreServiceProvider).updateScores(score));
+            () => ref.read(scoreServiceProvider).updateScores(score));
+  }
+
+  /// Dev only
+  Future<void> addSCore(CorpsScore score) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() =>
+        ref.read(scoresRepositoryProvider).addScore(score));
   }
 }

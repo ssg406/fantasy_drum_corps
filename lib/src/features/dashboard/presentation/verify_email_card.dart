@@ -36,7 +36,7 @@ class VerifyEmailCard extends ConsumerWidget {
             ),
             gapH8,
             Text(
-              'Verify your email to make sure you can fully participate this season!',
+              'Verify your email to make sure you can fully participate this season! A verification email was sent to you when you registered.',
               style: theme.textTheme.bodyLarge,
             ),
             Align(
@@ -48,7 +48,7 @@ class VerifyEmailCard extends ConsumerWidget {
                 icon: const FaIcon(FontAwesomeIcons.envelopeOpenText),
                 label: state.isLoading
                     ? const CircularProgressIndicator()
-                    : const Text('Verify Email'),
+                    : const Text('No Email? Resend it!'),
               ),
             )
           ],
