@@ -41,6 +41,11 @@ class FantasyCorpsRepository {
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
+  Future<List<FantasyCorps>> fetchAllFantasyCorps() async {
+    final allFantasyCorps = await queryFantasyCorps().get();
+    return allFantasyCorps.docs.map((doc) => doc.data()).toList();
+  }
+
   Stream<List<FantasyCorps>> watchUserFantasyCorps(String userId) =>
       queryFantasyCorps()
           .where('userId', isEqualTo: userId)

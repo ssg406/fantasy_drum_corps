@@ -5,6 +5,7 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/complete_profile_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_tour_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/greeting_card.dart';
+import 'package:fantasy_drum_corps/src/features/dashboard/presentation/messages_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/new_member_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/verify_email_card.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
@@ -68,6 +69,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
                   }
                 },
               ),
+              const DashboardMessages(),
             ],
           ),
         ),

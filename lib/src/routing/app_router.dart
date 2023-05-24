@@ -1,7 +1,10 @@
+import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
+import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_main.dart';
+import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_messaging.dart';
+import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
-import 'package:fantasy_drum_corps/src/features/competition.old/presentation/standings.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
@@ -59,6 +62,9 @@ enum AppRoutes {
   createCorps,
   myCorps,
   leaderboard,
+  adminMain,
+  adminAddScore,
+  adminAddMessage,
 }
 
 @riverpod
@@ -71,11 +77,25 @@ GoRouter goRouter(GoRouterRef ref) {
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
     redirect: (context, state) {
-      final isLoggedIn = authRepository.currentUser != null;
+      final currentUser = authRepository.currentUser;
+      final isLoggedIn = currentUser != null;
       if (isLoggedIn) {
         // If logged in and at the sign in page, go to dashboard
         if (state.subloc.startsWith('/signIn')) {
           return '/dashboard';
+        }
+        // If location is under admin pages
+        final adminUids = [
+          'dWC5c0tJL3aA450l76gqktSxSUN2',
+          '6QatDzHl9PNN4DQOsK304aqCeMB2',
+          'BiWZp0rcwGgAD2ac2YkExxJFLx73'
+        ];
+        if (state.subloc.startsWith('/admin')) {
+          // And UID is not Sam's, Kenny's, or Ben's
+          if (!adminUids.contains(currentUser.uid)) {
+            // Send back to dashboard
+            return '/dashboard';
+          }
         }
         // If not logged in and at any internal page, go back to sign in
       } else {
@@ -244,12 +264,6 @@ GoRouter goRouter(GoRouterRef ref) {
             ),
           ),
           GoRoute(
-            path: '/testpage',
-            name: 'testpage',
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const Standings()),
-          ),
-          GoRoute(
             path: '/profile',
             name: AppRoutes.profile.name,
             pageBuilder: (context, state) => MaterialPage(
@@ -314,6 +328,34 @@ GoRouter goRouter(GoRouterRef ref) {
                   fullscreenDialog: true,
                   child: const Placeholder(),
                 ),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: '/admin',
+            name: AppRoutes.adminMain.name,
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const AdminMain(),
+            ),
+            routes: [
+              GoRoute(
+                path: 'messaging',
+                name: AppRoutes.adminAddMessage.name,
+                pageBuilder: (context, state) => MaterialPage(
+                    key: state.pageKey, child: const AdminMessaging()),
+              ),
+              GoRoute(
+                path: 'addScore',
+                name: AppRoutes.adminAddScore.name,
+                pageBuilder: (context, state) {
+                  final corpsScore = state.extra as CorpsScore?;
+                  return MaterialPage(
+                      key: state.pageKey,
+                      child: AdminScores(
+                        corpsScore: corpsScore,
+                      ));
+                },
               ),
             ],
           ),

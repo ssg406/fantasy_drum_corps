@@ -190,22 +190,32 @@ class NavShell extends ConsumerWidget {
                 value: ref.watch(currentUserIsAdminProvider),
                 data: (bool isAdmin) {
                   return isAdmin
-                      ? const ExpansionTile(
-                          leading: FaIcon(FontAwesomeIcons.exclamation),
-                          title: Text('Admin Menu'),
+                      ? ExpansionTile(
+                          leading: const FaIcon(FontAwesomeIcons.exclamation),
+                          title: const Text('Admin Menu'),
                           children: [
                             ListTile(
-                              title: Text('Users'),
+                              title: const Text('Admin Dashboard'),
+                              onTap: () {
+                                context.pushNamed(AppRoutes.adminMain.name);
+                                scaffoldStateKey.currentState!.closeDrawer();
+                              },
                             ),
                             ListTile(
-                              title: Text('Tours'),
+                              title: const Text('Messaging'),
+                              onTap: () {
+                                context
+                                    .pushNamed(AppRoutes.adminAddMessage.name);
+                                scaffoldStateKey.currentState!.closeDrawer();
+                              },
                             ),
                             ListTile(
-                              title: Text('Fantasy Corps'),
+                              title: const Text('Scores'),
+                              onTap: () {
+                                context.pushNamed(AppRoutes.adminAddScore.name);
+                                scaffoldStateKey.currentState!.closeDrawer();
+                              },
                             ),
-                            ListTile(
-                              title: Text('Scores'),
-                            )
                           ],
                         )
                       : Container();

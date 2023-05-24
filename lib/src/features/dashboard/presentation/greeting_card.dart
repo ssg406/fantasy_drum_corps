@@ -12,8 +12,8 @@ class GreetingCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Dashboard',
-          style: Theme.of(context).textTheme.displaySmall,
+          'DASHBOARD',
+          style: Theme.of(context).textTheme.displayMedium,
         ),
         gapH8,
         Text(
