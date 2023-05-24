@@ -3,10 +3,14 @@ import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores_controller.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminScores extends ConsumerStatefulWidget {
   const AdminScores({
@@ -167,40 +171,26 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
   }
 
   Future<void> _submitForm() async {
-    // if (!formKey.currentState!.validate()) return;
+    if (!formKey.currentState!.validate()) return;
     final controller = ref.read(adminScoresControllerProvider.notifier);
-    // final corpsScore = parseForm();
-    // await controller.submitScore(corpsScore);
-    // if (mounted) context.goNamed(AppRoutes.adminMain.name);
-
-    for (final corps in DrumCorps.values) {
-      final score = CorpsScore(
-          corps: corps,
-          ge1: 0,
-          ge2: 0,
-          visualProficiency: 0,
-          visualAnalysis: 0,
-          colorGuard: 0,
-          brass: 0,
-          musicAnalysis: 0,
-          percussion: 0,
-          lastUpdate: DateTime.now());
-      await controller.submitScore(score);
-    }
+    final corpsScore = CorpsScore(
+        corps: widget.corpsScore!.corps,
+        scores: getLineupScore(),
+        lastUpdate: DateTime.now());
+    await controller.updateScores(corpsScore);
+    if (mounted) context.goNamed(AppRoutes.adminMain.name);
   }
 
-  CorpsScore parseForm() => CorpsScore(
-      id: widget.corpsScore!.id,
-      corps: widget.corpsScore!.corps,
-      ge1: double.parse(ge1.text),
-      ge2: double.parse(ge2.text),
-      visualProficiency: double.parse(visualProficiency.text),
-      visualAnalysis: double.parse(visualAnalysis.text),
-      colorGuard: double.parse(colorGuard.text),
-      brass: double.parse(brass.text),
-      musicAnalysis: double.parse(musicAnalysis.text),
-      percussion: double.parse(percussion.text),
-      lastUpdate: DateTime.now());
+  LineupScore getLineupScore() => {
+        Caption.percussion: double.parse(percussion.text),
+        Caption.musicAnalysis: double.parse(musicAnalysis.text),
+        Caption.colorGuard: double.parse(colorGuard.text),
+        Caption.visualAnalysis: double.parse(visualAnalysis.text),
+        Caption.visualProficiency: double.parse(visualAnalysis.text),
+        Caption.brass: double.parse(brass.text),
+        Caption.ge1: double.parse(ge1.text),
+        Caption.ge2: double.parse(ge2.text),
+      };
 
   String? scoreValidator(String? input) {
     if (input == null) {

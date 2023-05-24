@@ -2,6 +2,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps_controller.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/fantasy_corps_validators.dart';
@@ -24,9 +25,9 @@ class CreateFantasyCorps extends StatelessWidget {
     return fantasyCorps == null
         ? const NotFound()
         : CreateFantasyCorpsContents(
-      corps: fantasyCorps!,
-      isEditing: isEditing,
-    );
+            corps: fantasyCorps!,
+            isEditing: isEditing,
+          );
   }
 }
 
@@ -76,7 +77,7 @@ class _CreateFantasyCorpsContentsState
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(createFantasyCorpsControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(createFantasyCorpsControllerProvider);
 
     return PageScaffolding(
@@ -118,7 +119,7 @@ class _CreateFantasyCorpsContentsState
                 decoration: const InputDecoration(
                   labelText: 'Repertoire',
                   hintText:
-                  'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
+                      'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
                 ),
                 maxLines: 4,
               ),
@@ -147,8 +148,15 @@ class _CreateFantasyCorpsContentsState
 
   Future<void> _saveFantasyCorps() async {
     final controller = ref.read(createFantasyCorpsControllerProvider.notifier);
+    LineupScore lineupScore = {};
+    for (final caption in Caption.values) {
+      lineupScore.addAll({caption: 0});
+    }
     final newCorps = _fantasyCorps.copyWith(
-        name: _corpsName, showTitle: _showTitle, repertoire: _repertoire);
+        name: _corpsName,
+        showTitle: _showTitle,
+        repertoire: _repertoire,
+        lineupScore: lineupScore);
     await controller.addFantasyCorps(newCorps, isUpdating: _isEditing);
   }
 }

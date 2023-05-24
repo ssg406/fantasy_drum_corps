@@ -1,6 +1,5 @@
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_main.dart';
-import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_messaging.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
@@ -8,6 +7,7 @@ import 'package:fantasy_drum_corps/src/features/authentication/presentation/auth
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_lobby.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/corps_detail/corps_detail.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/leaderboard/leaderboard.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/my_corps/my_corps.dart';
@@ -61,10 +61,10 @@ enum AppRoutes {
   draftLobby,
   createCorps,
   myCorps,
+  corpsDetail,
   leaderboard,
   adminMain,
   adminAddScore,
-  adminAddMessage,
 }
 
 @riverpod
@@ -250,11 +250,21 @@ GoRouter goRouter(GoRouterRef ref) {
             ],
           ),
           GoRoute(
-            path: '/myCorps',
-            name: AppRoutes.myCorps.name,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const MyCorps()),
-          ),
+              path: '/myCorps',
+              name: AppRoutes.myCorps.name,
+              pageBuilder: (context, state) =>
+                  NoTransitionPage(key: state.pageKey, child: const MyCorps()),
+              routes: [
+                GoRoute(
+                    path: 'corpsDetail',
+                    name: AppRoutes.corpsDetail.name,
+                    pageBuilder: (context, state) => MaterialPage(
+                          key: state.pageKey,
+                          child: CorpsDetail(
+                            fantasyCorps: state.extra as FantasyCorps?,
+                          ),
+                        ))
+              ]),
           GoRoute(
             path: '/leaderboard',
             name: AppRoutes.leaderboard.name,
@@ -339,12 +349,6 @@ GoRouter goRouter(GoRouterRef ref) {
               child: const AdminMain(),
             ),
             routes: [
-              GoRoute(
-                path: 'messaging',
-                name: AppRoutes.adminAddMessage.name,
-                pageBuilder: (context, state) => MaterialPage(
-                    key: state.pageKey, child: const AdminMessaging()),
-              ),
               GoRoute(
                 path: 'addScore',
                 name: AppRoutes.adminAddScore.name,
