@@ -25,7 +25,6 @@ class ManageDraft extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         ButtonBar(
-          alignment: MainAxisAlignment.start,
           buttonMinWidth: 75,
           children: [
             TextButton.icon(

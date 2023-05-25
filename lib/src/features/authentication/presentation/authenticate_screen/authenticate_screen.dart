@@ -47,109 +47,113 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     final textSize =
         ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 50.0 : 30.0;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: ResponsiveCenter(
-          padding: centerContentPadding,
-          maxContentWidth: 600,
-          child: FocusScope(
-            node: _node,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  LogoText(
-                    size: textSize,
-                  ),
-                  gapH32,
-                  Text(
-                    _formType.title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  gapH16,
-                  Row(
-                    children: [
-                      Text(_formType.secondaryFormText),
-                      PrimaryTextButton(
-                          isLoading: state.isLoading,
-                          onPressed: _toggleFormType,
-                          label: _formType.toggleFormButtonText),
-                    ],
-                  ),
-                  gapH16,
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email'.hardcoded,
-                      hintText: 'me@gmail.com'.hardcoded,
-                      enabled: !state.isLoading,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ResponsiveCenter(
+            padding: centerContentPadding,
+            maxContentWidth: 600,
+            child: FocusScope(
+              node: _node,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LogoText(
+                      size: textSize,
                     ),
-                    validator: (email) =>
-                        !_submitted ? null : getEmailErrors(email ?? ''),
-                    //
-                    onEditingComplete: _emailEditingComplete,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    keyboardAppearance: Brightness.light,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  gapH20,
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password'.hardcoded,
-                      enabled: !state.isLoading,
+                    gapH32,
+                    Text(
+                      _formType.title,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    obscureText: true,
-                    autocorrect: false,
-                    keyboardAppearance: Brightness.light,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (password) =>
-                        !_submitted ? null : getPasswordErrors(password ?? ''),
-                    onEditingComplete: _passwordEditingComplete,
-                  ),
-                  gapH8,
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () => _showResetPasswordDialog(context),
-                      child: Text(
-                        'Forgot Password?',
-                        style: Theme.of(context).textTheme.labelLarge,
+                    gapH16,
+                    Row(
+                      children: [
+                        Text(_formType.secondaryFormText),
+                        PrimaryTextButton(
+                            isLoading: state.isLoading,
+                            onPressed: _toggleFormType,
+                            label: _formType.toggleFormButtonText),
+                      ],
+                    ),
+                    gapH16,
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email'.hardcoded,
+                        hintText: 'me@gmail.com'.hardcoded,
+                        enabled: !state.isLoading,
                       ),
+                      validator: (email) =>
+                          !_submitted ? null : getEmailErrors(email ?? ''),
+                      //
+                      onEditingComplete: _emailEditingComplete,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      keyboardAppearance: Brightness.light,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
-                  ),
-                  gapH20,
-                  PrimaryButton(
-                      isLoading: state.isLoading,
-                      onPressed: _submit,
-                      label: _formType.submitButtonText.toUpperCase()),
-                  gapH32,
-                  Flex(
-                    direction: ResponsiveBreakpoints.of(context)
-                            .largerOrEqualTo(TABLET)
-                        ? Axis.horizontal
-                        : Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => _submitSSO(OAuthSignInProvider.google),
-                        icon: const FaIcon(
-                          FontAwesomeIcons.google,
+                    gapH20,
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password'.hardcoded,
+                        enabled: !state.isLoading,
+                      ),
+                      obscureText: true,
+                      autocorrect: false,
+                      keyboardAppearance: Brightness.light,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (password) => !_submitted
+                          ? null
+                          : getPasswordErrors(password ?? ''),
+                      onEditingComplete: _passwordEditingComplete,
+                    ),
+                    gapH8,
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: TextButton(
+                        onPressed: () => _showResetPasswordDialog(context),
+                        child: Text(
+                          'Forgot Password?',
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
-                        label: const Text('Continue with Google'),
                       ),
-                      gapW16,
-                      TextButton.icon(
-                        onPressed: () =>
-                            _submitSSO(OAuthSignInProvider.facebook),
-                        icon: const FaIcon(FontAwesomeIcons.facebook),
-                        label: const Text('Continue with Facebook'),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                    gapH20,
+                    PrimaryButton(
+                        isLoading: state.isLoading,
+                        onPressed: _submit,
+                        label: _formType.submitButtonText.toUpperCase()),
+                    gapH32,
+                    Flex(
+                      direction: ResponsiveBreakpoints.of(context)
+                              .largerOrEqualTo(TABLET)
+                          ? Axis.horizontal
+                          : Axis.vertical,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () =>
+                              _submitSSO(OAuthSignInProvider.google),
+                          icon: const FaIcon(
+                            FontAwesomeIcons.google,
+                          ),
+                          label: const Text('Continue with Google'),
+                        ),
+                        gapW16,
+                        TextButton.icon(
+                          onPressed: () =>
+                              _submitSSO(OAuthSignInProvider.facebook),
+                          icon: const FaIcon(FontAwesomeIcons.facebook),
+                          label: const Text('Continue with Facebook'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

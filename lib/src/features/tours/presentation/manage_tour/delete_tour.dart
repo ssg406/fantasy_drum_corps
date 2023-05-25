@@ -25,27 +25,30 @@ class DeleteTour extends ConsumerWidget {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         gapH16,
-        TextButton.icon(
-          icon: const FaIcon(FontAwesomeIcons.trashCan),
-          onPressed: () {
-            _confirmDelete(context).then((confirmed) {
-              if (confirmed ?? false) {
-                ref
-                    .read(manageTourControllerProvider.notifier)
-                    .deleteTour(tourId: tour.id!);
-                context.goNamed(AppRoutes.myTours.name);
-              }
-            });
-          },
-          style: TextButton.styleFrom(
-            iconColor: Theme.of(context).colorScheme.error,
-          ),
-          label: Text(
-            'DELETE TOUR',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Theme.of(context).colorScheme.error),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: TextButton.icon(
+            icon: const FaIcon(FontAwesomeIcons.trashCan),
+            onPressed: () {
+              _confirmDelete(context).then((confirmed) {
+                if (confirmed ?? false) {
+                  ref
+                      .read(manageTourControllerProvider.notifier)
+                      .deleteTour(tourId: tour.id!);
+                  context.goNamed(AppRoutes.myTours.name);
+                }
+              });
+            },
+            style: TextButton.styleFrom(
+              iconColor: Theme.of(context).colorScheme.error,
+            ),
+            label: Text(
+              'DELETE TOUR',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.error),
+            ),
           ),
         ),
       ],

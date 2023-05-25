@@ -172,23 +172,13 @@ class NavShell extends ConsumerWidget {
                 scaffoldStateKey.currentState!.closeDrawer();
               },
             ),
-            const ExpansionTile(
-              leading: FaIcon(FontAwesomeIcons.circleInfo),
-              title: Text('About'),
-              children: [
-                ListTile(
-                  title: Text('Rules'),
-                ),
-                ListTile(
-                  title: Text('FAQs'),
-                ),
-                ListTile(
-                  title: Text('Contact'),
-                ),
-                ListTile(
-                  title: Text('Terms'),
-                )
-              ],
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.circleInfo),
+              title: const Text('About'),
+              onTap: () {
+                context.pushNamed(AppRoutes.about.name);
+                scaffoldStateKey.currentState!.closeDrawer();
+              },
             ),
             AsyncValueWidget(
                 value: ref.watch(currentUserIsAdminProvider),

@@ -6,6 +6,7 @@ import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart
 import 'package:fantasy_drum_corps/src/features/tours/application/player_tour_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class TourMembers extends ConsumerWidget {
   const TourMembers({Key? key, required this.members}) : super(key: key);
@@ -16,11 +17,15 @@ class TourMembers extends ConsumerWidget {
     return AsyncValueWidget(
       value: ref.watch(watchTourPlayersProvider(members)),
       data: (List<Player> players) {
-        return Row(
+        return Flex(
+          direction: ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+              ? Axis.horizontal
+              : Axis.vertical,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const ItemLabel(label: 'Tour Members'),
-            gapW32,
-            Row(
+            Wrap(
               children: [
                 for (final player in players) ...[
                   PlayerWidget(

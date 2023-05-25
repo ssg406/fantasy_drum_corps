@@ -40,18 +40,21 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          TextButton(
-            onPressed: () {
-              final Uri emailUri = Uri(
-                scheme: 'mailto',
-                path: 'help@fantasydrumcorps.com',
-                query: encodeQueryParameters(<String, String>{
-                  'subject': 'A question about Fantasy Drum Corps',
-                }),
-              );
-              launchUrl(emailUri);
-            },
-            child: const Text('Email Us'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              onPressed: () {
+                final Uri emailUri = Uri(
+                  scheme: 'mailto',
+                  path: 'help@fantasydrumcorps.com',
+                  query: encodeQueryParameters(<String, String>{
+                    'subject': 'A question about Fantasy Drum Corps',
+                  }),
+                );
+                launchUrl(emailUri);
+              },
+              child: const Text('Email Us'),
+            ),
           ),
           gapH16,
           Text(
@@ -72,12 +75,47 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          TextButton(
-            onPressed: () async {
-              await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
-            },
-            child: const Text('GNU Licenses'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              onPressed: () async {
+                await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
+              },
+              child: const Text('GNU Licenses'),
+            ),
           ),
+          gapH16,
+          Text(
+            'SOURCE',
+            style: theme.textTheme.titleMedium!
+                .copyWith(color: theme.colorScheme.primary),
+          ),
+          gapH8,
+          Text(
+            'Fantasy Drum Corps was created using Flutter and compiled for Web, '
+            'Android, and iOS. The draft server was created using Socket.io '
+            'and and NodeJS and is written in Typescript. The application '
+            ' and server source are available on GitHub and the author '
+            'encourages feedback and collaboration.',
+            style: theme.textTheme.bodyLarge,
+          ),
+          gapH8,
+          ButtonBar(children: [
+            TextButton(
+              onPressed: () async {
+                await launchUrl(
+                    Uri.parse('http://github.com/ssg406/fantasy-drum-corps'));
+              },
+              child: const Text('Fantasy Drum Corps App'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await launchUrl(Uri.parse(
+                    'http://github.com/ssg406/fantasy-drum-corps-server'));
+              },
+              child: const Text('Fantasy Drum Corps Server'),
+            ),
+          ]),
         ],
       ),
     );

@@ -18,9 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-/// WHERE YOU LEFT OFF
-/// server must serialize remaining DrumCorpsCaptions and save to list which will be a List<Map<String, dynamic>>
-
 const turnLength = 45;
 
 const rootServerUrl = 'https://fantasy-drum-corps-server.herokuapp.com';
@@ -156,7 +153,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   void _initSocket() {
     final tourId = widget.tour.id!;
 
-    socket = io.io('$rootServerUrl/$tourId');
+    socket = io.io('$rootServerUrl/$tourId',
+        io.OptionBuilder().setTransports(['websocket']).build());
   }
 
   /// Set up socket listeners that process active draft events
@@ -209,7 +207,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       final pick = availableCaptions[pickIndex];
 
       // Determine if the slot at this caption is available, continue if not
-      if (fantasyCorps[pick.caption] == null) continue;
+      if (fantasyCorps[pick.caption] != null) continue;
 
       // Execute the logic for adding a pick to the lineup
       fantasyCorps.addAll({pick.caption: pick.corps});
