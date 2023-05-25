@@ -305,12 +305,10 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: 'addScore',
                 name: AppRoutes.adminAddScore.name,
                 pageBuilder: (context, state) {
-                  final corpsScore = state.extra as CorpsScore?;
                   return MaterialPage(
-                      key: state.pageKey,
-                      child: AdminScores(
-                        corpsScore: corpsScore,
-                      ));
+                    key: state.pageKey,
+                    child: AdminScores(corpsScore: state.extra as CorpsScore?),
+                  );
                 },
               ),
             ],

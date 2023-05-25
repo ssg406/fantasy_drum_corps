@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:quiver/core.dart';
 
 typedef TourID = String;
@@ -75,7 +76,8 @@ class Tour {
       List<String>? members,
       String? password,
       DateTime? draftDateTime,
-      bool? draftActive}) {
+      bool? draftActive,
+      List<DrumCorpsCaption>? leftOverPicks}) {
     return Tour(
       id: id,
       name: tourName ?? name,

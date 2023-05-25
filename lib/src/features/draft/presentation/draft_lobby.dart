@@ -18,9 +18,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+/// WHERE YOU LEFT OFF
+/// server must serialize remaining DrumCorpsCaptions and save to list which will be a List<Map<String, dynamic>>
+
 const turnLength = 45;
 
-const rootServerUrl = 'http://localhost:3000';
+const rootServerUrl = 'https://fantasy-drum-corps-server.herokuapp.com';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -138,9 +141,14 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Register listeners on socket connection
     socket.onConnect((_) {
+      debugPrint('Connected to server');
       _registerDraftSetupListeners();
 
       _registerActiveDraftListeners();
+    });
+
+    socket.onError((data) {
+      debugPrint('There was a socket error: $data}');
     });
   }
 

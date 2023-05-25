@@ -60,8 +60,8 @@ class LineupScoreFromJson {
     final LineupScore lineupScore = {};
     for (final captionKey in json.keys) {
       final caption = Caption.values.byName(captionKey);
-      final score = json[captionKey] as double;
-      lineupScore.addAll({caption: score});
+      final score = json[captionKey] as num;
+      lineupScore.addAll({caption: score.toDouble()});
     }
     return lineupScore;
   }
