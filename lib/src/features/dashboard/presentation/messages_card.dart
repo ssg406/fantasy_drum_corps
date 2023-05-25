@@ -1,5 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/features/admin/data/message_repository.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/message.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
@@ -15,30 +15,17 @@ class DashboardMessages extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const FaIcon(
-                  FontAwesomeIcons.message,
-                  color: AppColors.customBlue,
-                ),
-                gapW16,
-                Text('Messages from Fantasy Drum Corps',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ],
-            ),
-            gapH16,
-            AsyncValueWidget(
-              value: ref.watch(watchAllMessagesProvider),
-              data: (List<AdminMessage> messages) =>
-                  AllMessageList(messages: messages),
-            ),
-          ],
-        ),
+    return TitledIconCard(
+      icon: const FaIcon(
+        FontAwesomeIcons.message,
+        color: AppColors.customBlue,
+      ),
+      title: 'Messages',
+      subtitle: 'Communication from the Fantasy Drum Corps team',
+      child: AsyncValueWidget(
+        value: ref.watch(watchAllMessagesProvider),
+        data: (List<AdminMessage> messages) =>
+            AllMessageList(messages: messages),
       ),
     );
   }
@@ -56,6 +43,13 @@ class AllMessageList extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
+          if (messages.isEmpty)
+            Center(
+              child: Text(
+                'No messages found',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
           for (final message in messages)
             ListTile(
               leading: const FaIcon(

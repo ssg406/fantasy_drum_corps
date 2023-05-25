@@ -1,4 +1,4 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
@@ -17,42 +17,26 @@ class VerifyEmailCard extends ConsumerWidget {
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(dashboardControllerProvider);
     final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const FaIcon(
-                  FontAwesomeIcons.at,
-                  color: AppColors.customBlue,
-                ),
-                gapW16,
-                Text('Verify your email',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ],
-            ),
-            gapH8,
-            Text(
-              'Verify your email to make sure you can fully participate this season! A verification email was sent to you when you registered.',
-              style: theme.textTheme.bodyLarge,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: TextButton.icon(
-                onPressed: () => ref
-                    .read(dashboardControllerProvider.notifier)
-                    .sendVerificationEmail(user),
-                icon: const FaIcon(FontAwesomeIcons.envelopeOpenText),
-                label: state.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('No Email? Resend it!'),
-              ),
-            )
-          ],
-        ),
+    return TitledIconCard(
+      title: 'Verify Your Email',
+      subtitle:
+          'Verify your email to make sure you can fully participate this season! A verification email was sent to you when you registered.',
+      icon: const FaIcon(
+        FontAwesomeIcons.at,
+        color: AppColors.customBlue,
+      ),
+      child: ButtonBar(
+        children: [
+          TextButton.icon(
+            onPressed: () => ref
+                .read(dashboardControllerProvider.notifier)
+                .sendVerificationEmail(user),
+            icon: const FaIcon(FontAwesomeIcons.envelopeOpenText),
+            label: state.isLoading
+                ? const CircularProgressIndicator()
+                : const Text('Resend Verification Email'),
+          ),
+        ],
       ),
     );
   }

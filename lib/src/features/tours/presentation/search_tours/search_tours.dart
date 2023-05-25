@@ -124,7 +124,7 @@ class SearchBar extends StatelessWidget {
         ),
         gapW16,
         Flexible(
-          flex: 3,
+          flex: 1,
           child:
               LabelCheckbox('Show Public Only', onChecked: onPublicOnlyChecked),
         )

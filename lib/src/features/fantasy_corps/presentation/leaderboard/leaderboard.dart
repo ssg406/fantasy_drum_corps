@@ -127,39 +127,31 @@ class TourLeaderboard extends ConsumerWidget {
         if (tourCorps.isEmpty) {
           return const Text('No Fantasy Corps Found');
         } else {
-          tourCorps.sort((a, b) => a.totalScore.compareTo(b.totalScore));
+          tourCorps.sort((a, b) => b.totalScore.compareTo(a.totalScore));
           final standingsMap = tourCorps.asMap();
-          return Card(
-            elevation: 3,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      'RANKINGS',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                  gapH16,
-                  Table(
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FractionColumnWidth(0.1),
-                      1: FractionColumnWidth(0.2),
-                      2: FlexColumnWidth(),
-                      3: FlexColumnWidth(),
-                    },
-                    children: [
-                      _getColumnHeaders(context),
-                      for (final key in standingsMap.keys)
-                        _getStandingRow(standingsMap[key]!, key + 1)
-                    ],
-                  )
-                ],
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'RANKINGS',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
-            ),
+              gapH16,
+              Table(
+                columnWidths: const <int, TableColumnWidth>{
+                  0: FlexColumnWidth(1),
+                  1: FlexColumnWidth(3),
+                  2: FlexColumnWidth(2),
+                },
+                children: [
+                  _getColumnHeaders(context),
+                  for (final key in standingsMap.keys)
+                    _getStandingRow(standingsMap[key]!, key + 1)
+                ],
+              )
+            ],
           );
         }
       },
@@ -175,10 +167,9 @@ class TourLeaderboard extends ConsumerWidget {
           TableCellPadded(
             child: Text(
               name,
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
           )
       ],

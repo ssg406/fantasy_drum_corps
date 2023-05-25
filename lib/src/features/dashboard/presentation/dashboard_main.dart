@@ -17,6 +17,7 @@ import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart'
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({
@@ -35,7 +36,9 @@ class _DashboardState extends ConsumerState<Dashboard> {
       child: ResponsiveCenter(
         maxContentWidth: 1200.0,
         child: Padding(
-          padding: pagePadding,
+          padding: ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+              ? pagePadding
+              : mobilePagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,10 +52,11 @@ class _DashboardState extends ConsumerState<Dashboard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             GreetingCard(displayName: player.displayName),
-                            gapH32,
                             if (player.displayName == null ||
-                                player.selectedCorps == null)
+                                player.selectedCorps == null) ...[
+                              gapH24,
                               const CompleteProfileCard()
+                            ]
                           ],
                         );
                 },

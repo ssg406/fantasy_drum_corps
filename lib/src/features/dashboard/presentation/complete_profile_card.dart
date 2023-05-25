@@ -1,4 +1,4 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
@@ -10,36 +10,22 @@ class CompleteProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const FaIcon(
-                  FontAwesomeIcons.user,
-                  color: AppColors.customBlue,
-                ),
-                gapW16,
-                Text('Complete Your Profile',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ],
-            ),
-            gapH16,
-            Text(
-                'Choose or update your display name to make it easy for other players to find you and your tours! Make sure to select a corps to sponsor as well so we can route your donation correctly.',
-                style: Theme.of(context).textTheme.bodyLarge),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: TextButton.icon(
-                onPressed: () => context.goNamed(AppRoutes.profile.name),
-                icon: const Icon(Icons.arrow_circle_right_outlined),
-                label: const Text('Go to Profile'),
-              ),
-            )
-          ],
-        ),
+    return TitledIconCard(
+      title: 'Complete Your Profile',
+      subtitle:
+          'Choose or update your display name to make it easy for other players to find you and your tours! Make sure to select a corps to sponsor as well so we can route your donation correctly.',
+      icon: const FaIcon(
+        FontAwesomeIcons.user,
+        color: AppColors.customBlue,
+      ),
+      child: ButtonBar(
+        children: [
+          TextButton.icon(
+            onPressed: () => context.goNamed(AppRoutes.profile.name),
+            icon: const Icon(Icons.arrow_circle_right_outlined),
+            label: const Text('Go to Profile'),
+          ),
+        ],
       ),
     );
   }

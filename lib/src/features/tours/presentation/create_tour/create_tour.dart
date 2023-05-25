@@ -16,6 +16,7 @@ import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class CreateTour extends ConsumerWidget {
   const CreateTour({
@@ -30,11 +31,10 @@ class CreateTour extends ConsumerWidget {
     return tourId == null
         ? const CreateTourContents()
         : AsyncValueWidget(
-        value: ref.watch(fetchTourProvider(tourId!)),
-        data: (Tour? tour) =>
-        tour == null
-            ? const NotFound()
-            : CreateTourContents(tour: tour));
+            value: ref.watch(fetchTourProvider(tourId!)),
+            data: (Tour? tour) => tour == null
+                ? const NotFound()
+                : CreateTourContents(tour: tour));
   }
 }
 
@@ -82,7 +82,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(createTourControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(createTourControllerProvider);
 
     return PageScaffolding(
@@ -90,8 +90,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: 25.0, horizontal: 45.0),
+          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 45.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -99,8 +98,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
               TextFormField(
                 initialValue: _name,
                 onChanged: (value) => _name = value,
-                validator: (String? input) =>
-                    getNameErrors(input ?? ''),
+                validator: (String? input) => getNameErrors(input ?? ''),
                 decoration: const InputDecoration(
                   labelText: 'Tour Name',
                   hintText: 'Cadets Alumni 99',
@@ -110,24 +108,31 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
               TextFormField(
                 initialValue: _description,
                 onChanged: (value) => _description = value,
-                validator: (String? input) =>
-                    getDescriptionErrors(input ?? ''),
+                validator: (String? input) => getDescriptionErrors(input ?? ''),
                 decoration: const InputDecoration(
                   labelText: 'Description',
                   hintText: 'A tour for alumni of the 1999 Cadets',
                 ),
               ),
               gapH32,
-              Row(
+              Flex(
+                direction:
+                    ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+                        ? Axis.horizontal
+                        : Axis.vertical,
+                mainAxisAlignment:
+                    ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.center,
                 children: [
                   PrivateTourSwitch(
                     publicSelected: _publicSelected,
                     onChanged: (selected) =>
                         setState(() => _publicSelected = selected),
                   ),
-                  if (!_publicSelected) gapW32,
                   if (!_publicSelected)
-                    Expanded(
+                    SizedBox(
+                      width: 200,
                       child: TextFormField(
                         initialValue: _password,
                         onChanged: (value) => _password = value,
@@ -140,14 +145,14 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
                         decoration: const InputDecoration(
                             labelText: 'Tour Password',
                             hintText:
-                            'Other players will need this password to join'),
+                                'Other players will need this password to join'),
                       ),
                     ),
                 ],
               ),
               DateTimePicker(
                 labelText:
-                'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
+                    'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
                 selectedDate: pickedDate,
                 selectedTime: pickedTime,
                 dateTimeErrorText: _dateTimeErrorText,
@@ -159,8 +164,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
               gapH32,
               Center(
                 child: PrimaryButton(
-                  onPressed:
-                  editing ? _submitEditedTour : _submitNewTour,
+                  onPressed: editing ? _submitEditedTour : _submitNewTour,
                   label: editing ? 'UPDATE' : 'CREATE',
                   isLoading: state.isLoading,
                   onSurface: true,
@@ -180,8 +184,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
       if (pickedDate == null || pickedTime == null) {
         // Error if no date or time was saved
         setState(
-                () =>
-            _dateTimeErrorText = 'Please enter a draft date and time');
+            () => _dateTimeErrorText = 'Please enter a draft date and time');
         // Fail validation: missing date
         return false;
       } else {
@@ -196,11 +199,10 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
   void _submitEditedTour() async {
     if (!_validate()) return;
     debugPrint(
-        'submitted values: name: $_name, description: $_description, public: $_publicSelected, password: $_password, owner: ${widget
-            .tour!.owner},  pickedDate: $pickedDate, pickedTime: $pickedTime');
+        'submitted values: name: $_name, description: $_description, public: $_publicSelected, password: $_password, owner: ${widget.tour!.owner},  pickedDate: $pickedDate, pickedTime: $pickedTime');
     final controller = ref.read(createTourControllerProvider.notifier);
     final draftDateTime =
-    DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
     final updatedTour = Tour(
         id: _id,
         name: _name!,
@@ -219,7 +221,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
     if (!_validate()) return;
     final controller = ref.read(createTourControllerProvider.notifier);
     final draftDateTime =
-    DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
     await controller.submitTour(
       name: _name!,
       description: _description!,

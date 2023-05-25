@@ -1,4 +1,4 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
@@ -15,57 +15,41 @@ class DashboardTourCard extends StatelessWidget {
   // Show next draft, quick links to tours
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: cardPadding,
-        child: Column(
+    return TitledIconCard(
+      icon: const FaIcon(
+        FontAwesomeIcons.users,
+        color: AppColors.customBlue,
+      ),
+      title: 'Tours Quick Access',
+      child: SizedBox(
+        height: 150,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
           children: [
-            Row(
-              children: [
-                const FaIcon(
-                  FontAwesomeIcons.users,
-                  color: AppColors.customBlue,
+            for (final tour in tours)
+              SizedBox(
+                width: 200,
+                height: 150,
+                child: ListTile(
+                  isThreeLine: true,
+                  title: Text(
+                    tour.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: Theme.of(context).colorScheme.primary),
+                  ),
+                  subtitle: Text(
+                    '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: Colors.white),
+                  ),
+                  onTap: () => context.pushNamed(AppRoutes.tourDetail.name,
+                      params: {'tid': tour.id!}),
                 ),
-                gapW16,
-                Text('Tours Quick Access',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ],
-            ),
-            gapH24,
-            SizedBox(
-              height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (final tour in tours)
-                    SizedBox(
-                      width: 200,
-                      height: 150,
-                      child: ListTile(
-                        isThreeLine: true,
-                        title: Text(
-                          tour.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context).colorScheme.primary),
-                        ),
-                        subtitle: Text(
-                          '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: Colors.white),
-                        ),
-                        onTap: () => context.pushNamed(
-                            AppRoutes.tourDetail.name,
-                            params: {'tid': tour.id!}),
-                      ),
-                    )
-                ],
-              ),
-            )
+              )
           ],
         ),
       ),

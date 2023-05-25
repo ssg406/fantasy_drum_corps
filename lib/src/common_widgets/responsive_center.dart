@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/constants/breakpoints.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 /// Reusable widget for showing a child with a maximum content width constraint.
 /// If available width is larger than the maximum width, the child will be
@@ -9,23 +10,26 @@ import 'package:flutter/material.dart';
 class ResponsiveCenter extends StatelessWidget {
   const ResponsiveCenter({
     super.key,
-    this.maxContentWidth = Breakpoint.desktop,
+    this.maxContentWidth,
     this.padding = EdgeInsets.zero,
     required this.child,
   });
-  final double maxContentWidth;
+
+  final double? maxContentWidth;
   final EdgeInsetsGeometry padding;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     // Use Center as it has *unconstrained* width (loose constraints)
+    double responsiveMaxWidth =
+        ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP) ? 1200 : 900;
     return Center(
       // together with SizedBox to specify the max width (tight constraints)
       // See this thread for more info:
       // https://twitter.com/biz84/status/1445400059894542337
       child: SizedBox(
-        width: maxContentWidth,
+        width: maxContentWidth ?? responsiveMaxWidth,
         child: Padding(
           padding: padding,
           child: child,
@@ -43,9 +47,11 @@ class ResponsiveSliverCenter extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     required this.child,
   });
+
   final double maxContentWidth;
   final EdgeInsetsGeometry padding;
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(

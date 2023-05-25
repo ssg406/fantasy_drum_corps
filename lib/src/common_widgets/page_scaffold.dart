@@ -29,6 +29,8 @@ class PageScaffolding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLargerThanMobile =
+        ResponsiveBreakpoints.of(context).largerThan(TABLET);
     return SingleChildScrollView(
       child: ResponsiveCenter(
         maxContentWidth: maxContentWidth,
@@ -38,33 +40,40 @@ class PageScaffolding extends StatelessWidget {
               : mobilePagePadding,
           child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                height: showImage ? 200 : null,
-                decoration: BoxDecoration(
-                  image: showImage
-                      ? DecorationImage(
-                          image: Image.asset(_getRandomImagePath()).image,
-                          fit: BoxFit.cover,
-                          opacity: 0.3,
-                        )
-                      : null,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 15.0, bottom: 15.0),
-                    child: Text(pageTitle.toUpperCase(),
-                        style: Theme.of(context).textTheme.displayMedium),
-                  ),
-                ),
-              ),
+              isLargerThanMobile
+                  ? Container(
+                      width: double.infinity,
+                      height: showImage ? 200 : null,
+                      decoration: BoxDecoration(
+                        image: showImage
+                            ? DecorationImage(
+                                image: Image.asset(_getRandomImagePath()).image,
+                                fit: BoxFit.cover,
+                                opacity: 0.3,
+                              )
+                            : null,
+                      ),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 15.0, bottom: 15.0),
+                          child: Text(pageTitle.toUpperCase(),
+                              style: Theme.of(context).textTheme.displayMedium),
+                        ),
+                      ),
+                    )
+                  : Text(pageTitle.toUpperCase(),
+                      style: Theme.of(context).textTheme.titleLarge),
               gapH8,
               const Divider(thickness: 0.5),
               gapH16,
               Card(
                 child: Padding(
-                  padding: cardPadding,
+                  padding:
+                      ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+                          ? cardPadding
+                          : mobileCardPadding,
                   child: child,
                 ),
               ),

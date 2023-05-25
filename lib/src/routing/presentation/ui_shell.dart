@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 import '../app_router.dart';
 
@@ -28,6 +29,8 @@ class NavShell extends ConsumerWidget {
     final GlobalKey<ScaffoldState> scaffoldStateKey = GlobalKey();
     ref.listen<AsyncValue>(uiShellControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
+    final textSize =
+        ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 24.0 : 16.0;
     return Scaffold(
       key: scaffoldStateKey,
       appBar: AppBar(
@@ -49,8 +52,9 @@ class NavShell extends ConsumerWidget {
                   child: AsyncValueWidget(
                     showLoading: false,
                     value: ref.watch(currentUserIsAdminProvider),
-                    data: (bool isAdmin) =>
-                        isAdmin ? const AdminLogoText() : const LogoText(),
+                    data: (bool isAdmin) => isAdmin
+                        ? AdminLogoText(size: textSize)
+                        : LogoText(size: textSize),
                   ),
                 ),
               ),

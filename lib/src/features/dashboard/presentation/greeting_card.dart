@@ -13,7 +13,7 @@ class GreetingCard extends StatelessWidget {
       children: [
         Text(
           'DASHBOARD',
-          style: Theme.of(context).textTheme.displayMedium,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         gapH8,
         Text(
