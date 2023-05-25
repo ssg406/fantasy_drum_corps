@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/features/about/presentation/about_page.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_main.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores.dart';
@@ -22,7 +23,6 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
-import 'package:fantasy_drum_corps/src/testpage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -44,16 +44,9 @@ enum AppRoutes {
   searchTours,
   tourDetail,
   draft,
-  competitionSchedule,
-  competitionDetail,
-  competitionSubcaptionScores,
   rankings,
   allCorps,
   about,
-  rules,
-  faqs,
-  contact,
-  terms,
   editTour,
   joinTour,
   leaveTour,
@@ -129,9 +122,10 @@ GoRouter goRouter(GoRouterRef ref) {
         },
         routes: [
           GoRoute(
-            path: '/testpage',
+            path: '/about',
+            name: AppRoutes.about.name,
             pageBuilder: (context, state) =>
-                const MaterialPage(child: TestPage()),
+                MaterialPage(key: state.pageKey, child: const AboutPage()),
           ),
           GoRoute(
             path: '/dashboard',
@@ -295,54 +289,6 @@ GoRouter goRouter(GoRouterRef ref) {
                 pageBuilder: (context, state) => NoTransitionPage(
                   key: state.pageKey,
                   child: FlutterMojiPicker(playerId: state.params['uid']!),
-                ),
-              ),
-            ],
-          ),
-          GoRoute(
-            path: '/about',
-            name: AppRoutes.about.name,
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              fullscreenDialog: true,
-              child: const Placeholder(),
-            ),
-            // About sub routes
-            routes: [
-              GoRoute(
-                path: 'terms',
-                name: AppRoutes.terms.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const Placeholder(),
-                ),
-              ),
-              GoRoute(
-                path: 'contact',
-                name: AppRoutes.contact.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const Placeholder(),
-                ),
-              ),
-              GoRoute(
-                path: 'faqs',
-                name: AppRoutes.faqs.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const Placeholder(),
-                ),
-              ),
-              GoRoute(
-                path: 'rules',
-                name: AppRoutes.rules.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const Placeholder(),
                 ),
               ),
             ],
