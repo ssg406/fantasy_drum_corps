@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 /// [AuthenticateScreen] shows sign in and registration form and allows the user
 /// to toggle between each function.
@@ -37,6 +38,125 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
   String get email => _emailController.text;
 
   String get password => _passwordController.text;
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<AsyncValue>(authenticateScreenControllerProvider,
+        (_, state) => state.showAlertDialogOnError(context));
+    final state = ref.watch(authenticateScreenControllerProvider);
+    final textSize =
+        ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 50.0 : 30.0;
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: ResponsiveCenter(
+          padding: centerContentPadding,
+          maxContentWidth: 600,
+          child: FocusScope(
+            node: _node,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  LogoText(
+                    size: textSize,
+                  ),
+                  gapH32,
+                  Text(
+                    _formType.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  gapH16,
+                  Row(
+                    children: [
+                      Text(_formType.secondaryFormText),
+                      PrimaryTextButton(
+                          isLoading: state.isLoading,
+                          onPressed: _toggleFormType,
+                          label: _formType.toggleFormButtonText),
+                    ],
+                  ),
+                  gapH16,
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email'.hardcoded,
+                      hintText: 'me@gmail.com'.hardcoded,
+                      enabled: !state.isLoading,
+                    ),
+                    validator: (email) =>
+                        !_submitted ? null : getEmailErrors(email ?? ''),
+                    //
+                    onEditingComplete: _emailEditingComplete,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    keyboardAppearance: Brightness.light,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  gapH20,
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password'.hardcoded,
+                      enabled: !state.isLoading,
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                    keyboardAppearance: Brightness.light,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (password) =>
+                        !_submitted ? null : getPasswordErrors(password ?? ''),
+                    onEditingComplete: _passwordEditingComplete,
+                  ),
+                  gapH8,
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      onPressed: () => _showResetPasswordDialog(context),
+                      child: Text(
+                        'Forgot Password?',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ),
+                  gapH20,
+                  PrimaryButton(
+                      isLoading: state.isLoading,
+                      onPressed: _submit,
+                      label: _formType.submitButtonText.toUpperCase()),
+                  gapH32,
+                  Flex(
+                    direction: ResponsiveBreakpoints.of(context)
+                            .largerOrEqualTo(TABLET)
+                        ? Axis.horizontal
+                        : Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () => _submitSSO(OAuthSignInProvider.google),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.google,
+                        ),
+                        label: const Text('Continue with Google'),
+                      ),
+                      gapW16,
+                      TextButton.icon(
+                        onPressed: () =>
+                            _submitSSO(OAuthSignInProvider.facebook),
+                        icon: const FaIcon(FontAwesomeIcons.facebook),
+                        label: const Text('Continue with Facebook'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -113,118 +233,5 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
   void _sendPasswordResetEmail(String email) async {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
     await controller.sendPasswordResetMail(email: email);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ref.listen<AsyncValue>(authenticateScreenControllerProvider,
-        (_, state) => state.showAlertDialogOnError(context));
-    final state = ref.watch(authenticateScreenControllerProvider);
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: ResponsiveCenter(
-          padding: centerContentPadding,
-          maxContentWidth: 600,
-          child: FocusScope(
-            node: _node,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const LogoText(
-                    size: 50.0,
-                  ),
-                  gapH32,
-                  Text(
-                    _formType.title,
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                  gapH16,
-                  Row(
-                    children: [
-                      Text(_formType.secondaryFormText),
-                      PrimaryTextButton(
-                          isLoading: state.isLoading,
-                          onPressed: _toggleFormType,
-                          label: _formType.toggleFormButtonText),
-                    ],
-                  ),
-                  gapH16,
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email'.hardcoded,
-                      hintText: 'me@gmail.com'.hardcoded,
-                      enabled: !state.isLoading,
-                    ),
-                    validator: (email) =>
-                        !_submitted ? null : getEmailErrors(email ?? ''),
-                    //
-                    onEditingComplete: _emailEditingComplete,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    keyboardAppearance: Brightness.light,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  gapH20,
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password'.hardcoded,
-                      enabled: !state.isLoading,
-                    ),
-                    obscureText: true,
-                    autocorrect: false,
-                    keyboardAppearance: Brightness.light,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (password) =>
-                        !_submitted ? null : getPasswordErrors(password ?? ''),
-                    onEditingComplete: _passwordEditingComplete,
-                  ),
-                  gapH8,
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () => _showResetPasswordDialog(context),
-                      child: Text(
-                        'Forgot Password?',
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
-                    ),
-                  ),
-                  gapH20,
-                  PrimaryButton(
-                      isLoading: state.isLoading,
-                      onPressed: _submit,
-                      label: _formType.submitButtonText.toUpperCase()),
-                  gapH32,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () => _submitSSO(OAuthSignInProvider.google),
-                        icon: const FaIcon(
-                          FontAwesomeIcons.google,
-                        ),
-                        label: const Text('Continue with Google'),
-                      ),
-                      gapW16,
-                      TextButton.icon(
-                        onPressed: () =>
-                            _submitSSO(OAuthSignInProvider.facebook),
-                        icon: const FaIcon(FontAwesomeIcons.facebook),
-                        label: const Text('Continue with Facebook'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
