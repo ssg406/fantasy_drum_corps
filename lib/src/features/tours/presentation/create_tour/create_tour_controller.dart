@@ -45,7 +45,7 @@ class CreateTourController extends _$CreateTourController {
         owner: owner,
         members: members,
         draftDateTime: draftDateTime,
-        draftActive: false);
+        draftComplete: false);
     state = await AsyncValue.guard(() => _submitLeague(tour));
   }
 

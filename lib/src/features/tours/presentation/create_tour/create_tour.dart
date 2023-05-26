@@ -212,7 +212,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
         owner: widget.tour!.owner,
         members: _members!,
         draftDateTime: draftDateTime,
-        draftActive: false);
+        draftComplete: false);
     await controller.updateTour(updatedTour);
     _showSuccessMessage();
   }

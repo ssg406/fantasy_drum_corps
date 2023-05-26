@@ -14,8 +14,8 @@ class Tour {
     required this.owner,
     required this.members,
     required this.draftDateTime,
+    required this.draftComplete,
     this.password,
-    required this.draftActive,
   });
 
   final TourID? id;
@@ -25,8 +25,8 @@ class Tour {
   final String owner;
   final List<String> members;
   final DateTime draftDateTime;
+  final bool draftComplete;
   final String? password;
-  final bool draftActive;
 
   static const maxTourSize = 22;
 
@@ -51,8 +51,8 @@ class Tour {
       members:
           (json['members'] as List<dynamic>).map((e) => e as String).toList(),
       draftDateTime: (json['draftDateTime'] as Timestamp).toDate(),
+      draftComplete: json['draftComplete'] as bool,
       password: json['password'] as String?,
-      draftActive: json['draftActive'] as bool,
     );
   }
 
@@ -65,7 +65,7 @@ class Tour {
         'members': members,
         'password': password,
         'draftDateTime': draftDateTime,
-        'draftActive': draftActive,
+        'draftComplete': draftComplete,
       };
 
   Tour copyWith(
@@ -76,7 +76,7 @@ class Tour {
       List<String>? members,
       String? password,
       DateTime? draftDateTime,
-      bool? draftActive,
+      bool? draftComplete,
       List<DrumCorpsCaption>? leftOverPicks}) {
     return Tour(
       id: id,
@@ -87,7 +87,7 @@ class Tour {
       members: members ?? this.members,
       password: password ?? this.password,
       draftDateTime: draftDateTime ?? this.draftDateTime,
-      draftActive: draftActive ?? this.draftActive,
+      draftComplete: draftComplete ?? this.draftComplete,
     );
   }
 
@@ -107,7 +107,8 @@ class Tour {
       'owner: $owner, '
       'members: ${members.join(', ')}, '
       'password: $password, '
-      'draftDateTime: $draftDateTime)';
+      'draftDateTime: $draftDateTime, '
+      'draftComplete: $draftComplete)';
 
   @override
   int get hashCode => hash4(id, name, owner, members);
@@ -124,6 +125,7 @@ class Tour {
         other.owner == owner &&
         other.members == members &&
         other.password == password &&
+        other.draftComplete == draftComplete &&
         other.draftDateTime == draftDateTime;
   }
 }
