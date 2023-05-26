@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repository.g.dart';
@@ -66,12 +67,16 @@ class AuthRepository {
       case OAuthSignInProvider.google:
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         googleProvider.addScope('email');
-        return await _auth.signInWithPopup(googleProvider);
+
+        if (kIsWeb) {
+          return await _auth.signInWithPopup(googleProvider);
+        }
+        return await _auth.signInWithProvider(googleProvider);
 
       case OAuthSignInProvider.facebook:
         FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-        // facebookProvider.addScope('email');
-        // facebookProvider.addScope('user_profile');
+        facebookProvider.addScope('public_profile');
+        facebookProvider.addScope('email');
         return await _auth.signInWithPopup(facebookProvider);
     }
   }

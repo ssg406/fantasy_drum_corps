@@ -27,7 +27,7 @@ class App extends ConsumerWidget {
       onGenerateTitle: (context) => 'Fantasy Drum Corps'.hardcoded,
       theme: AppTheme.flexThemeLight,
       darkTheme: AppTheme.flexThemeDark,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
     );
   }
 }

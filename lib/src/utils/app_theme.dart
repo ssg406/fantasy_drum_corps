@@ -9,7 +9,7 @@ class AppTheme {
   static ThemeData get flexThemeLight {
     var baseTheme = ThemeData(brightness: Brightness.light);
     return FlexThemeData.light(
-      scheme: FlexScheme.blue,
+      scheme: FlexScheme.ebonyClay,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 9,
       subThemesData: const FlexSubThemesData(
@@ -35,7 +35,7 @@ class AppTheme {
   static ThemeData get flexThemeDark {
     var baseTheme = ThemeData(brightness: Brightness.dark);
     return FlexThemeData.dark(
-      scheme: FlexScheme.blue,
+      scheme: FlexScheme.greyLaw,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 15,
       subThemesData: const FlexSubThemesData(

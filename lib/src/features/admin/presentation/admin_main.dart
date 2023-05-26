@@ -21,11 +21,11 @@ class AdminMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PageScaffolding(
+    return PageScaffolding(
       pageTitle: 'Admin Dashboard',
       showImage: false,
       child: Column(
-        children: [
+        children: const [
           ScoresCard(),
           gapH24,
           Divider(thickness: 1.0),

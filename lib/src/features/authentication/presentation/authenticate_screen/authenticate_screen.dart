@@ -9,6 +9,7 @@ import 'package:fantasy_drum_corps/src/features/authentication/presentation/auth
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
 import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -144,12 +145,13 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                           label: const Text('Continue with Google'),
                         ),
                         gapW16,
-                        TextButton.icon(
-                          onPressed: () =>
-                              _submitSSO(OAuthSignInProvider.facebook),
-                          icon: const FaIcon(FontAwesomeIcons.facebook),
-                          label: const Text('Continue with Facebook'),
-                        ),
+                        if (kIsWeb)
+                          TextButton.icon(
+                            onPressed: () =>
+                                _submitSSO(OAuthSignInProvider.facebook),
+                            icon: const FaIcon(FontAwesomeIcons.facebook),
+                            label: const Text('Continue with Facebook'),
+                          ),
                       ],
                     ),
                   ],
