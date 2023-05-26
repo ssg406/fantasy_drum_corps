@@ -6,9 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'tour_corps_service.g.dart';
 
 class TourCorpsService {
-  const TourCorpsService(this.toursRepository,
-      this.corpsRepository,
-      this.picksRepository,);
+  const TourCorpsService(
+    this.toursRepository,
+    this.corpsRepository,
+    this.picksRepository,
+  );
 
   final ToursRepository toursRepository;
   final FantasyCorpsRepository corpsRepository;
@@ -21,11 +23,11 @@ class TourCorpsService {
     if (tour == null) {
       throw ArgumentError('Tour to reset could not be found.');
     }
-    toursRepository.updateTour(tour.copyWith(draftComplete: false));
+    await toursRepository.updateTour(tour.copyWith(draftComplete: false));
 
     // Remove remaining picks if present
-    final remainingPicks = await picksRepository.fetchTourRemainingPicks(
-        tourId);
+    final remainingPicks =
+        await picksRepository.fetchTourRemainingPicks(tourId);
     if (remainingPicks != null) {
       picksRepository.deleteTourRemainingPicks(remainingPicks.id!);
     }
@@ -36,7 +38,7 @@ class TourCorpsService {
 }
 
 @riverpod
-TourCorpsService tourCorpsService(TourCorpsServiceRef ref) =>
-    TourCorpsService(ref.watch(toursRepositoryProvider),
-        ref.watch(fantasyCorpsRepositoryProvider),
-        ref.watch(remainingPicksRepositoryProvider));
+TourCorpsService tourCorpsService(TourCorpsServiceRef ref) => TourCorpsService(
+    ref.watch(toursRepositoryProvider),
+    ref.watch(fantasyCorpsRepositoryProvider),
+    ref.watch(remainingPicksRepositoryProvider));

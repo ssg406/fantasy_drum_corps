@@ -18,16 +18,6 @@ class RemainingPicksRepository {
       db.doc(remainingPickPath(remainingPicks.id!)).update(
           remainingPicks.toJson());
 
-  Stream<RemainingPicks?> watchRemainingPicks(String id) =>
-      db.doc(remainingPickPath(id))
-          .withConverter(
-        fromFirestore: (snapshot, _) =>
-            RemainingPicks.fromJson(snapshot.data()!, snapshot.id),
-        toFirestore: (remainingPick, _) => remainingPick.toJson(),
-      )
-          .snapshots()
-          .map((snapshot) => snapshot.data());
-
   Future<RemainingPicks?> fetchTourRemainingPicks(String tourId) async {
     final remainingPicks = await db.collection(remainingPicksPath)
         .withConverter(
@@ -52,3 +42,11 @@ class RemainingPicksRepository {
 RemainingPicksRepository remainingPicksRepository(
     RemainingPicksRepositoryRef ref) =>
     RemainingPicksRepository(ref.watch(firebaseFirestoreProvider));
+
+@riverpod
+Future<RemainingPicks?> fetchTourRemainingPicks(FetchTourRemainingPicksRef ref,
+    String tourId) async {
+  return ref
+      .read(remainingPicksRepositoryProvider)
+      .fetchTourRemainingPicks(tourId);
+}

@@ -3,6 +3,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/socket_events.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/auto_draft.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_waiting_room.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
@@ -40,10 +41,12 @@ class DraftLobby extends ConsumerWidget {
               } else if (playerId == null) {
                 return const NotFound();
               }
-              return DraftLobbyContents(
-                tour: tour,
-                playerId: playerId,
-              );
+              return tour.draftComplete
+                  ? AutoDraft(tour: tour)
+                  : DraftLobbyContents(
+                      tour: tour,
+                      playerId: playerId,
+                    );
             });
   }
 }
@@ -152,7 +155,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   /// Set up initial socket connection to tour namespace
   void _initSocket() {
     final tourId = widget.tour.id!;
-
     socket = io.io('$rootServerUrl/$tourId',
         io.OptionBuilder().setTransports(['websocket']).build());
   }

@@ -105,10 +105,15 @@ class TourDetailContents extends StatelessWidget {
           gapH24,
           LabeledFlexRow(
             label: 'Draft Time',
-            item: Text(
-              DateFormat.yMMMMd('en_US').add_jm().format(draftDateTime),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            item: tour.draftComplete
+                ? Text(
+                    'Draft Complete',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  )
+                : Text(
+                    DateFormat.yMMMMd('en_US').add_jm().format(draftDateTime),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
           ),
           gapH24,
           const Divider(thickness: 0.5),

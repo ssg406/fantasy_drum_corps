@@ -38,13 +38,19 @@ class ManageDraft extends StatelessWidget {
                           ref.read(manageTourControllerProvider.notifier);
                       await controller.resetDraft(tour.id!);
                     },
-                    icon: const FaIcon(FontAwesomeIcons.shieldHalved),
-                    label: const Tooltip(
+                    icon: FaIcon(
+                      FontAwesomeIcons.exclamation,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    label: Tooltip(
                       message:
                           'Erases all Fantasy Corps created for this tour and makes '
                           'the draft available again.',
                       child: Text(
                         'RESET DRAFT',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                   );

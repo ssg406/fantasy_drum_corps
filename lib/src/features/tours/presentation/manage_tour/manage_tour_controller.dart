@@ -30,7 +30,10 @@ class ManageTourController extends _$ManageTourController {
 
   Future<void> resetDraft(String tourId) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-        () => ref.read(tourCorpsServiceProvider).resetTourDraft(tourId));
+    state = await AsyncValue.guard(() => _resetDraft(tourId));
+  }
+
+  Future<void> _resetDraft(String tourId) async {
+    ref.read(tourCorpsServiceProvider).resetTourDraft(tourId);
   }
 }

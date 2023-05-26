@@ -6,9 +6,11 @@ import 'package:fantasy_drum_corps/src/features/admin/application/score_service.
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps_controller.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/fantasy_corps_validators.dart';
+import 'package:fantasy_drum_corps/src/routing/app_router.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateFantasyCorps extends StatelessWidget {
   const CreateFantasyCorps({
@@ -157,5 +159,8 @@ class _CreateFantasyCorpsContentsState
         repertoire: _repertoire,
         lineupScore: lineupScore);
     await controller.addFantasyCorps(newCorps, isUpdating: _isEditing);
+    if (mounted) {
+      context.goNamed(AppRoutes.myCorps.name);
+    }
   }
 }
