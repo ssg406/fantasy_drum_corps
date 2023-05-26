@@ -18,17 +18,30 @@ class FantasyCorpsRepository {
 
   Query<FantasyCorps> queryFantasyCorps() =>
       _database.collection(fantasyCorpsPath).withConverter(
-            fromFirestore: (snapshot, _) =>
-                FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
-            toFirestore: (fantasyCorps, _) => fantasyCorps.toJson(),
-          );
+        fromFirestore: (snapshot, _) =>
+            FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
+        toFirestore: (fantasyCorps, _) => fantasyCorps.toJson(),
+      );
 
   Future<void> addFantasyCorps(FantasyCorps fantasyCorps) =>
       _database.collection(fantasyCorpsPath).add(fantasyCorps.toJson());
 
-  Future<void> updateFantasyCorps(FantasyCorps fantasyCorps) => _database
-      .doc(userFantasyCorpsPath(fantasyCorps.fantasyCorpsId!))
-      .update(fantasyCorps.toJson());
+  Future<void> deleteFantasyCorps(String id) async {
+    final docRef = _database.doc(userFantasyCorpsPath(id));
+    await docRef.delete();
+  }
+
+  Future<void> deleteAllTourFantasyCorps(String tourId) async {
+    final allFantasyCorps = await fetchAllFantasyCorps();
+    for (final corps in allFantasyCorps) {
+      deleteFantasyCorps(corps.fantasyCorpsId!);
+    }
+  }
+
+  Future<void> updateFantasyCorps(FantasyCorps fantasyCorps) =>
+      _database
+          .doc(userFantasyCorpsPath(fantasyCorps.fantasyCorpsId!))
+          .update(fantasyCorps.toJson());
 
   Stream<List<FantasyCorps>> watchAllFantasyCorps({String? tourId}) {
     Query<FantasyCorps> query = queryFantasyCorps();
@@ -52,14 +65,15 @@ class FantasyCorpsRepository {
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
-  Stream<FantasyCorps?> watchFantasyCorps(String fantasyCorpsId) => _database
-      .doc(userFantasyCorpsPath(fantasyCorpsId))
-      .withConverter(
+  Stream<FantasyCorps?> watchFantasyCorps(String fantasyCorpsId) =>
+      _database
+          .doc(userFantasyCorpsPath(fantasyCorpsId))
+          .withConverter(
           fromFirestore: (snapshot, _) =>
               FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (fantasyCorps, _) => fantasyCorps.toJson())
-      .snapshots()
-      .map((snapshot) => snapshot.data());
+          .snapshots()
+          .map((snapshot) => snapshot.data());
 }
 
 @riverpod
@@ -72,8 +86,8 @@ Stream<List<FantasyCorps>> watchAllFantasyCorps(WatchAllFantasyCorpsRef ref) {
 }
 
 @riverpod
-Stream<List<FantasyCorps>> watchTourFantasyCorps(
-    WatchTourFantasyCorpsRef ref, String tourId) {
+Stream<List<FantasyCorps>> watchTourFantasyCorps(WatchTourFantasyCorpsRef ref,
+    String tourId) {
   return ref
       .watch(fantasyCorpsRepositoryProvider)
       .watchAllFantasyCorps(tourId: tourId);
@@ -81,7 +95,9 @@ Stream<List<FantasyCorps>> watchTourFantasyCorps(
 
 @riverpod
 Stream<List<FantasyCorps>> watchUserFantasyCorps(WatchUserFantasyCorpsRef ref) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
+  final user = ref
+      .watch(authRepositoryProvider)
+      .currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when accessing Fantasy Corps');
   }

@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/features/tours/application/tour_corps_service.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,4 +28,9 @@ class ManageTourController extends _$ManageTourController {
   Future<void> _deleteTour(String tourId) async =>
       ref.read(deleteTourProvider(tourId));
 
+  Future<void> resetDraft(String tourId) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+        () => ref.read(tourCorpsServiceProvider).resetTourDraft(tourId));
+  }
 }

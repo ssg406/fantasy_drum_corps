@@ -7,7 +7,7 @@ part of 'admin_scores_controller.dart';
 // **************************************************************************
 
 String _$adminScoresControllerHash() =>
-    r'52a1fa07608dd8dcf87814ecb85ce29f2aa16d6a';
+    r'71b5becb3a27aceb8e116206ac35c81a16aa8cd2';
 
 /// See also [AdminScoresController].
 @ProviderFor(AdminScoresController)
