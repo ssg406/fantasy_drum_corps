@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
@@ -16,24 +15,20 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ElevatedButton(
+    return FilledButton.tonal(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.customGreen,
-          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-      // style: ButtonStyle(
-      //   backgroundColor: MaterialStateProperty.resolveWith((states) {
-      //     if (states.contains(MaterialState.hovered)) {
-      //       return AppColors.customGreen;
-      //     }
-      //     return theme.colorScheme.surface;
-      //   }),
-      // ),
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(
+          vertical: 15.0,
+          horizontal: 20.0,
+        ),
+      ),
       child: isLoading
           ? const CircularProgressIndicator()
           : Text(
-              label,
-              style: Theme.of(context).textTheme.bodyLarge,
+              label.toUpperCase(),
+              style: const TextStyle(
+                  letterSpacing: 1.5, fontWeight: FontWeight.bold),
             ),
     );
   }

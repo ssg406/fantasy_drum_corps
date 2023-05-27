@@ -167,7 +167,6 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
                   onPressed: editing ? _submitEditedTour : _submitNewTour,
                   label: editing ? 'UPDATE' : 'CREATE',
                   isLoading: state.isLoading,
-                  onSurface: true,
                 ),
               )
             ],

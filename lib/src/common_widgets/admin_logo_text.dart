@@ -1,5 +1,5 @@
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AdminLogoText extends StatelessWidget {
   const AdminLogoText({Key? key, this.size = 24.0}) : super(key: key);
@@ -8,24 +8,24 @@ class AdminLogoText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'FANTASY',
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(fontSize: size, color: AppColors.customBlue),
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: FaIcon(
+            FontAwesomeIcons.shieldHalved,
+            size: size,
+          ),
         ),
-        Text('CORPS',
+        Text(' FANTASY CORPS ',
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(fontSize: size, color: AppColors.customBlue)),
+                .copyWith(fontSize: size)),
         Text('ADMIN',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontSize: size, color: AppColors.customGreen)),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                fontSize: size)),
       ],
     );
   }

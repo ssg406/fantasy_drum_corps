@@ -12,6 +12,7 @@ class PrimaryButton extends StatelessWidget {
     this.onSurface = false,
     this.isDisabled = false,
   });
+
   final VoidCallback onPressed;
   final String label;
   final bool isLoading;
@@ -20,27 +21,20 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return FilledButton(
       onPressed: isLoading || isDisabled ? null : onPressed,
-      style: ElevatedButton.styleFrom(
+      style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(
           vertical: 15.0,
           horizontal: 20.0,
         ),
-        backgroundColor:
-            onSurface ? Theme.of(context).colorScheme.surfaceVariant : null,
       ),
       child: isLoading
           ? const CircularProgressIndicator()
           : Text(
-              label,
-              style: TextStyle(
-                letterSpacing: 1.5,
-                color: onSurface
-                    ? Theme.of(context).colorScheme.onSurfaceVariant
-                    : null,
-                fontWeight: FontWeight.w600,
-              ),
+              label.toUpperCase(),
+              style: const TextStyle(
+                  letterSpacing: 1.5, fontWeight: FontWeight.bold),
             ),
     );
   }

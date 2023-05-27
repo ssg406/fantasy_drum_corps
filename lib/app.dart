@@ -25,9 +25,9 @@ class App extends ConsumerWidget {
       restorationScopeId: 'app',
       routerConfig: goRouter,
       onGenerateTitle: (context) => 'Fantasy Drum Corps'.hardcoded,
-      theme: AppTheme.flexThemeLight,
-      darkTheme: AppTheme.flexThemeDark,
-      themeMode: ThemeMode.system,
+      theme: AppThemeUtils.lightFlexTheme,
+      darkTheme: AppThemeUtils.darkFlexTheme,
+      themeMode: ThemeMode.light,
     );
   }
 }
