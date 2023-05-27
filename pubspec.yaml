@@ -22,7 +22,7 @@ dependencies:
     sdk: flutter
   intl: any
   go_router: ^6.0.10
-  flex_color_scheme: ^6.1.2
+  flex_color_scheme: ^7.1.2
   google_fonts: ^4.0.3
   font_awesome_flutter: ^10.4.0
   email_validator: ^2.1.17
