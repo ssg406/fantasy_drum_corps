@@ -34,7 +34,7 @@ class NewMemberCard extends StatelessWidget {
                 icon: const Icon(Icons.add_circle_outline_rounded),
                 label: const Text('Create Tour'),
               ),
-              TextButton.icon(
+              FilledButton.icon(
                 onPressed: () => context.goNamed(AppRoutes.searchTours.name),
                 icon: const Icon(Icons.people_alt_rounded),
                 label: const Text('Join Tour'),

@@ -54,7 +54,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
                             GreetingCard(displayName: player.displayName),
                             if (player.displayName == null ||
                                 player.selectedCorps == null) ...[
-                              gapH24,
+                              gapW24,
                               const CompleteProfileCard()
                             ]
                           ],

@@ -32,43 +32,38 @@ class ManageDraft extends StatelessWidget {
             if (tour.draftComplete)
               Consumer(
                 builder: (context, ref, child) {
-                  return TextButton.icon(
+                  return FilledButton.icon(
                     onPressed: () async {
                       final controller =
                           ref.read(manageTourControllerProvider.notifier);
                       await controller.resetDraft(tour.id!);
                     },
-                    icon: FaIcon(
-                      FontAwesomeIcons.exclamation,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    label: Tooltip(
+                    style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.error),
+                    icon: const Icon(Icons.error_outline_rounded),
+                    label: const Tooltip(
                       message:
                           'Erases all Fantasy Corps created for this tour and makes '
                           'the draft available again.',
-                      child: Text(
-                        'RESET DRAFT',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
+                      child: Text('RESET DRAFT'),
                     ),
                   );
                 },
               ),
-            TextButton.icon(
-              onPressed: () => context.goNamed(
-                AppRoutes.draftLobby.name,
-                params: {'tid': tourId},
-              ),
-              icon: const FaIcon(FontAwesomeIcons.circlePlay),
-              label: const Tooltip(
-                message: 'Go to the draft page.',
-                child: Text(
-                  'GO TO DRAFT PAGE',
+            if (!tour.draftComplete)
+              FilledButton.icon(
+                onPressed: () => context.goNamed(
+                  AppRoutes.draftLobby.name,
+                  params: {'tid': tourId},
+                ),
+                icon: const FaIcon(FontAwesomeIcons.circlePlay),
+                label: const Tooltip(
+                  message: 'Go to the draft page.',
+                  child: Text(
+                    'Go to Draft',
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ],

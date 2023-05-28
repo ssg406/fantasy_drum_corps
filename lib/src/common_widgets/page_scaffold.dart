@@ -13,7 +13,7 @@ class PageScaffolding extends StatelessWidget {
     required this.pageTitle,
     this.onBackPressed,
     required this.child,
-    this.showImage = true,
+    this.showImage = false,
   });
 
   final double maxContentWidth;

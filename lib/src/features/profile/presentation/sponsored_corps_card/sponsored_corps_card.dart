@@ -1,6 +1,4 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
@@ -28,38 +26,44 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
     ref.listen<AsyncValue>(sponsoredCorpsCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(sponsoredCorpsCardControllerProvider);
+
     return AsyncValueWidget(
       value: ref.watch(playerStreamProvider),
       data: (Player? player) {
         final selectedCorps = player?.selectedCorps;
-        return TitledSectionCard(
-          title: 'Sponsored Drum Corps',
-          child: Column(
-            children: [
-              Form(
-                key: _formKey,
-                child: DropdownButtonFormField<DrumCorps>(
-                  value: selectedCorps,
-                  decoration:
-                      const InputDecoration(labelText: 'Sponsored Corps'),
-                  items: DrumCorps.values.map((drumCorps) {
-                    return DropdownMenuItem<DrumCorps>(
-                        value: drumCorps, child: Text(drumCorps.fullName));
-                  }).toList(),
-                  onChanged: (DrumCorps? newValue) {
-                    setState(() => _selectedCorps = newValue);
-                  },
-                ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Sponsored Drum Corps',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            gapH16,
+            Form(
+              key: _formKey,
+              child: DropdownButtonFormField<DrumCorps>(
+                value: selectedCorps,
+                decoration: const InputDecoration(labelText: 'Sponsored Corps'),
+                items: DrumCorps.values.map((drumCorps) {
+                  return DropdownMenuItem<DrumCorps>(
+                      value: drumCorps, child: Text(drumCorps.fullName));
+                }).toList(),
+                onChanged: (DrumCorps? newValue) {
+                  setState(() => _selectedCorps = newValue);
+                },
               ),
-              gapH20,
-              PrimaryButton(
-                onSurface: true,
-                label: 'Change Selection',
-                isLoading: state.isLoading,
+            ),
+            gapH16,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FilledButton(
                 onPressed: _submitSelectedCorps,
-              )
-            ],
-          ),
+                child: state.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Save Selection'),
+              ),
+            )
+          ],
         );
       },
     );

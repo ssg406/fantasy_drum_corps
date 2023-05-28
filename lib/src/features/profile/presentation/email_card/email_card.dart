@@ -1,6 +1,4 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
@@ -11,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-// TODO email only required when provider is EmailPassword and not Google
 class EmailCard extends ConsumerStatefulWidget {
   const EmailCard({Key? key}) : super(key: key);
 
@@ -36,36 +33,43 @@ class _EmailCardState extends ConsumerState<EmailCard>
     ref.listen(emailCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(emailCardControllerProvider);
+
     return AsyncValueWidget(
-      value: ref.watch(userChangesStreamProvider), //ref.watch(userChangesStreamProvider),
+      value: ref.watch(userChangesStreamProvider),
+      //ref.watch(userChangesStreamProvider),
       data: (User? user) {
-        return TitledSectionCard(
-          title: 'Email Address',
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Form(
-                key: _formKey,
-                child: TextFormField(
-                  controller: _emailController..text = user?.email ?? '',
-                  validator: (input) => canSubmitEmail(input ?? '')
-                      ? null
-                      : getEmailErrors(input ?? ''),
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
-                  onEditingComplete: _submitEmail,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Email Address',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            gapH16,
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _emailController..text = user?.email ?? '',
+                validator: (input) => canSubmitEmail(input ?? '')
+                    ? null
+                    : getEmailErrors(input ?? ''),
+                decoration: const InputDecoration(
+                  labelText: 'Email',
                 ),
+                onEditingComplete: _submitEmail,
               ),
-              gapH20,
-              PrimaryButton(
-                onSurface: true,
+            ),
+            gapH16,
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FilledButton(
                 onPressed: _submitEmail,
-                label: 'Update',
-                isLoading: state.isLoading,
+                child: state.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Save'),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

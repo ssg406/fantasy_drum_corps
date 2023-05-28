@@ -4,6 +4,8 @@ import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
+import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -14,13 +16,13 @@ class Leaderboard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AsyncValueWidget(
-      value: ref.watch(watchUserFantasyCorpsProvider),
-      data: (List<FantasyCorps> corps) => corps.isEmpty
+      value: ref.watch(watchJoinedToursProvider),
+      data: (List<Tour> tours) => tours.isEmpty
           ? Center(
-              child: Text('No Fantasy Corps Found.',
+              child: Text('No Tours Found.',
                   style: Theme.of(context).textTheme.titleLarge),
             )
-          : LeaderboardContents(corps: corps),
+          : LeaderboardContents(tours: tours),
     );
   }
 }
@@ -28,87 +30,63 @@ class Leaderboard extends ConsumerWidget {
 class LeaderboardContents extends StatefulWidget {
   const LeaderboardContents({
     Key? key,
-    required this.corps,
+    required this.tours,
   }) : super(key: key);
-  final List<FantasyCorps> corps;
+  final List<Tour> tours;
 
   @override
   State<LeaderboardContents> createState() => _LeaderboardContentsState();
 }
 
 class _LeaderboardContentsState extends State<LeaderboardContents> {
-  FantasyCorps? selectedCorps;
+  Tour? selectedTour;
 
   @override
   Widget build(BuildContext context) {
+    final bool largerThanTablet =
+        ResponsiveBreakpoints.of(context).largerThan(TABLET);
     return PageScaffolding(
       pageTitle: 'Corps Leaderboard',
       child: Column(
         children: [
           Flex(
-            direction:
-                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
-                    ? Axis.horizontal
-                    : Axis.vertical,
-            mainAxisAlignment:
-                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.center,
-            crossAxisAlignment:
-                ResponsiveBreakpoints.of(context).largerOrEqualTo(DESKTOP)
-                    ? CrossAxisAlignment.center
-                    : CrossAxisAlignment.start,
+            direction: largerThanTablet ? Axis.horizontal : Axis.vertical,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: largerThanTablet
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: [
               Text(
-                'Select your corps to see your tour\'s leaderboard.',
+                'Select your tour to see the leaderboard.',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              gapH16,
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: DropdownButton<FantasyCorps>(
-                  hint: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 15.0),
-                    child: Text(
-                      'Select a Corps',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                  focusColor: Colors.transparent,
-                  underline: Container(),
-                  dropdownColor: Theme.of(context).colorScheme.inversePrimary,
-                  value: selectedCorps,
-                  items: widget.corps
-                      .map(
-                        (corps) => DropdownMenuItem<FantasyCorps>(
-                          value: corps,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            child: Text(corps.name),
-                          ),
-                        ),
-                      )
+              if (!largerThanTablet) gapH24,
+              SizedBox(
+                width: 300,
+                child: DropdownButtonFormField<Tour>(
+                  hint: const Text('Select a tour'),
+                  value: selectedTour,
+                  items: widget.tours
+                      .where((tour) => tour.draftComplete)
+                      .map((tour) => DropdownMenuItem<Tour>(
+                            value: tour,
+                            child: Text(tour.name),
+                          ))
                       .toList(),
-                  onChanged: (FantasyCorps? newValue) =>
-                      setState(() => selectedCorps = newValue),
+                  onChanged: (tour) => setState(() => selectedTour = tour),
                 ),
-              ),
+              )
             ],
           ),
           gapH24,
-          selectedCorps == null
+          selectedTour == null
               ? Center(
                   child: Text(
-                    'Select a Fantasy Corps',
+                    'Select a Tour',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 )
-              : TourLeaderboard(tourId: selectedCorps!.tourId),
+              : TourLeaderboard(tourId: selectedTour!.id!),
         ],
       ),
     );
@@ -148,7 +126,7 @@ class TourLeaderboard extends ConsumerWidget {
                 children: [
                   _getColumnHeaders(context),
                   for (final key in standingsMap.keys)
-                    _getStandingRow(standingsMap[key]!, key + 1)
+                    _getStandingRow(standingsMap[key]!, key + 1, context)
                 ],
               )
             ],
@@ -166,8 +144,8 @@ class TourLeaderboard extends ConsumerWidget {
         for (final name in colNames)
           TableCellPadded(
             child: Text(
-              name,
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+              name.toUpperCase(),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
             ),
@@ -176,17 +154,27 @@ class TourLeaderboard extends ConsumerWidget {
     );
   }
 
-  TableRow _getStandingRow(FantasyCorps fantasyCorps, int rank) {
+  TableRow _getStandingRow(
+      FantasyCorps fantasyCorps, int rank, BuildContext context) {
     return TableRow(
       children: [
         TableCellPadded(
-          child: Text(rank.toString()),
+          child: Text(
+            rank.toString(),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
         TableCellPadded(
-          child: Text(fantasyCorps.name),
+          child: Text(
+            fantasyCorps.name,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
         TableCellPadded(
-          child: Text(fantasyCorps.totalScore.toStringAsFixed(2)),
+          child: Text(
+            fantasyCorps.totalScore.toStringAsFixed(2),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         )
       ],
     );

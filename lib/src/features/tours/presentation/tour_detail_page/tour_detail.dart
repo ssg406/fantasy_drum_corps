@@ -163,20 +163,20 @@ class TourDetailContents extends StatelessWidget {
             },
             label: const Text('Edit Tour'),
           ),
-        if (tour.members.contains(user.uid))
-          TextButton.icon(
-            icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () => context.pushNamed(AppRoutes.draftLobby.name,
-                params: {'tid': tour.id!}),
-            label: const Text('Go to Draft'),
-          ),
         if (tour.members.contains(user.uid) && tour.owner != user.uid)
           TextButton.icon(
             icon: const Icon(Icons.remove),
             onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
                 params: {'tid': tour.id!}, extra: tour),
             label: const Text('Leave Tour'),
-          )
+          ),
+        if (tour.members.contains(user.uid) && !tour.draftComplete)
+          FilledButton.icon(
+            icon: const Icon(Icons.play_circle_outline_outlined),
+            onPressed: () => context.pushNamed(AppRoutes.draftLobby.name,
+                params: {'tid': tour.id!}),
+            label: const Text('Go to Draft'),
+          ),
       ],
     );
   }

@@ -86,6 +86,7 @@ class _CreateFantasyCorpsContentsState
       pageTitle: _isEditing
           ? 'Edit Your Fantasy Corps'
           : 'Complete Your Fantasy Corps',
+      onBackPressed: () => context.goNamed(AppRoutes.myCorps.name),
       child: Form(
         key: _formKey,
         child: Padding(

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppThemeUtils {
+  static ThemeData getBaseTheme(Brightness brightness) {
+    return ThemeData(brightness: brightness);
+  }
+
   static ThemeData get lightFlexTheme {
     var baseTheme = ThemeData(brightness: Brightness.light);
     return FlexThemeData.light(
@@ -13,7 +17,8 @@ class AppThemeUtils {
         secondaryContainer: Color(0xfff0b395),
         tertiary: Color(0xff7cc8f8),
         tertiaryContainer: Color(0xffc5e7ff),
-        appBarColor: Color(0xfff0b395),
+        appBarColor: Color(0xff2583ff),
+        //Color(0xfff0b395),
         error: Color(0xffb00020),
       ),
       subThemesData: const FlexSubThemesData(
@@ -21,10 +26,10 @@ class AppThemeUtils {
         blendOnColors: false,
         useTextTheme: true,
         useM2StyleDividerInM3: true,
-        adaptiveAppBarScrollUnderOff: FlexAdaptive.appleWeb(),
+        //adaptiveAppBarScrollUnderOff: FlexAdaptive.all(),
         filledButtonRadius: 10.0,
         elevatedButtonRadius: 10.0,
-        inputDecoratorBackgroundAlpha: 134,
+        inputDecoratorBackgroundAlpha: 50,
         inputDecoratorRadius: 25.0,
         inputDecoratorUnfocusedBorderIsColored: false,
         cardRadius: 8.0,
@@ -37,15 +42,16 @@ class AppThemeUtils {
       useMaterial3: true,
       swapLegacyOnMaterial3: true,
     ).copyWith(
-        textTheme: _getTextTheme(baseTheme),
-        appBarTheme: const AppBarTheme(
-          toolbarHeight: 100,
-          elevation: 0.0,
-          centerTitle: true,
-        ),
-        dividerTheme: DividerThemeData(
-          color: Colors.grey[400],
-        ));
+      textTheme: _getTextTheme(baseTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xff2583ff),
+        toolbarHeight: 100,
+        centerTitle: true,
+      ),
+      dividerTheme: DividerThemeData(
+        color: Colors.grey[400],
+      ),
+    );
   }
 
   static ThemeData get darkFlexTheme {
@@ -96,18 +102,18 @@ class AppThemeUtils {
       (baseTheme.textTheme).copyWith(
         bodyLarge: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyLarge),
         bodyMedium:
-        GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyMedium),
+            GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyMedium),
         bodySmall: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodySmall),
         labelLarge: GoogleFonts.roboto(
             textStyle: baseTheme.textTheme.labelLarge
                 ?.copyWith(fontWeight: FontWeight.w300)),
         labelMedium:
-        GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelMedium),
+            GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelMedium),
         labelSmall:
-        GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelSmall),
+            GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelSmall),
         titleSmall: GoogleFonts.leagueSpartan(
           textStyle:
-          baseTheme.textTheme.titleSmall!.copyWith(letterSpacing: -0.5),
+              baseTheme.textTheme.titleSmall!.copyWith(letterSpacing: -0.5),
         ),
         titleMedium: GoogleFonts.leagueSpartan(
           textStyle: baseTheme.textTheme.titleMedium!

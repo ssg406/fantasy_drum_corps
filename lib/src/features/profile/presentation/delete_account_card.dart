@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
@@ -10,40 +9,36 @@ class DeleteAccountCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TitledSectionCard(
-        title: 'Delete Account',
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Deleting your account removes all personal information '
-              'that you have stored in Fantasy Drum Corps and cannot be '
-              'undone. Lineups you have created will remain on the site to '
-              'allow other members to continue in your absence.',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            gapH24,
-            ElevatedButton(
-              onPressed: () {
-                _confirmDelete(context).then((confirmed) {
-                  if (confirmed ?? false) {
-                    ref
-                        .read(profileScreenControllerProvider.notifier)
-                        .deleteAccount();
-                  }
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.errorContainer),
-              child: Text(
-                'DELETE ACCOUNT',
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onErrorContainer),
-              ),
-            ),
-          ],
-        ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Deleting your account removes all personal information '
+          'that you have stored in Fantasy Drum Corps and cannot be '
+          'undone. Lineups you have created will remain on the site to '
+          'allow other members to continue in your absence.',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        gapH16,
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FilledButton(
+            onPressed: () {
+              _confirmDelete(context).then((confirmed) {
+                if (confirmed ?? false) {
+                  ref
+                      .read(profileScreenControllerProvider.notifier)
+                      .deleteAccount();
+                }
+              });
+            },
+            style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error),
+            child: const Text('Delete Account'),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<bool?> _confirmDelete(BuildContext context) async {

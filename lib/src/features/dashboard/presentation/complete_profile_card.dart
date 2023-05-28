@@ -20,9 +20,9 @@ class CompleteProfileCard extends StatelessWidget {
       ),
       child: ButtonBar(
         children: [
-          TextButton.icon(
+          FilledButton.icon(
             onPressed: () => context.goNamed(AppRoutes.profile.name),
-            icon: const Icon(Icons.arrow_circle_right_outlined),
+            icon: const Icon(Icons.person),
             label: const Text('Go to Profile'),
           ),
         ],

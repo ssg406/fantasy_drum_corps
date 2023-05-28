@@ -1,6 +1,4 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
@@ -44,7 +42,6 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     with RegistrationValidators {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  static const imageMaxSize = 5000000;
 
   String get displayName => _nameController.text;
 
@@ -66,60 +63,66 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
     ref.listen<AsyncValue>(detailsCardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(detailsCardControllerProvider);
-    return TitledSectionCard(
-      title: 'User Details',
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTapDown: (tapDetails) =>
-                    _showAvatarMenu(tapDetails.globalPosition),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: state.isLoading
-                      ? const CircularProgressIndicator()
-                      : Tooltip(
-                          message: 'Edit Avatar',
-                          child: Avatar(
-                            size: 100,
-                            avatarString: widget.player.avatarString,
-                          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Avatar and Display Name',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        gapH16,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTapDown: (tapDetails) =>
+                  _showAvatarMenu(tapDetails.globalPosition),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: state.isLoading
+                    ? const CircularProgressIndicator()
+                    : Tooltip(
+                        message: 'Edit Avatar',
+                        child: Avatar(
+                          size: 100,
+                          avatarString: widget.player.avatarString,
                         ),
+                      ),
+              ),
+            ),
+            gapW24,
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      enabled: !state.isLoading,
+                      controller: _nameController
+                        ..text = widget.player.displayName ?? '',
+                      validator: (input) => canSubmitDisplayName(input ?? '')
+                          ? null
+                          : getDisplayNameErrors(input ?? ''),
+                      decoration:
+                          const InputDecoration(labelText: 'Display Name'),
+                      onEditingComplete: _onDisplayNameEditingComplete,
+                    ),
+                  ],
                 ),
               ),
-              gapW24,
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        enabled: !state.isLoading,
-                        controller: _nameController
-                          ..text = widget.player.displayName ?? '',
-                        validator: (input) => canSubmitDisplayName(input ?? '')
-                            ? null
-                            : getDisplayNameErrors(input ?? ''),
-                        decoration:
-                            const InputDecoration(labelText: 'Display Name'),
-                        onEditingComplete: _onDisplayNameEditingComplete,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
+            )
+          ],
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: FilledButton(
+            onPressed: _submitDisplayName,
+            child: state.isLoading
+                ? const CircularProgressIndicator()
+                : const Text('Save'),
           ),
-          PrimaryButton(
-            onSurface: true,
-            onPressed: () => _submitDisplayName(),
-            label: 'Update',
-            isLoading: state.isLoading,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

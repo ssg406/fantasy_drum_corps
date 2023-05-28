@@ -27,11 +27,11 @@ class VerifyEmailCard extends ConsumerWidget {
       ),
       child: ButtonBar(
         children: [
-          TextButton.icon(
+          FilledButton.icon(
             onPressed: () => ref
                 .read(dashboardControllerProvider.notifier)
                 .sendVerificationEmail(user),
-            icon: const FaIcon(FontAwesomeIcons.envelopeOpenText),
+            icon: const Icon(Icons.email_rounded),
             label: state.isLoading
                 ? const CircularProgressIndicator()
                 : const Text('Resend Verification Email'),

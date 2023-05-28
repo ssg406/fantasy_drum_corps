@@ -32,20 +32,11 @@ class DashboardTourCard extends StatelessWidget {
                 height: 150,
                 child: ListTile(
                   isThreeLine: true,
-                  title: Text(
-                    tour.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
+                  title: Text(tour.name,
+                      style: Theme.of(context).textTheme.titleLarge!),
                   subtitle: Text(
-                    '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Colors.white),
-                  ),
+                      '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
+                      style: Theme.of(context).textTheme.bodyMedium!),
                   onTap: () => context.pushNamed(AppRoutes.tourDetail.name,
                       params: {'tid': tour.id!}),
                 ),

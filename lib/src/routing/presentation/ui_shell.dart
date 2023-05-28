@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/common_widgets/admin_logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/user_avatar.dart';
@@ -42,7 +41,10 @@ class NavShell extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: const Icon(Icons.menu),
+                icon: const FaIcon(
+                  FontAwesomeIcons.bars,
+                  color: Colors.white,
+                ),
                 onPressed: () => scaffoldStateKey.currentState!.openDrawer(),
               ),
               MouseRegion(
@@ -52,9 +54,11 @@ class NavShell extends ConsumerWidget {
                   child: AsyncValueWidget(
                     showLoading: false,
                     value: ref.watch(currentUserIsAdminProvider),
-                    data: (bool isAdmin) => isAdmin
-                        ? AdminLogoText(size: textSize)
-                        : LogoText(size: textSize),
+                    data: (bool isAdmin) => LogoText(
+                      size: textSize,
+                      isAdmin: isAdmin,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

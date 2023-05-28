@@ -1,6 +1,4 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
@@ -39,46 +37,56 @@ class _PasswordCardState extends ConsumerState<PasswordCard>
     return AsyncValueWidget(
       value: ref.watch(userChangesStreamProvider),
       data: (User? user) {
-        return TitledSectionCard(
-          title: 'Password',
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _currentPasswordController,
-                  validator: (input) {
-                    if (input == null || input.isEmpty) {
-                      return 'Please enter your password';
-                    } else {
-                      return null;
-                    }
-                  },
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Current Password',
-                    hintText: 'Verify current password to change password',
-                  ),
-                ),
-                gapH24,
-                TextFormField(
-                  validator: (input) => getPasswordErrors(input ?? ''),
-                  obscureText: true,
-                  controller: _newPasswordController,
-                  decoration: const InputDecoration(
-                    labelText: 'New Password',
-                  ),
-                ),
-                gapH32,
-                PrimaryButton(
-                  onSurface: true,
-                  onPressed: _submitPassword,
-                  label: 'Update',
-                  isLoading: state.isLoading,
-                ),
-              ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Change Password',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          ),
+            gapH16,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _currentPasswordController,
+                    validator: (input) {
+                      if (input == null || input.isEmpty) {
+                        return 'Please enter your password';
+                      } else {
+                        return null;
+                      }
+                    },
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Current Password',
+                      hintText: 'Verify current password to change password',
+                    ),
+                  ),
+                  gapH16,
+                  TextFormField(
+                    validator: (input) => getPasswordErrors(input ?? ''),
+                    obscureText: true,
+                    controller: _newPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'New Password',
+                    ),
+                  ),
+                  gapH16,
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: FilledButton(
+                      onPressed: _submitPassword,
+                      child: state.isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text('Save Password'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
