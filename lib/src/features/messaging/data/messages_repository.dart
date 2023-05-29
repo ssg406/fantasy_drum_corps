@@ -17,22 +17,25 @@ class MessagesRepository {
   Future<void> addMessage(TourMessage message) =>
       db.collection(messagesPath).add(message.toJson());
 
-
   Future<void> deleteMessage(String id) async {
     final messageRef = db.doc(messagePath(id));
     await messageRef.delete();
   }
 
-  Stream<List<TourMessage>> watchTourMessages(String tourId) =>
-      db.collection(messagesPath).withConverter(
-        fromFirestore: (snapshot, _) =>
-            TourMessage.fromJson(snapshot.data()!, snapshot.id),
-        toFirestore: (tourMessage, _) => tourMessage.toJson(),
-      )
-          .snapshots()
-          .map((snapshot) =>
-          snapshot.docs.map((doc) => doc.data()).where((
-              tourMessage) => tourMessage.id == tourId).toList());
+  Stream<List<TourMessage>> watchTourMessages(String tourId) {
+    return db
+        .collection(messagesPath)
+        .withConverter(
+          fromFirestore: (snapshot, _) =>
+              TourMessage.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (tourMessage, _) => tourMessage.toJson(),
+        )
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => doc.data())
+            .where((tourMessage) => tourMessage.tourId == tourId)
+            .toList());
+  }
 }
 
 @riverpod
@@ -40,6 +43,6 @@ MessagesRepository messagesRepository(MessagesRepositoryRef ref) =>
     MessagesRepository(ref.watch(firebaseFirestoreProvider));
 
 @riverpod
-Stream<List<TourMessage>> watchTourMessages(WatchTourMessagesRef ref,
-    String tourId) =>
+Stream<List<TourMessage>> watchTourMessages(
+        WatchTourMessagesRef ref, String tourId) =>
     ref.watch(messagesRepositoryProvider).watchTourMessages(tourId);

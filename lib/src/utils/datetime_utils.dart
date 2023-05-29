@@ -14,8 +14,10 @@ class DateTimeUtils {
   static String formattedDate(DateTime date) =>
       DateFormat.yMMMMd('en_US').format(date);
 
-  static DateTime combineDateAndTime(DateTime date, TimeOfDay time) =>
-      DateTime(
+  static String shortFormattedDate(DateTime date) =>
+      DateFormat.yMd('en_US').add_jm().format(date);
+
+  static DateTime combineDateAndTime(DateTime date, TimeOfDay time) => DateTime(
         date.year,
         date.month,
         date.day,

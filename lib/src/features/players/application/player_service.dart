@@ -40,6 +40,10 @@ class PlayerService {
         playerId: user.uid, corps: selectedCorps);
   }
 
+  Future<String?> fetchDisplayName(String userId) async {
+    final player = await _playerRepo.fetchPlayer(userId);
+    return player?.displayName;
+  }
 }
 
 @riverpod

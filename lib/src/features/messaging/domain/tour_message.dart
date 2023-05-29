@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 @immutable
 class TourMessage {
   const TourMessage(
-      {this.id, required this.user, required this.tourId, required this.message, required this.dateTime});
+      {this.id,
+      required this.user,
+      required this.userId,
+      required this.tourId,
+      required this.message,
+      required this.dateTime});
 
   final String? id;
   final String user;
+  final String userId;
   final String tourId;
   final String message;
   final DateTime dateTime;
@@ -16,14 +22,15 @@ class TourMessage {
       TourMessage(
         id: id,
         user: json['user'] as String,
+        userId: json['userId'] as String,
         tourId: json['tourId'] as String,
         message: json['message'] as String,
         dateTime: (json['dateTime'] as Timestamp).toDate(),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'user': user,
+        'userId': userId,
         'tourId': tourId,
         'message': message,
         'dateTime': dateTime,
@@ -33,13 +40,14 @@ class TourMessage {
     String? user,
     String? tourId,
     String? message,
+    String? userId,
     DateTime? dateTime,
   }) =>
       TourMessage(
         user: user ?? this.user,
+        userId: userId ?? this.userId,
         tourId: tourId ?? this.tourId,
         message: message ?? this.message,
         dateTime: dateTime ?? this.dateTime,
       );
-
 }

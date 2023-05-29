@@ -1,6 +1,3 @@
-import 'dart:developer' as developer;
-
-import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,9 +17,13 @@ class AsyncValueWidget<T> extends StatelessWidget {
     return value.when(
       data: data,
       error: (e, st) {
-        developer.log('Error: ${e.toString()}\nStack Trace: $st',
-            name: 'logs.error', error: e);
-        return const NotFound();
+        debugPrint('Error: ${e.toString()}\n$st');
+        return Center(
+          child: Text(
+            'Internal Server Error',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        );
       },
       loading: () => Center(
           child: showLoading ? const CircularProgressIndicator() : Container()),

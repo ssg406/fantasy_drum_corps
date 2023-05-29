@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
@@ -15,8 +16,12 @@ class LabeledFlexRow extends StatelessWidget {
           ? Axis.horizontal
           : Axis.vertical,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [ItemLabel(label: label), item],
+      children: [
+        ItemLabel(label: label),
+        //if (ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET)) gapW12,
+        gapW12,
+        item,
+      ],
     );
   }
 }

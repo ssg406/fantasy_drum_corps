@@ -22,9 +22,9 @@ class TourMembers extends ConsumerWidget {
               ? Axis.horizontal
               : Axis.vertical,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const ItemLabel(label: 'Tour Members'),
+            gapW16,
             Wrap(
               children: [
                 for (final player in players) ...[
