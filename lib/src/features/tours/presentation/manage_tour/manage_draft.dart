@@ -2,7 +2,7 @@ import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour_controller.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

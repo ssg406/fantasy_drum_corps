@@ -8,7 +8,7 @@ import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/leave_tour/leave_tour_controller.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';

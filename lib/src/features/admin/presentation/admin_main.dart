@@ -8,7 +8,7 @@ import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/message.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_messaging_controller.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:flutter/material.dart';

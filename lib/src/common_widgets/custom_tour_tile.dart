@@ -1,7 +1,7 @@
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,9 +21,7 @@ class CustomTourTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref
-        .watch(authRepositoryProvider)
-        .currentUser;
+    final user = ref.watch(authRepositoryProvider).currentUser;
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => _goToTourPage(context),
@@ -75,7 +73,6 @@ class CustomTourTile extends ConsumerWidget {
   }
 
   void _goToTourPage(BuildContext context) {
-    context.pushNamed(AppRoutes.tourDetail.name,
-        params: {'tid': tour.id!});
+    context.pushNamed(AppRoutes.tourDetail.name, params: {'tid': tour.id!});
   }
 }

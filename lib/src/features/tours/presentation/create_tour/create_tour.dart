@@ -9,7 +9,7 @@ import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour_controller.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/private_tour_switch.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/tour_validators.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';

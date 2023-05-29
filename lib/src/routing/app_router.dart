@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/features/about/presentation/about_page.dart';
+import 'package:fantasy_drum_corps/src/features/about/presentation/how_to_play.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_main.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores.dart';
@@ -21,6 +22,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/m
 import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/search_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
 import 'package:flutter/material.dart';
@@ -32,34 +34,6 @@ part 'app_router.g.dart';
 // Navigator keys
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
-
-enum AppRoutes {
-  signIn,
-  dashboard,
-  tours,
-  profile,
-  createTour,
-  register,
-  myTours,
-  searchTours,
-  tourDetail,
-  draft,
-  rankings,
-  allCorps,
-  about,
-  editTour,
-  joinTour,
-  leaveTour,
-  manageTour,
-  createFluttermoji,
-  draftLobby,
-  createCorps,
-  myCorps,
-  corpsDetail,
-  leaderboard,
-  adminMain,
-  adminAddScore,
-}
 
 @riverpod
 // ignore: unsupported_provider_value
@@ -111,8 +85,8 @@ GoRouter goRouter(GoRouterRef ref) {
         name: AppRoutes.signIn.name,
         pageBuilder: (context, state) => NoTransitionPage(
           key: state.pageKey,
-          child: const AuthenticateScreen(
-              formType: AuthenticationFormType.register),
+          child:
+              const AuthenticateScreen(formType: AuthenticationFormType.signIn),
         ),
       ),
       ShellRoute(
@@ -126,6 +100,12 @@ GoRouter goRouter(GoRouterRef ref) {
             name: AppRoutes.about.name,
             pageBuilder: (context, state) =>
                 MaterialPage(key: state.pageKey, child: const AboutPage()),
+          ),
+          GoRoute(
+            path: '/howToPlay',
+            name: AppRoutes.howToPlay.name,
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const HowToPlay()),
           ),
           GoRoute(
             path: '/dashboard',

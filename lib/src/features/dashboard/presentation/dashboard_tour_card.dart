@@ -1,6 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:flutter/material.dart';

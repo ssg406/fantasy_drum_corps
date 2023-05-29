@@ -7,7 +7,7 @@ import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores_
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/routing/app_router.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
