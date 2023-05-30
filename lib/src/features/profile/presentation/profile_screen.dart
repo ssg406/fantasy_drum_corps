@@ -6,8 +6,10 @@ import 'package:fantasy_drum_corps/src/features/profile/presentation/email_card/
 import 'package:fantasy_drum_corps/src/features/profile/presentation/password_card/password_card.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/sponsored_corps_card/sponsored_corps_card.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class UserProfile extends ConsumerWidget {
   const UserProfile({
@@ -20,6 +22,7 @@ class UserProfile extends ConsumerWidget {
     final isGoogleAuth = controller.getIsOAuthAccount();
     return PageScaffolding(
       pageTitle: 'My Profile',
+      onBackPressed: () => context.goNamed(AppRoutes.dashboard.name),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
