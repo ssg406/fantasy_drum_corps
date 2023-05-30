@@ -54,6 +54,7 @@ class _CreateFantasyCorpsContentsState
   String? _showTitle;
   String? _repertoire;
   bool _saved = false;
+  final _focusNode = FocusScopeNode();
 
   @override
   void initState() {
@@ -87,55 +88,61 @@ class _CreateFantasyCorpsContentsState
           ? 'Edit Your Fantasy Corps'
           : 'Complete Your Fantasy Corps',
       onBackPressed: () => context.goNamed(AppRoutes.myCorps.name),
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: cardPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              gapH16,
-              TextFormField(
-                initialValue: _corpsName,
-                onChanged: (value) => _corpsName = value,
-                validator: validateCorpsName,
-                decoration: const InputDecoration(
-                  labelText: 'Fantasy Corps Name',
-                  hintText: 'Crimson Devils',
+      child: FocusScope(
+        node: _focusNode,
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: cardPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                gapH16,
+                TextFormField(
+                  initialValue: _corpsName,
+                  onChanged: (value) => _corpsName = value,
+                  validator: validateCorpsName,
+                  decoration: const InputDecoration(
+                    labelText: 'Fantasy Corps Name',
+                    hintText: 'Crimson Devils',
+                  ),
+                  onEditingComplete: () => _focusNode.nextFocus(),
                 ),
-              ),
-              gapH32,
-              TextFormField(
-                initialValue: _showTitle,
-                onChanged: (value) => _showTitle = value,
-                validator: validateShowTitleAndRepertoire,
-                decoration: const InputDecoration(
-                  labelText: 'Show Title',
-                  hintText: 'Backseat Driver',
+                gapH32,
+                TextFormField(
+                  initialValue: _showTitle,
+                  onChanged: (value) => _showTitle = value,
+                  validator: validateShowTitleAndRepertoire,
+                  decoration: const InputDecoration(
+                    labelText: 'Show Title',
+                    hintText: 'Backseat Driver',
+                  ),
+                  onEditingComplete: () => _focusNode.nextFocus(),
                 ),
-              ),
-              gapH32,
-              TextFormField(
-                initialValue: _repertoire,
-                onChanged: (value) => _repertoire = value,
-                validator: validateShowTitleAndRepertoire,
-                decoration: const InputDecoration(
-                  labelText: 'Repertoire',
-                  hintText:
-                      'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
+                gapH32,
+                TextFormField(
+                  initialValue: _repertoire,
+                  onChanged: (value) => _repertoire = value,
+                  validator: validateShowTitleAndRepertoire,
+                  decoration: const InputDecoration(
+                    labelText: 'Repertoire',
+                    hintText:
+                        'Carnival of Venice by Niccolo Paganini\nHands and Feet by Michel Camilo\nTank! by Yoko Kanno',
+                  ),
+                  maxLines: 4,
+                  onEditingComplete: _submitForm,
                 ),
-                maxLines: 4,
-              ),
-              gapH32,
-              Center(
-                child: PrimaryButton(
-                  onPressed: _submitForm,
-                  label: _isEditing ? 'UPDATE' : 'FINISH',
-                  isLoading: state.isLoading,
-                  onSurface: true,
+                gapH32,
+                Center(
+                  child: PrimaryButton(
+                    onPressed: _submitForm,
+                    label: _isEditing ? 'UPDATE' : 'FINISH',
+                    isLoading: state.isLoading,
+                    onSurface: true,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
