@@ -1,13 +1,10 @@
 import 'package:fantasy_drum_corps/src/common_widgets/logo_text.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_text_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/oauth_provider.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_screen_controller.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
-import 'package:fantasy_drum_corps/src/localization/string_hardcoded.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,118 +42,189 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
     ref.listen<AsyncValue>(authenticateScreenControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(authenticateScreenControllerProvider);
-    final textSize =
-        ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 50.0 : 30.0;
+    final breakpoints = ResponsiveBreakpoints.of(context);
+    final theme = Theme.of(context);
+    final textSize = breakpoints.largerThan(TABLET) ? 40.0 : 30.0;
+
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: ResponsiveCenter(
-            padding: centerContentPadding,
-            maxContentWidth: 600,
-            child: FocusScope(
-              node: _node,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    LogoText(
-                      size: textSize,
-                    ),
-                    gapH32,
-                    Text(
-                      _formType.title,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    gapH16,
-                    Row(
-                      children: [
-                        Text(_formType.secondaryFormText),
-                        PrimaryTextButton(
-                            isLoading: state.isLoading,
-                            onPressed: _toggleFormType,
-                            label: _formType.toggleFormButtonText),
-                      ],
-                    ),
-                    gapH16,
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email'.hardcoded,
-                        hintText: 'me@gmail.com'.hardcoded,
-                        enabled: !state.isLoading,
-                      ),
-                      validator: (email) =>
-                          !_submitted ? null : getEmailErrors(email ?? ''),
-                      //
-                      onEditingComplete: _emailEditingComplete,
-                      autocorrect: false,
-                      keyboardType: TextInputType.emailAddress,
-                      keyboardAppearance: Brightness.light,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                    ),
-                    gapH20,
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password'.hardcoded,
-                        enabled: !state.isLoading,
-                      ),
-                      obscureText: true,
-                      autocorrect: false,
-                      keyboardAppearance: Brightness.light,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (password) => !_submitted
-                          ? null
-                          : getPasswordErrors(password ?? ''),
-                      onEditingComplete: _passwordEditingComplete,
-                    ),
-                    gapH8,
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: TextButton(
-                        onPressed: () => _showResetPasswordDialog(context),
-                        child: Text(
-                          'Forgot Password?',
-                          style: Theme.of(context).textTheme.labelLarge,
+        child: ResponsiveCenter(
+          padding:
+              breakpoints.largerThan(MOBILE) ? pagePadding : mobilePagePadding,
+          child: SingleChildScrollView(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (breakpoints.largerThan(TABLET))
+                  IntroText(textSize: textSize),
+                Expanded(
+                  child: Container(
+                    margin: breakpoints.largerThan(TABLET)
+                        ? const EdgeInsets.only(left: Sizes.p48)
+                        : null,
+                    child: Card(
+                      color: Theme.of(context).colorScheme.primary,
+                      child: FocusScope(
+                        node: _node,
+                        child: Form(
+                          key: _formKey,
+                          child: Padding(
+                            padding: breakpoints.largerThan(TABLET)
+                                ? cardPadding
+                                : mobileCardPadding,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (breakpoints.smallerOrEqualTo(TABLET)) ...[
+                                  LogoText(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: textSize,
+                                    alignment: MainAxisAlignment.center,
+                                  ),
+                                  gapH32,
+                                ],
+                                Text(
+                                  _formType.title,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: theme.colorScheme.onPrimary),
+                                ),
+                                gapH16,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _formType.secondaryFormText,
+                                      style: TextStyle(
+                                          color: theme.colorScheme.onPrimary),
+                                    ),
+                                    TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                          foregroundColor:
+                                              theme.colorScheme.onPrimary),
+                                      icon: const Icon(
+                                          Icons.app_registration_rounded),
+                                      onPressed: _toggleFormType,
+                                      label:
+                                          Text(_formType.toggleFormButtonText),
+                                    ),
+                                  ],
+                                ),
+                                gapH16,
+                                TextFormField(
+                                  controller: _emailController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Email',
+                                    hintText: 'Email',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    enabled: !state.isLoading,
+                                  ),
+                                  validator: (email) => !_submitted
+                                      ? null
+                                      : getEmailErrors(email ?? ''),
+                                  //
+                                  onEditingComplete: _emailEditingComplete,
+                                  autocorrect: false,
+                                  keyboardType: TextInputType.emailAddress,
+                                  keyboardAppearance: Brightness.light,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                ),
+                                gapH20,
+                                TextFormField(
+                                  controller: _passwordController,
+                                  decoration: InputDecoration(
+                                      enabled: !state.isLoading,
+                                      label: const Text('Password'),
+                                      hintText: 'Password',
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.never),
+                                  obscureText: true,
+                                  autocorrect: false,
+                                  keyboardAppearance: Brightness.light,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (password) => !_submitted
+                                      ? null
+                                      : getPasswordErrors(password ?? ''),
+                                  onEditingComplete: _passwordEditingComplete,
+                                ),
+                                gapH8,
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: TextButton(
+                                    onPressed: () =>
+                                        _showResetPasswordDialog(context),
+                                    child: Text(
+                                      'Forgot Password?',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .copyWith(
+                                              color: theme
+                                                  .colorScheme.inversePrimary),
+                                    ),
+                                  ),
+                                ),
+                                gapH12,
+                                TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          theme.colorScheme.onPrimary),
+                                  icon: const Icon(
+                                      Icons.arrow_circle_right_outlined),
+                                  onPressed: _submit,
+                                  label: state.isLoading
+                                      ? const CircularProgressIndicator()
+                                      : Text(_formType.submitButtonText),
+                                ),
+                                gapH32,
+                                Flex(
+                                  direction: breakpoints.smallerThan(TABLET)
+                                      ? Axis.horizontal
+                                      : Axis.vertical,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                          foregroundColor:
+                                              theme.colorScheme.onPrimary),
+                                      onPressed: () => _submitSSO(
+                                          OAuthSignInProvider.google),
+                                      icon: const FaIcon(
+                                        FontAwesomeIcons.google,
+                                      ),
+                                      label: const Text('Continue with Google'),
+                                    ),
+                                    gapW16,
+                                    if (kIsWeb)
+                                      TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                theme.colorScheme.onPrimary),
+                                        onPressed: () => _submitSSO(
+                                            OAuthSignInProvider.facebook),
+                                        icon: const FaIcon(
+                                            FontAwesomeIcons.facebook),
+                                        label: const Text(
+                                            'Continue with Facebook'),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    gapH20,
-                    PrimaryButton(
-                        isLoading: state.isLoading,
-                        onPressed: _submit,
-                        label: _formType.submitButtonText.toUpperCase()),
-                    gapH32,
-                    Flex(
-                      direction: ResponsiveBreakpoints.of(context)
-                              .largerOrEqualTo(TABLET)
-                          ? Axis.horizontal
-                          : Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () =>
-                              _submitSSO(OAuthSignInProvider.google),
-                          icon: const FaIcon(
-                            FontAwesomeIcons.google,
-                          ),
-                          label: const Text('Continue with Google'),
-                        ),
-                        gapW16,
-                        if (kIsWeb)
-                          TextButton.icon(
-                            onPressed: () =>
-                                _submitSSO(OAuthSignInProvider.facebook),
-                            icon: const FaIcon(FontAwesomeIcons.facebook),
-                            label: const Text('Continue with Facebook'),
-                          ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -239,5 +307,38 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
   void _sendPasswordResetEmail(String email) async {
     final controller = ref.read(authenticateScreenControllerProvider.notifier);
     await controller.sendPasswordResetMail(email: email);
+  }
+}
+
+class IntroText extends StatelessWidget {
+  const IntroText({Key? key, required this.textSize}) : super(key: key);
+  final double textSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final breakpoints = ResponsiveBreakpoints.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LogoText(
+          size: textSize,
+        ),
+        gapH16,
+        SizedBox(
+          width: breakpoints.screenWidth * 0.3,
+          child: const Text(
+            'Ut enim ad minim veniam, quis nostrud exercitation '
+            'ullamco laboris nisi ut aliquip ex ea commodo '
+            'consequat. Duis aute irure dolor in reprehenderit '
+            'in voluptate velit esse cillum dolore eu fugiat '
+            'nulla pariatur. Excepteur sint occaecat cupidatat '
+            'non proident, sunt in culpa qui officia deserunt '
+            'mollit anim id est laborum.',
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
+    );
   }
 }

@@ -133,10 +133,11 @@ class TourDetailContents extends StatelessWidget {
                   gapH24,
                 ],
               ),
-              MessagingBox(
-                tourId: tour.id!,
-                userId: user.uid,
-              ),
+              if (tour.members.contains(user.uid))
+                MessagingBox(
+                  tourId: tour.id!,
+                  userId: user.uid,
+                ),
             ],
           ),
           _getButtonBar(context),

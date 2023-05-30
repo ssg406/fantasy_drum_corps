@@ -111,11 +111,12 @@ class MainDraft extends StatelessWidget {
               if (onCancelDraft != null)
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
+                  child: FilledButton.icon(
+                    icon: const Icon(Icons.cancel_rounded),
                     onPressed: onCancelDraft,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error),
-                    child: const Text('Cancel Draft'),
+                    label: const Text('Cancel Draft'),
                   ),
                 ),
             ],
