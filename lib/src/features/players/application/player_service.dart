@@ -44,6 +44,18 @@ class PlayerService {
     final player = await _playerRepo.fetchPlayer(userId);
     return player?.displayName;
   }
+
+  Future<bool> playerHasCompletedSignup() async {
+    final currentUser = _authRepo.currentUser;
+    if (currentUser == null) return false;
+    final currentPlayer = await _playerRepo.fetchPlayer(currentUser.uid);
+    if (currentPlayer == null) return false;
+
+    final hasVerifiedEmail = currentUser.emailVerified;
+    final hasDisplayName = currentPlayer.hasDisplayName;
+
+    return hasVerifiedEmail && hasDisplayName;
+  }
 }
 
 @riverpod
@@ -53,3 +65,7 @@ PlayerService playerService(PlayerServiceRef ref) {
     ref.watch(playersRepositoryProvider),
   );
 }
+
+@Riverpod(keepAlive: false)
+Future<bool> playerHasCompletedSignup(PlayerHasCompletedSignupRef ref) =>
+    ref.watch(playerServiceProvider).playerHasCompletedSignup();

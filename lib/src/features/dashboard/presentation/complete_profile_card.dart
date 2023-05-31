@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +13,26 @@ class CompleteProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return TitledIconCard(
       title: 'Complete Your Profile',
-      subtitle:
-          'Choose or update your display name to make it easy for other players to find you and your tours! Make sure to select a corps to sponsor as well so we can route your donation correctly.',
+      subtitle: 'Choose a display name and sponsored corps',
       icon: const FaIcon(
         FontAwesomeIcons.user,
         color: AppColors.customBlue,
       ),
-      child: ButtonBar(
+      child: Column(
         children: [
-          FilledButton.icon(
-            onPressed: () => context.goNamed(AppRoutes.profile.name),
-            icon: const Icon(Icons.person),
-            label: const Text('Go to Profile'),
+          Text(
+            'Choose or update your display name to make it easy for other players to find you and your tours! Make sure to select a corps to sponsor as well so we can route your donation correctly.',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          gapH16,
+          ButtonBar(
+            children: [
+              FilledButton.icon(
+                onPressed: () => context.goNamed(AppRoutes.profile.name),
+                icon: const Icon(Icons.person),
+                label: const Text('Go to Profile'),
+              ),
+            ],
           ),
         ],
       ),

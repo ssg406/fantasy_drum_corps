@@ -21,6 +21,10 @@ class Player {
   final String? avatarString;
   final bool isActive;
 
+  bool get hasDisplayName => displayName != null;
+
+  bool get hasSelectedCorps => selectedCorps != null;
+
   factory Player.fromJson(Map<String, dynamic> json, String playerId) {
     return Player(
       playerId: playerId,

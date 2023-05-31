@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MessagingBox extends ConsumerWidget {
+class MessagingBox extends ConsumerStatefulWidget {
   const MessagingBox({Key? key, required this.userId, required this.tourId})
       : super(key: key);
 
@@ -18,11 +18,20 @@ class MessagingBox extends ConsumerWidget {
   final String tourId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MessagingBox> createState() => _MessagingBoxState();
+}
+
+class _MessagingBoxState extends ConsumerState<MessagingBox> {
+  String get userId => widget.userId;
+
+  String get tourId => widget.tourId;
+  final _textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen<AsyncValue>(messagingBoxControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(messagingBoxControllerProvider);
-    final textController = TextEditingController();
     return Column(
       children: [
         Text(
@@ -36,7 +45,8 @@ class MessagingBox extends ConsumerWidget {
             children: [
               Expanded(
                 child: TextField(
-                  controller: textController,
+                  controller: _textController,
+                  onEditingComplete: _submitMessage,
                   decoration: const InputDecoration(
                     hintText: 'Enter new message...',
                     border: InputBorder.none,
@@ -45,27 +55,13 @@ class MessagingBox extends ConsumerWidget {
               ),
               gapW12,
               IconButton.filled(
-                icon: state.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: FaIcon(FontAwesomeIcons.paperPlane),
-                      ),
-                onPressed: () async {
-                  final controller =
-                      ref.read(messagingBoxControllerProvider.notifier);
-                  final displayName = await ref
-                      .read(playerServiceProvider)
-                      .fetchDisplayName(userId);
-                  final message = TourMessage(
-                      user: displayName ?? '',
-                      userId: userId,
-                      tourId: tourId,
-                      message: textController.text,
-                      dateTime: DateTime.now());
-                  controller.submitMessage(message);
-                },
-              )
+                  icon: state.isLoading
+                      ? const CircularProgressIndicator()
+                      : const Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: FaIcon(FontAwesomeIcons.paperPlane),
+                        ),
+                  onPressed: _submitMessage)
             ],
           ),
         ),
@@ -76,55 +72,106 @@ class MessagingBox extends ConsumerWidget {
             height: 400,
             child: AsyncValueWidget(
               value: ref.watch(watchTourMessagesProvider(tourId)),
-              data: (List<TourMessage> messages) => messages.isEmpty
-                  ? const Center(child: Text('No Messages'))
-                  : ListView(
-                      children: [
-                        for (final message in messages)
-                          MessageTile(
-                            message: message.message,
-                            date: message.dateTime,
-                            displayName: message.user,
-                            isOwnMessage: message.userId == userId,
-                          )
-                      ],
-                    ),
+              data: (List<TourMessage> messages) {
+                messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+                return messages.isEmpty
+                    ? const Center(child: Text('No Messages'))
+                    : ListView.builder(
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) => MessageTile(
+                          id: messages[index].id!,
+                          message: messages[index].message,
+                          date: messages[index].dateTime,
+                          displayName: messages[index].user,
+                          isOwnMessage: messages[index].userId == userId,
+                          onDeleteMessage: _deleteMessage,
+                        ),
+                      );
+              },
             ),
           ),
         ),
       ],
     );
   }
+
+  Future<void> _deleteMessage(String id) async {
+    final controller = ref.read(messagingBoxControllerProvider.notifier);
+    await controller.deleteMessage(id);
+  }
+
+  Future<void> _submitMessage() async {
+    if (_textController.text.isEmpty) return;
+    final controller = ref.read(messagingBoxControllerProvider.notifier);
+    final displayName =
+        await ref.read(playerServiceProvider).fetchDisplayName(userId);
+    final message = TourMessage(
+        user: displayName ?? '',
+        userId: userId,
+        tourId: tourId,
+        message: _textController.text,
+        dateTime: DateTime.now());
+    await controller.submitMessage(message);
+  }
 }
 
 class MessageTile extends StatelessWidget {
   const MessageTile(
       {Key? key,
+      required this.id,
       required this.message,
       required this.date,
       required this.displayName,
-      this.isOwnMessage = false})
+      this.isOwnMessage = false,
+      required this.onDeleteMessage})
       : super(key: key);
+
+  final String id;
   final String message;
   final DateTime date;
   final String displayName;
   final bool isOwnMessage;
+  final void Function(String) onDeleteMessage;
 
   @override
   Widget build(BuildContext context) {
     final textAlign = isOwnMessage ? TextAlign.right : TextAlign.left;
     final formattedDate = DateTimeUtils.shortFormattedDate(date);
     return ListTile(
-      leading: isOwnMessage ? null : const Icon(Icons.message_rounded),
+      leading: isOwnMessage
+          ? null
+          : PopupMenuButton(
+              itemBuilder: popupMenuBuilder,
+            ),
       title: Text(
-        'This is a new message',
+        message,
         textAlign: textAlign,
       ),
       subtitle: Text(
         '@$displayName at $formattedDate',
         textAlign: textAlign,
       ),
-      trailing: isOwnMessage ? const Icon(Icons.message_rounded) : null,
+      trailing: isOwnMessage
+          ? PopupMenuButton(
+              itemBuilder: popupMenuBuilder,
+            )
+          : null,
     );
+  }
+
+  List<PopupMenuEntry<dynamic>> popupMenuBuilder(BuildContext context) {
+    return [
+      PopupMenuItem(
+        onTap: () => onDeleteMessage(id),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(Icons.delete_outline_rounded),
+            Text('Delete Message'),
+          ],
+        ),
+      ),
+    ];
   }
 }

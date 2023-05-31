@@ -4,9 +4,13 @@ import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
+import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour_controller.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/incomplete_profile.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/private_tour_switch.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/tour_validators.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
@@ -28,13 +32,23 @@ class CreateTour extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return tourId == null
-        ? const CreateTourContents()
-        : AsyncValueWidget(
-            value: ref.watch(fetchTourProvider(tourId!)),
-            data: (Tour? tour) => tour == null
-                ? const NotFound()
-                : CreateTourContents(tour: tour));
+    if (tourId == null) {
+      return AsyncValueWidget(
+          value: ref.watch(playerStreamProvider),
+          data: (Player? player) {
+            final currentUser = ref.watch(authRepositoryProvider).currentUser;
+            final hasDisplayName = player?.hasDisplayName ?? false;
+            final emailVerified = currentUser?.emailVerified ?? false;
+            return hasDisplayName && emailVerified
+                ? const CreateTourContents()
+                : const IncompleteProfileWarning();
+          });
+    } else {
+      return AsyncValueWidget(
+          value: ref.watch(fetchTourProvider(tourId!)),
+          data: (Tour? tour) =>
+              tour == null ? const NotFound() : CreateTourContents(tour: tour));
+    }
   }
 }
 
