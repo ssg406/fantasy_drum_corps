@@ -30,6 +30,7 @@ class MyCorpsContents extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageScaffolding(
       pageTitle: 'MY FANTASY CORPS',
+      onBackPressed: () => context.goNamed(AppRoutes.dashboard.name),
       child: Column(
         children: [
           Row(
@@ -43,40 +44,37 @@ class MyCorpsContents extends StatelessWidget {
             ],
           ),
           gapH16,
-          SizedBox(
-            height: 200,
-            child: userCorps.isEmpty
-                ? Center(
-                    child: Text(
-                      'No Fantasy Corps Found',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  )
-                : ListView(
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      for (final corps in userCorps)
-                        ListTile(
-                          title: Text(
-                            corps.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                          ),
-                          subtitle: Text(
-                            corps.showTitle ?? 'Untitled Show',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          onTap: () => context.pushNamed(
-                              AppRoutes.corpsDetail.name,
-                              extra: corps),
-                        ),
-                    ],
+          userCorps.isEmpty
+              ? Center(
+                  child: Text(
+                    'No Fantasy Corps Found',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-          ),
+                )
+              : ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    for (final corps in userCorps)
+                      ListTile(
+                        title: Text(
+                          corps.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: Theme.of(context).colorScheme.primary),
+                        ),
+                        subtitle: Text(
+                          corps.showTitle ?? 'Untitled Show',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        onTap: () => context.pushNamed(
+                            AppRoutes.corpsDetail.name,
+                            params: {'cid': corps.fantasyCorpsId!}),
+                      ),
+                  ],
+                ),
         ],
       ),
     );

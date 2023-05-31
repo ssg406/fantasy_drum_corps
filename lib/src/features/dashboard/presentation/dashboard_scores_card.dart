@@ -21,13 +21,13 @@ class DashboardScoresCard extends StatelessWidget {
         color: AppColors.customBlue,
       ),
       child: SizedBox(
-        height: 120,
+        height: 80,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
             for (final corps in fantasyCorps)
               SizedBox(
-                width: 200,
+                width: 150,
                 child: ListTile(
                   title: Text(
                     corps.name,

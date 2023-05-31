@@ -24,6 +24,7 @@ enum AppRoutes {
   adminMain,
   adminAddScore,
   howToPlay,
+  editCorps,
 }
 
 extension RouteNames on AppRoutes {
@@ -79,6 +80,8 @@ extension RouteNames on AppRoutes {
         return name;
       case AppRoutes.howToPlay:
         return 'How to Play';
+      default:
+        return name;
     }
   }
 }

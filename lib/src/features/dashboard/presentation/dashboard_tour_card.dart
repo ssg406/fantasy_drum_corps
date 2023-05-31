@@ -22,7 +22,7 @@ class DashboardTourCard extends StatelessWidget {
       ),
       title: 'Tours Quick Access',
       child: SizedBox(
-        height: 150,
+        height: 100,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
@@ -35,7 +35,7 @@ class DashboardTourCard extends StatelessWidget {
                   title: Text(tour.name,
                       style: Theme.of(context).textTheme.titleLarge!),
                   subtitle: Text(
-                      '${tour.description}\n${_getDraftDateText(tour.draftDateTime)}',
+                      '${tour.description}\n${_getDraftDateText(tour.draftDateTime, tour.draftComplete)}',
                       style: Theme.of(context).textTheme.bodyMedium!),
                   onTap: () => context.pushNamed(AppRoutes.tourDetail.name,
                       params: {'tid': tour.id!}),
@@ -47,9 +47,9 @@ class DashboardTourCard extends StatelessWidget {
     );
   }
 
-  String _getDraftDateText(DateTime draftDateTime) {
+  String _getDraftDateText(DateTime draftDateTime, bool draftComplete) {
     if (draftDateTime.isBefore(DateTime.now())) {
-      return 'Draft Completed';
+      return draftComplete ? 'Draft Complete' : 'Draft Pending';
     } else {
       final formattedDate = DateTimeUtils.formattedDate(draftDateTime);
       return 'Drafting on $formattedDate';

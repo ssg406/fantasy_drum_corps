@@ -114,8 +114,8 @@ class MainDraft extends StatelessWidget {
                   child: FilledButton.icon(
                     icon: const Icon(Icons.cancel_rounded),
                     onPressed: onCancelDraft,
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.error),
+                    style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.error),
                     label: const Text('Cancel Draft'),
                   ),
                 ),

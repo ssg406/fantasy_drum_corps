@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../../fantasy_corps/domain/drum_corps_enum.dart';
+
 const turnLength = 45;
 
 const rootServerUrl = 'https://fantasy-drum-corps-server.herokuapp.com';
@@ -70,6 +72,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
   List<DrumCorpsCaption> filteredCaptions = List.empty(growable: true);
   List<Caption> selectedFilters = List.empty(growable: true);
+  List<DrumCorps> alreadySelectedCorps = List.empty(growable: true);
 
   bool draftStarted = false;
   bool showCountdown = false;
@@ -208,11 +211,17 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       // Get the DrumCorpsCaption pick from the available captions
       final pick = availableCaptions[pickIndex];
 
+      // Check if pick corps already exists in lineup
+      if (alreadySelectedCorps.contains(pick.corps)) continue;
+
       // Determine if the slot at this caption is available, continue if not
       if (fantasyCorps[pick.caption] != null) continue;
 
       // Execute the logic for adding a pick to the lineup
       fantasyCorps.addAll({pick.caption: pick.corps});
+
+      // Add the selection to list of already picked corps
+      alreadySelectedCorps.add(pick.corps);
 
       socket.emit(CLIENT_SENDS_AUTO_PICK, {
         'playerId': widget.playerId,
@@ -305,11 +314,23 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       return;
     }
 
+    // Check if corps already exists in lineup
+    if (alreadySelectedCorps.contains(drumCorpsCaption.corps)) {
+      showAlertDialog(
+          context: context,
+          title:
+              'You already have ${drumCorpsCaption.corps.fullName} in your lineup.');
+      return;
+    }
+
     // Send selection back to server
     socket.emit(CLIENT_ENDS_TURN, {
       'playerId': widget.playerId,
       'drumCorpsCaption': drumCorpsCaption.toJson()
     });
+
+    // Add to list of picked captions
+    alreadySelectedCorps.add(drumCorpsCaption.corps);
 
     // Update the lineup locally
     setState(() {

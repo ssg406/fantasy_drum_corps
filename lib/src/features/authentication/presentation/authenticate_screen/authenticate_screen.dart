@@ -172,15 +172,19 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                                   ),
                                 ),
                                 gapH12,
-                                TextButton.icon(
-                                  style: TextButton.styleFrom(
+                                FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                      backgroundColor:
+                                          theme.colorScheme.onPrimary,
                                       foregroundColor:
-                                          theme.colorScheme.onPrimary),
+                                          theme.colorScheme.primary),
                                   icon: const Icon(
                                       Icons.arrow_circle_right_outlined),
                                   onPressed: _submit,
                                   label: state.isLoading
-                                      ? const CircularProgressIndicator()
+                                      ? CircularProgressIndicator(
+                                          color: theme.colorScheme.onPrimary,
+                                        )
                                       : Text(_formType.submitButtonText),
                                 ),
                                 gapH32,
