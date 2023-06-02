@@ -15,9 +15,7 @@ class PlayerWidget extends StatelessWidget {
         Avatar(size: 45, avatarString: avatarString),
         Text(
           name ?? 'Anonymous',
-          style: const TextStyle(
-            color: Colors.white60,
-          ),
+          style: Theme.of(context).textTheme.labelMedium,
         ),
       ],
     );

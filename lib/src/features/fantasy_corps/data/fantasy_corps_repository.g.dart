@@ -168,4 +168,86 @@ final watchUserFantasyCorpsProvider =
 
 typedef WatchUserFantasyCorpsRef
     = AutoDisposeStreamProviderRef<List<FantasyCorps>>;
+String _$watchFantasyCorpsHash() => r'e7d9a9c7560408af96da724ef1bf020e2f2129b9';
+typedef WatchFantasyCorpsRef = AutoDisposeStreamProviderRef<FantasyCorps?>;
+
+/// See also [watchFantasyCorps].
+@ProviderFor(watchFantasyCorps)
+const watchFantasyCorpsProvider = WatchFantasyCorpsFamily();
+
+/// See also [watchFantasyCorps].
+class WatchFantasyCorpsFamily extends Family<AsyncValue<FantasyCorps?>> {
+  /// See also [watchFantasyCorps].
+  const WatchFantasyCorpsFamily();
+
+  /// See also [watchFantasyCorps].
+  WatchFantasyCorpsProvider call(
+    String id,
+  ) {
+    return WatchFantasyCorpsProvider(
+      id,
+    );
+  }
+
+  @override
+  WatchFantasyCorpsProvider getProviderOverride(
+    covariant WatchFantasyCorpsProvider provider,
+  ) {
+    return call(
+      provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'watchFantasyCorpsProvider';
+}
+
+/// See also [watchFantasyCorps].
+class WatchFantasyCorpsProvider
+    extends AutoDisposeStreamProvider<FantasyCorps?> {
+  /// See also [watchFantasyCorps].
+  WatchFantasyCorpsProvider(
+    this.id,
+  ) : super.internal(
+          (ref) => watchFantasyCorps(
+            ref,
+            id,
+          ),
+          from: watchFantasyCorpsProvider,
+          name: r'watchFantasyCorpsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$watchFantasyCorpsHash,
+          dependencies: WatchFantasyCorpsFamily._dependencies,
+          allTransitiveDependencies:
+              WatchFantasyCorpsFamily._allTransitiveDependencies,
+        );
+
+  final String id;
+
+  @override
+  bool operator ==(Object other) {
+    return other is WatchFantasyCorpsProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

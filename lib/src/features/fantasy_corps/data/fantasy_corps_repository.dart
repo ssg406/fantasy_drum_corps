@@ -18,10 +18,10 @@ class FantasyCorpsRepository {
 
   Query<FantasyCorps> queryFantasyCorps() =>
       _database.collection(fantasyCorpsPath).withConverter(
-        fromFirestore: (snapshot, _) =>
-            FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
-        toFirestore: (fantasyCorps, _) => fantasyCorps.toJson(),
-      );
+            fromFirestore: (snapshot, _) =>
+                FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
+            toFirestore: (fantasyCorps, _) => fantasyCorps.toJson(),
+          );
 
   Future<void> addFantasyCorps(FantasyCorps fantasyCorps) =>
       _database.collection(fantasyCorpsPath).add(fantasyCorps.toJson());
@@ -38,10 +38,9 @@ class FantasyCorpsRepository {
     }
   }
 
-  Future<void> updateFantasyCorps(FantasyCorps fantasyCorps) =>
-      _database
-          .doc(userFantasyCorpsPath(fantasyCorps.fantasyCorpsId!))
-          .update(fantasyCorps.toJson());
+  Future<void> updateFantasyCorps(FantasyCorps fantasyCorps) => _database
+      .doc(userFantasyCorpsPath(fantasyCorps.fantasyCorpsId!))
+      .update(fantasyCorps.toJson());
 
   Stream<List<FantasyCorps>> watchAllFantasyCorps({String? tourId}) {
     Query<FantasyCorps> query = queryFantasyCorps();
@@ -65,15 +64,14 @@ class FantasyCorpsRepository {
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
-  Stream<FantasyCorps?> watchFantasyCorps(String fantasyCorpsId) =>
-      _database
-          .doc(userFantasyCorpsPath(fantasyCorpsId))
-          .withConverter(
+  Stream<FantasyCorps?> watchFantasyCorps(String fantasyCorpsId) => _database
+      .doc(userFantasyCorpsPath(fantasyCorpsId))
+      .withConverter(
           fromFirestore: (snapshot, _) =>
               FantasyCorps.fromJson(snapshot.data()!, snapshot.id),
           toFirestore: (fantasyCorps, _) => fantasyCorps.toJson())
-          .snapshots()
-          .map((snapshot) => snapshot.data());
+      .snapshots()
+      .map((snapshot) => snapshot.data());
 }
 
 @riverpod
@@ -86,8 +84,8 @@ Stream<List<FantasyCorps>> watchAllFantasyCorps(WatchAllFantasyCorpsRef ref) {
 }
 
 @riverpod
-Stream<List<FantasyCorps>> watchTourFantasyCorps(WatchTourFantasyCorpsRef ref,
-    String tourId) {
+Stream<List<FantasyCorps>> watchTourFantasyCorps(
+    WatchTourFantasyCorpsRef ref, String tourId) {
   return ref
       .watch(fantasyCorpsRepositoryProvider)
       .watchAllFantasyCorps(tourId: tourId);
@@ -95,9 +93,7 @@ Stream<List<FantasyCorps>> watchTourFantasyCorps(WatchTourFantasyCorpsRef ref,
 
 @riverpod
 Stream<List<FantasyCorps>> watchUserFantasyCorps(WatchUserFantasyCorpsRef ref) {
-  final user = ref
-      .watch(authRepositoryProvider)
-      .currentUser;
+  final user = ref.watch(authRepositoryProvider).currentUser;
   if (user == null) {
     throw AssertionError('User cannot be null when accessing Fantasy Corps');
   }
@@ -105,3 +101,7 @@ Stream<List<FantasyCorps>> watchUserFantasyCorps(WatchUserFantasyCorpsRef ref) {
       .watch(fantasyCorpsRepositoryProvider)
       .watchUserFantasyCorps(user.uid);
 }
+
+@riverpod
+Stream<FantasyCorps?> watchFantasyCorps(WatchFantasyCorpsRef ref, String id) =>
+    ref.watch(fantasyCorpsRepositoryProvider).watchFantasyCorps(id);

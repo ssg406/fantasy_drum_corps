@@ -230,21 +230,36 @@ GoRouter goRouter(GoRouterRef ref) {
             ],
           ),
           GoRoute(
-              path: '/myCorps',
-              name: AppRoutes.myCorps.name,
-              pageBuilder: (context, state) =>
-                  NoTransitionPage(key: state.pageKey, child: const MyCorps()),
-              routes: [
-                GoRoute(
-                    path: 'corpsDetail',
-                    name: AppRoutes.corpsDetail.name,
-                    pageBuilder: (context, state) => MaterialPage(
-                          key: state.pageKey,
-                          child: CorpsDetail(
-                            fantasyCorps: state.extra as FantasyCorps?,
-                          ),
-                        ))
-              ]),
+            path: '/myCorps',
+            name: AppRoutes.myCorps.name,
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const MyCorps()),
+            routes: [
+              GoRoute(
+                path: ':cid/corpsDetail',
+                name: AppRoutes.corpsDetail.name,
+                pageBuilder: (context, state) => MaterialPage(
+                  key: state.pageKey,
+                  child: CorpsDetail(
+                    fantasyCorpsId: state.params['cid'],
+                  ),
+                ),
+              ),
+              GoRoute(
+                  path: ':cid/editCorps',
+                  name: AppRoutes.editCorps.name,
+                  pageBuilder: (context, state) {
+                    final corps = state.extra as FantasyCorps?;
+                    return MaterialPage(
+                      key: state.pageKey,
+                      child: CreateFantasyCorps(
+                        fantasyCorps: corps,
+                        isEditing: true,
+                      ),
+                    );
+                  })
+            ],
+          ),
           GoRoute(
             path: '/leaderboard',
             name: AppRoutes.leaderboard.name,

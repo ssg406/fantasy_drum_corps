@@ -211,11 +211,17 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       // Get the DrumCorpsCaption pick from the available captions
       final pick = availableCaptions[pickIndex];
 
+      // Check if pick corps already exists in lineup
+      if (alreadySelectedCorps.contains(pick.corps)) continue;
+
       // Determine if the slot at this caption is available, continue if not
       if (fantasyCorps[pick.caption] != null) continue;
 
       // Execute the logic for adding a pick to the lineup
       fantasyCorps.addAll({pick.caption: pick.corps});
+
+      // Add the selection to list of already picked corps
+      alreadySelectedCorps.add(pick.corps);
 
       socket.emit(CLIENT_SENDS_AUTO_PICK, {
         'playerId': widget.playerId,
@@ -322,6 +328,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       'playerId': widget.playerId,
       'drumCorpsCaption': drumCorpsCaption.toJson()
     });
+
+    // Add to list of picked captions
+    alreadySelectedCorps.add(drumCorpsCaption.corps);
 
     // Update the lineup locally
     setState(() {

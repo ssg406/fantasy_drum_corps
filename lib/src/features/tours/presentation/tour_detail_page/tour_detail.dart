@@ -140,6 +140,7 @@ class TourDetailContents extends StatelessWidget {
                 ),
             ],
           ),
+          gapH32,
           _getButtonBar(context),
         ],
       ),
@@ -192,7 +193,7 @@ class TourDetailContents extends StatelessWidget {
                 params: {'tid': tour.id!}, extra: tour),
             label: const Text('Leave Tour'),
           ),
-        if (tour.members.contains(user.uid) && !tour.draftComplete)
+        if (tour.members.contains(user.uid))
           FilledButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
             onPressed: () => context.pushNamed(AppRoutes.draftLobby.name,

@@ -1,8 +1,6 @@
+import 'package:fantasy_drum_corps/src/common_widgets/lineup_caption_slot.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
@@ -42,38 +40,6 @@ class PlayerLineup extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class LineupCaptionSlot extends StatelessWidget {
-  const LineupCaptionSlot({super.key, this.pick, required this.caption});
-
-  final Caption caption;
-  final DrumCorps? pick;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          caption.fullName,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        pick == null
-            ? Text(
-                'OPEN SLOT',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall!
-                    .copyWith(color: AppColors.customBlue),
-              )
-            : Text(
-                pick!.fullName,
-                style: Theme.of(context).textTheme.titleSmall,
-              )
-      ],
     );
   }
 }
