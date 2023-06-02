@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class GreetingCard extends StatelessWidget {
@@ -12,13 +11,8 @@ class GreetingCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'DASHBOARD',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        gapH8,
-        Text(
           '$greeting Welcome to Fantasy Corps.',
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
     );

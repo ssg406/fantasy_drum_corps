@@ -1,7 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
@@ -101,17 +100,20 @@ class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
                       ),
                       gapH24,
                     ],
-                    Row(
+                    ButtonBar(
                       children: [
-                        PrimaryButton(
-                            onPressed: () => _submit(),
-                            label: 'JOIN',
-                            isLoading: state.isLoading),
-                        PrimaryButton(
+                        TextButton(
                           onPressed: () => context.pop(),
-                          label: 'CANCEL',
-                          isLoading: state.isLoading,
-                        )
+                          child: state.isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text('CANCEL'),
+                        ),
+                        FilledButton(
+                          onPressed: _submit,
+                          child: state.isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text('JOIN'),
+                        ),
                       ],
                     )
                   ],
@@ -144,7 +146,7 @@ class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
           content: 'Tour joined successfully!');
     }
     if (mounted) {
-      context.goNamed(AppRoutes.searchTours.name);
+      context.goNamed(AppRoutes.myTours.name);
     }
   }
 }

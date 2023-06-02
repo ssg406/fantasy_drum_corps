@@ -1,7 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
@@ -58,9 +57,15 @@ class _LeaveTourContentsState extends ConsumerState<LeaveTourContents> {
     _date = widget.tour.draftDateTime;
   }
 
-  String _getRemainingTime() {
+  String _getDisplayText() {
+    if (widget.tour.draftComplete) {
+      return 'Are you sure you want to leave? Your Fantasy Corps for this tour will remain active.';
+    }
     final remainingDaysInt = _date.difference(DateTime.now()).inDays;
-    return '$remainingDaysInt day${remainingDaysInt > 1 ? 's' : ''}';
+    if (remainingDaysInt <= 0) {
+      return 'Are you sure you want to leave? Your tour mates will be sad to see you go!';
+    }
+    return 'Are you sure you want to leave? There\'s only $remainingDaysInt day${remainingDaysInt > 1 ? 's' : ''} until the draft';
   }
 
   @override
@@ -84,20 +89,20 @@ class _LeaveTourContentsState extends ConsumerState<LeaveTourContents> {
                     'Are you sure you want to leave $_name?',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  Text(
-                      'There\'s only ${_getRemainingTime()} days until the draft! Your tour mates will be sad to lose you.'),
+                  Text(_getDisplayText()),
                   gapH24,
-                  Row(
+                  ButtonBar(
                     children: [
-                      PrimaryButton(
-                        isLoading: state.isLoading,
+                      TextButton(
                         onPressed: _leaveTour,
-                        label: 'LEAVE',
+                        child: state.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text('LEAVE'),
                       ),
-                      PrimaryButton(
-                          isLoading: state.isLoading,
-                          onPressed: () => context.pop(),
-                          label: 'STAY'),
+                      FilledButton(
+                        onPressed: () => context.pop(),
+                        child: const Text('STAY'),
+                      ),
                     ],
                   )
                 ],

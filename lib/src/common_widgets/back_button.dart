@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +18,14 @@ class CustomBackButton extends StatelessWidget {
         child: TextButton.icon(
           icon: const Icon(Icons.arrow_circle_left_outlined),
           label: const Text('Back'),
-          onPressed: customOnPressed ?? () => context.pop(),
+          onPressed: customOnPressed ??
+              () {
+                if (Navigator.of(context).canPop()) {
+                  context.pop();
+                } else {
+                  context.goNamed(AppRoutes.dashboard.name);
+                }
+              },
         ),
       ),
     );

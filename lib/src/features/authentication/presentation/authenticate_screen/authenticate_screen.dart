@@ -102,14 +102,12 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                                       style: TextStyle(
                                           color: theme.colorScheme.onPrimary),
                                     ),
-                                    TextButton.icon(
+                                    TextButton(
                                       style: TextButton.styleFrom(
                                           foregroundColor:
                                               theme.colorScheme.onPrimary),
-                                      icon: const Icon(
-                                          Icons.app_registration_rounded),
                                       onPressed: _toggleFormType,
-                                      label:
+                                      child:
                                           Text(_formType.toggleFormButtonText),
                                     ),
                                   ],
@@ -327,16 +325,21 @@ class IntroText extends StatelessWidget {
         gapH16,
         SizedBox(
           width: breakpoints.screenWidth * 0.3,
-          child: const Text(
-            'Ut enim ad minim veniam, quis nostrud exercitation '
-            'ullamco laboris nisi ut aliquip ex ea commodo '
-            'consequat. Duis aute irure dolor in reprehenderit '
-            'in voluptate velit esse cillum dolore eu fugiat '
-            'nulla pariatur. Excepteur sint occaecat cupidatat '
-            'non proident, sunt in culpa qui officia deserunt '
-            'mollit anim id est laborum.',
+          child: Text(
+            'Welcome to Fantasy Corps, drum corps\' newest fantasy league! Join a tour, build a corps, and compete against friends and fans all season long.',
             textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
+        ),
+        gapH8,
+        Text(
+          'Do you have what it takes to #WinTheField?',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        gapH24,
+        Text(
+          'LAUNCHING 6.14',
+          style: Theme.of(context).textTheme.titleLarge,
         )
       ],
     );

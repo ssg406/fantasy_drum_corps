@@ -42,6 +42,11 @@ class _DashboardState extends ConsumerState<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'CORPS HALL',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              gapH8,
               AsyncValueWidget(
                 showLoading: false,
                 value: ref.watch(playerStreamProvider),
@@ -60,6 +65,10 @@ class _DashboardState extends ConsumerState<Dashboard> {
                           ],
                         );
                 },
+              ),
+              Text(
+                'The Corps Hall is your dashboard to keep track of your tours, corps, messages and scores.',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               if (user != null && !user.emailVerified) ...[
                 gapH24,

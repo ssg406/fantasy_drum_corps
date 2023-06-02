@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../../fantasy_corps/domain/drum_corps_enum.dart';
+
 const turnLength = 45;
 
 const rootServerUrl = 'https://fantasy-drum-corps-server.herokuapp.com';
@@ -70,6 +72,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
   List<DrumCorpsCaption> filteredCaptions = List.empty(growable: true);
   List<Caption> selectedFilters = List.empty(growable: true);
+  List<DrumCorps> alreadySelectedCorps = List.empty(growable: true);
 
   bool draftStarted = false;
   bool showCountdown = false;
@@ -302,6 +305,15 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       showAlertDialog(
           context: context,
           title: 'No ${drumCorpsCaption.caption.fullName} slot available');
+      return;
+    }
+
+    // Check if corps already exists in lineup
+    if (alreadySelectedCorps.contains(drumCorpsCaption.corps)) {
+      showAlertDialog(
+          context: context,
+          title:
+              'You already have ${drumCorpsCaption.corps.fullName} in your lineup.');
       return;
     }
 
