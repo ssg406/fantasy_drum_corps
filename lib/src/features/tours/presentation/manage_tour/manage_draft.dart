@@ -3,6 +3,7 @@ import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour_controller.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
+import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,10 +34,20 @@ class ManageDraft extends StatelessWidget {
               Consumer(
                 builder: (context, ref, child) {
                   return FilledButton.icon(
-                    onPressed: () async {
-                      final controller =
-                          ref.read(manageTourControllerProvider.notifier);
-                      await controller.resetDraft(tour.id!);
+                    onPressed: () {
+                      showAlertDialog(
+                              context: context,
+                              title: 'Reset Draft',
+                              cancelActionText: 'Cancel',
+                              content:
+                                  'Are you sure you want to reset the draft? All created fantasy corps will be lost for all members.')
+                          .then((confirmed) async {
+                        if (confirmed ?? false) {
+                          final controller =
+                              ref.read(manageTourControllerProvider.notifier);
+                          await controller.resetDraft(tour.id!);
+                        }
+                      });
                     },
                     style: FilledButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error),

@@ -180,9 +180,7 @@ class _AuthenticateScreenState extends ConsumerState<AuthenticateScreen>
                                       Icons.arrow_circle_right_outlined),
                                   onPressed: _submit,
                                   label: state.isLoading
-                                      ? CircularProgressIndicator(
-                                          color: theme.colorScheme.onPrimary,
-                                        )
+                                      ? CircularProgressIndicator()
                                       : Text(_formType.submitButtonText),
                                 ),
                                 gapH32,
