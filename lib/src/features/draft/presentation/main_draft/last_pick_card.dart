@@ -1,33 +1,30 @@
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class RoundCard extends StatelessWidget {
-  const RoundCard({
-    super.key,
-    required this.roundNumber,
-  });
+import '../../../../constants/app_sizes.dart';
 
-  final int roundNumber;
+class LastPickCard extends StatelessWidget {
+  const LastPickCard({Key? key, this.lastPlayersPick}) : super(key: key);
+  final DrumCorpsCaption? lastPlayersPick;
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat('00');
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Round',
+          'Last Pick',
           style: Theme.of(context)
               .textTheme
               .titleLarge!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
+        gapH8,
         Text(
-          formatter.format(roundNumber),
+          lastPlayersPick?.displayString ?? 'No Pick',
           style: Theme.of(context)
               .textTheme
               .titleLarge!
-              .copyWith(color: Colors.blue[900]),
+              .copyWith(color: Colors.blue.shade900),
         ),
       ],
     );

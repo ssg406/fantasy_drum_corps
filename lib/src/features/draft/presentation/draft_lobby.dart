@@ -1,11 +1,8 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/socket_events.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/auto_draft.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_waiting_room.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
@@ -19,7 +16,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../../../constants/app_sizes.dart';
 import '../../fantasy_corps/domain/drum_corps_enum.dart';
+import 'draft_waiting_room.dart';
+import 'main_draft/main_draft.dart';
 
 const turnLength = 45;
 
@@ -49,7 +49,8 @@ class DraftLobby extends ConsumerWidget {
                       tour: tour,
                       playerId: playerId,
                     );
-            });
+            },
+          );
   }
 }
 
