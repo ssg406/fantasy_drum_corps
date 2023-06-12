@@ -13,6 +13,7 @@ class PlayerLineup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 8,
       child: Padding(
         padding: cardPadding,
         child: Column(
@@ -28,9 +29,9 @@ class PlayerLineup extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
                 crossAxisCount:
                     ResponsiveBreakpoints.of(context).largerThan(TABLET)
-                        ? 4
-                        : 2,
-                childAspectRatio: 2,
+                        ? 2
+                        : 1,
+                childAspectRatio: 10 / 4,
                 children: [
                   for (final caption in lineup.keys)
                     LineupCaptionSlot(pick: lineup[caption], caption: caption)

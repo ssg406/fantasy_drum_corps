@@ -40,43 +40,49 @@ class NavShell extends ConsumerWidget {
     final textSize =
         ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 24.0 : 16.0;
 
+    final route = GoRouter.of(context).location;
+
     return Scaffold(
       key: scaffoldStateKey,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0.0),
-          width: 1500,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const FaIcon(
-                  FontAwesomeIcons.bars,
-                  color: Colors.white,
-                ),
-                onPressed: () => scaffoldStateKey.currentState!.openDrawer(),
-              ),
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => context.goNamed(AppRoutes.dashboard.name),
-                  child: AsyncValueWidget(
-                    showLoading: false,
-                    value: ref.watch(currentUserIsAdminProvider),
-                    data: (bool isAdmin) => LogoText(
-                      size: textSize,
-                      isAdmin: isAdmin,
-                      color: Colors.white,
+      appBar: route.contains(AppRoutes.draftLobby.name)
+          ? null
+          : AppBar(
+              automaticallyImplyLeading: false,
+              title: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25.0, vertical: 0.0),
+                width: 1500,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.bars,
+                        color: Colors.white,
+                      ),
+                      onPressed: () =>
+                          scaffoldStateKey.currentState!.openDrawer(),
                     ),
-                  ),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => context.goNamed(AppRoutes.dashboard.name),
+                        child: AsyncValueWidget(
+                          showLoading: false,
+                          value: ref.watch(currentUserIsAdminProvider),
+                          data: (bool isAdmin) => LogoText(
+                            size: textSize,
+                            isAdmin: isAdmin,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const ClickableAvatarWidget(),
+                  ],
                 ),
               ),
-              const ClickableAvatarWidget(),
-            ],
-          ),
-        ),
-      ),
+            ),
       drawer: Drawer(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,

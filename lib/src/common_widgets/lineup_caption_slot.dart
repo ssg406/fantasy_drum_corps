@@ -11,26 +11,28 @@ class LineupCaptionSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(caption.fullName, style: Theme
-          .of(context)
-          .textTheme
-          .titleMedium,),
+      leading: pick != null
+          ? Image.asset(
+              'corps_logos/${pick!.name}.png',
+              height: 25,
+            )
+          : const Icon(
+              Icons.circle_outlined,
+              size: 25,
+            ),
+      title: Text(
+        caption.fullName,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       subtitle: pick == null
           ? Text(
-        'OPEN SLOT',
-        style: Theme
-            .of(context)
-            .textTheme
-            .titleSmall,
-      )
+              'OPEN SLOT',
+              style: Theme.of(context).textTheme.titleSmall,
+            )
           : Text(
-        pick!.fullName,
-        style: Theme
-            .of(context)
-            .textTheme
-            .titleSmall,
-      ),
-
+              pick!.fullName,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
     );
   }
 }
