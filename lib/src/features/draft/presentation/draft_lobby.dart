@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
@@ -71,8 +73,6 @@ class DraftLobbyContents extends ConsumerStatefulWidget {
 class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   List<Player> players = List.empty(growable: true);
   List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
-  List<DrumCorpsCaption> filteredCaptions = List.empty(growable: true);
-  List<Caption> selectedFilters = List.empty(growable: true);
   List<DrumCorps> alreadySelectedCorps = List.empty(growable: true);
 
   bool draftStarted = false;
@@ -96,10 +96,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         nextPick: nextPick,
         lastPlayersPick: lastPlayersPick,
         canPick: isPlayersTurn,
-        availablePicks: filteredCaptions,
+        availablePicks: availableCaptions,
         fantasyCorps: fantasyCorps,
         onCaptionSelected: _onCaptionSelected,
-        onFilterSelected: _onCaptionFilterSelected,
         onCancelDraft:
             widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
@@ -145,14 +144,14 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Register listeners on socket connection
     socket.onConnect((_) {
-      debugPrint('Connected to server');
+      dev.log('Connected to Socket.io server', name: 'DRAFT');
       _registerDraftSetupListeners();
 
       _registerActiveDraftListeners();
     });
 
     socket.onError((data) {
-      debugPrint('There was a socket error: $data}');
+      dev.log('There was a Socket.io error', name: 'DRAFT', error: data);
     });
   }
 
@@ -165,6 +164,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   /// Set up socket listeners that process active draft events
   void _registerActiveDraftListeners() {
+    dev.log('Server starting draft countdown', name: 'DRAFT');
     socket.on(SERVER_BEGIN_DRAFT_COUNTDOWN, (_) {
       setState(() => showCountdown = true);
     });
@@ -175,6 +175,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Server starts turn and emits available picks and currently picking player
     socket.on(SERVER_STARTS_TURN, (data) {
+      dev.log('Server stared turn', name: 'DRAFT');
       _startTurn(data);
     });
 
@@ -187,7 +188,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     // Server sends the last players pick
     socket.on(SERVER_SENDS_PLAYER_PICK, (data) {
       final lastPick = data['lastPick'];
-      debugPrint(data.toString());
+      dev.log('Received last pick from server: $lastPick');
       final pick =
           DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
       setState(() => lastPlayersPick = pick);
@@ -201,6 +202,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   /// Iterates through the available picks and adds the first compatible pick
   /// to the fantasyCorps map.
   void _autoSelectPick() {
+    dev.log('Auto-selecting a pick', name: 'DRAFT');
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
         List.generate(availableCaptions.length, (index) => index);
@@ -250,6 +252,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     final isCountingDown = data['draftCountingDown'] as bool;
     final isDraftStarted = data['draftStarted'] as bool;
 
+    dev.log(
+        'Got draft status update from server: isCountingDown = $isCountingDown isDraftStarted = $isDraftStarted');
+
     // Update widget state
     setState(() {
       showCountdown = isCountingDown;
@@ -278,14 +283,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
     // Update widget state
     setState(() {
-      // Re run caption filters
-      if (selectedFilters.isEmpty) {
-        filteredCaptions = availablePicks;
-      } else {
-        filteredCaptions = availablePicks
-            .where((item) => selectedFilters.contains(item.caption))
-            .toList();
-      }
       availableCaptions = availablePicks;
       isPlayersTurn = currentPickerId == widget.playerId;
       currentPick = currentPickName;
@@ -295,6 +292,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   }
 
   void _updatePlayers(Map<String, dynamic> data) {
+    dev.log('Got updated players list from server', name: 'DRAFT');
+
     // Generate list of players from server data
     final playersFromServer = data['joinedPlayers'] as List<dynamic>;
     final List<Player> newPlayers = [];
@@ -324,6 +323,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       return;
     }
 
+    dev.log('Caption selected, sending pick to server', name: 'DRAFT');
+
     // Send selection back to server
     socket.emit(CLIENT_ENDS_TURN, {
       'playerId': widget.playerId,
@@ -347,6 +348,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       0, (previousValue, element) => previousValue + (element == null ? 1 : 0));
 
   void _onLineupComplete() {
+    dev.log('Player lineup complete, leaving draft...', name: 'DRAFT');
+
     socket.emit(CLIENT_LINEUP_COMPLETE);
 
     // Create a new fantasy corps object and write it to the server
@@ -362,6 +365,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   }
 
   void _onOwnerCancelledDraft() {
+    dev.log('Tour owner cancelled draft', name: 'DRAFT');
+
     setState(() {
       draftStarted = false;
     });
@@ -381,26 +386,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
       showCountdown = false;
     });
     context.pop();
-  }
-
-  void _onCaptionFilterSelected(bool selected, Caption caption) {
-    // Add or remove from list of filtered captions
-    if (selected) {
-      selectedFilters.add(caption);
-    } else {
-      selectedFilters.remove(caption);
-    }
-
-    // Filter the caption list and set state
-    setState(() {
-      if (selectedFilters.isEmpty) {
-        filteredCaptions = availableCaptions;
-      } else {
-        filteredCaptions = availableCaptions
-            .where((item) => selectedFilters.contains(item.caption))
-            .toList();
-      }
-    });
   }
 
   @override

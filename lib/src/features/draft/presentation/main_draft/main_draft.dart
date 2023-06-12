@@ -6,7 +6,6 @@ import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/la
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/player_lineup.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/round_card.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/timer_card.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,6 @@ class MainDraft extends StatelessWidget {
     required this.fantasyCorps,
     required this.onCaptionSelected,
     required this.onCancelDraft,
-    required this.onFilterSelected,
   });
 
   final int remainingTime;
@@ -38,7 +36,6 @@ class MainDraft extends StatelessWidget {
   final Lineup fantasyCorps;
   final void Function(DrumCorpsCaption) onCaptionSelected;
   final VoidCallback? onCancelDraft;
-  final void Function(bool, Caption) onFilterSelected;
 
   @override
   Widget build(BuildContext context) {
