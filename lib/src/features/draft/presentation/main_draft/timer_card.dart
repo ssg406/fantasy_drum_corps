@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
+
+import '../../../../constants/app_sizes.dart';
 
 class TimerCard extends StatelessWidget {
   const TimerCard({
@@ -22,22 +25,26 @@ class TimerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('00');
-    return Column(
+    return Flex(
+      direction: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+          ? Axis.vertical
+          : Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           'Time Left',
           style: Theme.of(context)
               .textTheme
-              .titleMedium!
+              .titleLarge!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
+        if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
         Text(
           ':${formatter.format(remainingTime)}',
           style: Theme.of(context)
               .textTheme
               .titleLarge!
-              .copyWith(color: _getTimerColor(), fontSize: 28.0),
+              .copyWith(color: _getTimerColor()),
         ),
       ],
     );

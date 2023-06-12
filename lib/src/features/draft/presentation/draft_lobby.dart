@@ -2,26 +2,26 @@ import 'dart:developer' as dev;
 
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
+import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/socket_events.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/auto_draft.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_waiting_room.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/main_draft.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/players/domain/player_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
+import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-
-import '../../../constants/app_sizes.dart';
-import '../../fantasy_corps/domain/drum_corps_enum.dart';
-import 'draft_waiting_room.dart';
-import 'main_draft/main_draft.dart';
 
 const turnLength = 45;
 
@@ -88,6 +88,21 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   @override
   Widget build(BuildContext context) {
+    return MainDraft(
+      remainingTime: 45,
+      roundNumber: 0,
+      currentPick: 'Sam',
+      nextPick: 'Sam',
+      lastPlayersPick: DrumCorpsCaption(
+          drumCorpsCaptionId: 'a1',
+          corps: DrumCorps.bluecoats,
+          caption: Caption.percussion),
+      canPick: true,
+      availablePicks: DrumCorpsData.getAllPicks(),
+      fantasyCorps: {},
+      onCaptionSelected: _onCaptionSelected,
+      onCancelDraft: _onCancelDraft,
+    );
     if (draftStarted) {
       return MainDraft(
         remainingTime: remainingTime,

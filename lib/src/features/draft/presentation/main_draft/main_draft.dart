@@ -50,7 +50,11 @@ class MainDraft extends StatelessWidget {
                 elevation: 8,
                 child: Padding(
                   padding: cardPadding,
-                  child: Row(
+                  child: Flex(
+                    direction:
+                        ResponsiveBreakpoints.of(context).largerThan(TABLET)
+                            ? Axis.horizontal
+                            : Axis.vertical,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TimerCard(remainingTime: remainingTime),

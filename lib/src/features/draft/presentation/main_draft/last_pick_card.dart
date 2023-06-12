@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 import '../../../../constants/app_sizes.dart';
 
@@ -9,7 +10,11 @@ class LastPickCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Flex(
+      direction: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+          ? Axis.vertical
+          : Axis.horizontal,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           'Last Pick',
@@ -18,7 +23,7 @@ class LastPickCard extends StatelessWidget {
               .titleLarge!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
-        gapH8,
+        if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
         Text(
           lastPlayersPick?.displayString ?? 'No Pick',
           style: Theme.of(context)

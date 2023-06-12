@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class CurrentPickCard extends StatelessWidget {
@@ -21,11 +20,19 @@ class CurrentPickCard extends StatelessWidget {
 
   Widget _getTurnInProgressDisplay(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Current Turn: ',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.onTertiary),
+            ),
             Text(
               '@$currentPick',
               style: Theme.of(context)
@@ -33,31 +40,24 @@ class CurrentPickCard extends StatelessWidget {
                   .titleLarge!
                   .copyWith(color: Colors.green.shade900),
             ),
-            gapW8,
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Text(
-              'is making a pick',
+              'Next Turn: ',
               style: Theme.of(context)
                   .textTheme
                   .titleLarge!
                   .copyWith(color: Theme.of(context).colorScheme.onTertiary),
             ),
-          ],
-        ),
-        Row(
-          children: [
             Text(
               '@$nextPick',
               style: Theme.of(context)
                   .textTheme
                   .titleLarge!
                   .copyWith(color: Colors.orange.shade900),
-            ),
-            Text(
-              ' is picking next',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.onTertiary),
             ),
           ],
         ),
