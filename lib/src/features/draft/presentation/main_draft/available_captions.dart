@@ -34,7 +34,9 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
     return Card(
       elevation: widget.canPick ? 8 : 1,
       child: Padding(
-        padding: cardPadding,
+        padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+            ? cardPadding
+            : mobileCardPadding,
         child: Column(
           children: [
             Text('REMAINING PICKS',
@@ -77,7 +79,9 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                         return ListTile(
                           title: Text(dcc.displayString),
                           selected: index == _selectedIndex,
-                          selectedColor: AppColors.customGreen,
+                          selectedColor: Colors.black,
+                          selectedTileColor:
+                              AppColors.customGreen.withOpacity(0.2),
                           visualDensity: const VisualDensity(
                               horizontal: -4.0, vertical: -4.0),
                           onTap: !widget.canPick

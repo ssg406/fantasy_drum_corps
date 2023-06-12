@@ -21,19 +21,21 @@ class DashboardScoresCard extends StatelessWidget {
         color: AppColors.customBlue,
       ),
       child: SizedBox(
-        height: 80,
+        height: 100,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
             for (final corps in fantasyCorps)
               SizedBox(
-                width: 150,
+                width: 200,
                 child: ListTile(
                   title: Text(
                     corps.name,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   subtitle: Text(
                     'Last Score: ${_getScore(corps)}',
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   onTap: () => context.pushNamed(AppRoutes.leaderboard.name),
                 ),

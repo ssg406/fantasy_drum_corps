@@ -22,14 +22,13 @@ class DashboardTourCard extends StatelessWidget {
       ),
       title: 'Tours Quick Access',
       child: SizedBox(
-        height: 100,
+        height: 150,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
             for (final tour in tours)
               SizedBox(
-                width: 200,
-                height: 150,
+                width: 225,
                 child: ListTile(
                   isThreeLine: true,
                   title: Text(tour.name,

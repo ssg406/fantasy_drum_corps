@@ -17,7 +17,6 @@ import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart'
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
-import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -88,21 +87,6 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   @override
   Widget build(BuildContext context) {
-    return MainDraft(
-      remainingTime: 45,
-      roundNumber: 0,
-      currentPick: 'Sam',
-      nextPick: 'Sam',
-      lastPlayersPick: DrumCorpsCaption(
-          drumCorpsCaptionId: 'a1',
-          corps: DrumCorps.bluecoats,
-          caption: Caption.percussion),
-      canPick: true,
-      availablePicks: DrumCorpsData.getAllPicks(),
-      fantasyCorps: {},
-      onCaptionSelected: _onCaptionSelected,
-      onCancelDraft: _onCancelDraft,
-    );
     if (draftStarted) {
       return MainDraft(
         remainingTime: remainingTime,
@@ -294,6 +278,17 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     for (var pick in allPicks) {
       availablePicks
           .add(DrumCorpsCaption.fromJson(pick, pick['drumCorpsCaptionId']));
+    }
+
+    // Show alert if it is the players turn
+    if (currentPickerId == widget.playerId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You\'re up! Make a selection in the next 45 seconds.'),
+          showCloseIcon: true,
+          duration: Duration(milliseconds: 1500),
+        ),
+      );
     }
 
     // Update widget state

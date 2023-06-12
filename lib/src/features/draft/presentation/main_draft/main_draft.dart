@@ -40,7 +40,9 @@ class MainDraft extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: pagePadding,
+      padding: ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET)
+          ? mobilePagePadding
+          : pagePadding,
       child: SingleChildScrollView(
         child: ResponsiveCenter(
           maxContentWidth: 1000,
@@ -71,25 +73,16 @@ class MainDraft extends StatelessWidget {
                 ),
               ),
               IntrinsicHeight(
-                child: Flex(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  direction:
-                      ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                          ? Axis.vertical
-                          : Axis.horizontal,
+                child: Row(
                   children: [
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
+                    Expanded(
                       child: AvailableCaptions(
                         canPick: canPick,
                         availableCaptions: availablePicks,
                         onCaptionSelected: onCaptionSelected,
                       ),
                     ),
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
+                    Expanded(
                       child: PlayerLineup(
                         lineup: fantasyCorps,
                       ),

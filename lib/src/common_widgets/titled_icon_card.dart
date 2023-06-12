@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class TitledIconCard extends StatelessWidget {
@@ -18,19 +17,20 @@ class TitledIconCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Column(
-      children: [
-        ListTile(
-          leading: icon,
-          title: Text(title),
-          subtitle: subtitle == null ? null : Text(subtitle!),
-        ),
-        gapH16,
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
-          child: child,
-        ),
-      ],
-    ));
+      child: Column(
+        children: [
+          ListTile(
+            leading: icon,
+            title: Text(title),
+            subtitle: subtitle == null ? null : Text(subtitle!),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 0, left: 15, right: 15, bottom: 20),
+            child: child,
+          ),
+        ],
+      ),
+    );
   }
 }
