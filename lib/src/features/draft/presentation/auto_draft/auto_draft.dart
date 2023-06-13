@@ -36,39 +36,37 @@ class AutoDraft extends ConsumerWidget {
         value: ref.watch(watchUserFantasyCorpsProvider),
         data: (List<FantasyCorps> userCorps) {
           // Get user Id
-          final userId = ref
-              .watch(authRepositoryProvider)
-              .currentUser
-              ?.uid;
+          final userId = ref.watch(authRepositoryProvider).currentUser?.uid;
           // Check for corps associated with given tour
           final hasCorps = userCorps
               .firstWhereOrNull((element) => element.tourId == tour.id);
           return hasCorps != null
               ? const DraftAlreadyRun()
               : AsyncValueWidget(
-            value: ref.watch(fetchTourRemainingPicksProvider(tour.id!)),
-            data: (RemainingPicks? remainingPicks) {
-              if (remainingPicks == null || userId == null) {
-                return const NotFound();
-              } else if (remainingPicks.leftOverPicks.isEmpty) {
-                return const Text('No picks left');
-              } else {
-                return AutoDraftContents(
-                    remainingPicksList: remainingPicks.leftOverPicks,
-                    tourId: tour.id!,
-                    userId: userId);
-              }
-            },
-          );
+                  value: ref.watch(fetchTourRemainingPicksProvider(tour.id!)),
+                  data: (RemainingPicks? remainingPicks) {
+                    if (remainingPicks == null || userId == null) {
+                      return const NotFound();
+                    } else if (remainingPicks.leftOverPicks.isEmpty) {
+                      return const Text('No picks left');
+                    } else {
+                      return AutoDraftContents(
+                          remainingPicksList: remainingPicks.leftOverPicks,
+                          tourId: tour.id!,
+                          userId: userId);
+                    }
+                  },
+                );
         });
   }
 }
 
 class AutoDraftContents extends StatefulWidget {
-  const AutoDraftContents({Key? key,
-    required this.remainingPicksList,
-    required this.tourId,
-    required this.userId})
+  const AutoDraftContents(
+      {Key? key,
+      required this.remainingPicksList,
+      required this.tourId,
+      required this.userId})
       : super(key: key);
   final List<DrumCorpsCaption> remainingPicksList;
   final String tourId;
@@ -92,24 +90,17 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
         children: [
           Text(
             'It looks like you missed the draft for your tour. You can still '
-                'generate a random lineup from the picks left over from the '
-                'main draft, and your Fantasy Corps will immediately '
-                'populate with the current scores from this season. Click the '
-                'button below to create a lineup. Once the lineup has been '
-                'created, it is permanent.',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyLarge,
+            'generate a random lineup from the picks left over from the '
+            'main draft, and your Fantasy Corps will immediately '
+            'populate with the current scores from this season. Click the '
+            'button below to create a lineup. Once the lineup has been '
+            'created, it is permanent.',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           gapH16,
           Text(
-            'There were ${widget.remainingPicksList
-                .length} picks remaining after the draft.',
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium,
+            'There were ${widget.remainingPicksList.length} picks remaining after the draft.',
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           gapH16,
           FilledButton.icon(
@@ -121,7 +112,7 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
             shrinkWrap: true,
             padding: const EdgeInsets.all(0),
             crossAxisCount:
-            ResponsiveBreakpoints.of(context).largerThan(TABLET) ? 4 : 2,
+                ResponsiveBreakpoints.of(context).largerThan(TABLET) ? 4 : 2,
             childAspectRatio: 2,
             children: [
               for (final caption in lineup.keys)
@@ -130,15 +121,16 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
           ),
           gapH12,
           if (lineupCreated)
-            Column(
-              children: [
-                const CircularProgressIndicator(),
-                gapH8,
-                Text('Saving Lineup...', style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge),
-              ],
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  gapH8,
+                  Text('Saving Lineup...',
+                      style: Theme.of(context).textTheme.titleLarge),
+                ],
+              ),
             )
         ],
       ),
@@ -181,6 +173,7 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
 
     setState(() => lineupCreated = true);
 
+    // Delay for effect and allows user to see created lineup
     await Future.delayed(const Duration(seconds: 2));
 
     final fantasyCorps = FantasyCorps(
@@ -205,12 +198,9 @@ class DraftAlreadyRun extends StatelessWidget {
       children: [
         Text(
           'It looks like you already have a Fantasy Corps for this tour. '
-              'The tour admin can reset all corps for this tour, or click below '
-              'to go to your existing Fantasy Corps.',
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyLarge,
+          'The tour admin can reset all corps for this tour, or click below '
+          'to go to your existing Fantasy Corps.',
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         gapH8,
         FilledButton(
