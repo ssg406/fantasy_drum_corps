@@ -60,12 +60,13 @@ class DraftWaitingRoom extends StatelessWidget {
   }
 
   Widget _getNoPlayersDisplay(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         Text(
-          'No players joined yet...',
+          'Waiting for server...',
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        const CircularProgressIndicator(),
       ],
     );
   }
