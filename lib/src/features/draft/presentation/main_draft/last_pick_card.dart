@@ -17,7 +17,7 @@ class LastPickCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Last Pick',
+          'LAST PICK',
           style: Theme.of(context)
               .textTheme
               .titleLarge!

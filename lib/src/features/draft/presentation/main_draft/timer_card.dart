@@ -32,7 +32,7 @@ class TimerCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Time Left',
+          'TIME LEFT',
           style: Theme.of(context)
               .textTheme
               .titleLarge!

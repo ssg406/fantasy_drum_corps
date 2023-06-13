@@ -22,7 +22,7 @@ class RoundCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Round',
+          'ROUND',
           style: Theme.of(context)
               .textTheme
               .titleLarge!
