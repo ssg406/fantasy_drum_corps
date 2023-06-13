@@ -43,7 +43,7 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                 style: Theme.of(context).textTheme.titleLarge),
             gapH8,
             SizedBox(
-              height: ResponsiveBreakpoints.of(context).screenHeight * 0.4,
+              height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
               child: widget.availableCaptions == null
                   ? const Center(child: Text('No available captions'))
                   : GroupedListView<DrumCorpsCaption, String>(
@@ -137,7 +137,7 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                       },
                     ),
                   if (!widget.canPick)
-                    ElevatedButton(
+                    const FilledButton(
                       onPressed: null,
                       child: Text('WAITING'),
                     ),
