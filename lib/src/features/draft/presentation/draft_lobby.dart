@@ -236,8 +236,11 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   /// Emit client identification, and listen for initial waiting room state updates
   void _registerDraftSetupListeners() {
-    // Emit identification
-    socket.emit(CLIENT_SENDS_IDENTIFICATION, {'playerId': widget.playerId});
+    // Wait for server to confirm namespace
+    socket.on(SERVER_TOUR_FOUND, (_) {
+      // Emit identification
+      socket.emit(CLIENT_SENDS_IDENTIFICATION, {'playerId': widget.playerId});
+    });
 
     // Server sends if draft is started or in countdown to start
     socket.on(SERVER_SENDS_DRAFT_STATE, (data) => _updateDraftState(data));
