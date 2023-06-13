@@ -6,11 +6,13 @@ import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/draft/data/remaining_picks_repository.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/remaining_picks.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/auto_draft/auto_draft_controller.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
+import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -36,53 +38,61 @@ class AutoDraft extends ConsumerWidget {
         value: ref.watch(watchUserFantasyCorpsProvider),
         data: (List<FantasyCorps> userCorps) {
           // Get user Id
-          final userId = ref.watch(authRepositoryProvider).currentUser?.uid;
+          final userId = ref
+              .watch(authRepositoryProvider)
+              .currentUser
+              ?.uid;
           // Check for corps associated with given tour
           final hasCorps = userCorps
               .firstWhereOrNull((element) => element.tourId == tour.id);
           return hasCorps != null
               ? const DraftAlreadyRun()
               : AsyncValueWidget(
-                  value: ref.watch(fetchTourRemainingPicksProvider(tour.id!)),
-                  data: (RemainingPicks? remainingPicks) {
-                    if (remainingPicks == null || userId == null) {
-                      return const NotFound();
-                    } else if (remainingPicks.leftOverPicks.isEmpty) {
-                      return const Text('No picks left');
-                    } else {
-                      return AutoDraftContents(
-                          remainingPicksList: remainingPicks.leftOverPicks,
-                          tourId: tour.id!,
-                          userId: userId);
-                    }
-                  },
-                );
+            value: ref.watch(fetchTourRemainingPicksProvider(tour.id!)),
+            data: (RemainingPicks? remainingPicks) {
+              if (remainingPicks == null || userId == null) {
+                return const NotFound();
+              } else if (remainingPicks.leftOverPicks.isEmpty) {
+                return const Text('No picks left');
+              } else {
+                return AutoDraftContents(
+                    remainingPicks: remainingPicks,
+                    tourId: tour.id!,
+                    userId: userId);
+              }
+            },
+          );
         });
   }
 }
 
-class AutoDraftContents extends StatefulWidget {
-  const AutoDraftContents(
-      {Key? key,
-      required this.remainingPicksList,
-      required this.tourId,
-      required this.userId})
+class AutoDraftContents extends ConsumerStatefulWidget {
+  const AutoDraftContents({Key? key,
+    required this.remainingPicks,
+    required this.tourId,
+    required this.userId})
       : super(key: key);
-  final List<DrumCorpsCaption> remainingPicksList;
+  final RemainingPicks remainingPicks;
   final String tourId;
   final String userId;
 
   @override
-  State<AutoDraftContents> createState() => _AutoDraftContentsState();
+  ConsumerState<AutoDraftContents> createState() => _AutoDraftContentsState();
 }
 
-class _AutoDraftContentsState extends State<AutoDraftContents> {
+class _AutoDraftContentsState extends ConsumerState<AutoDraftContents> {
   final Lineup lineup = {};
   final Map<Caption, List<DrumCorpsCaption>> leftPicks = {};
   bool lineupCreated = false;
 
+  List<DrumCorpsCaption> get remainingPicksList =>
+      widget.remainingPicks.leftOverPicks;
+
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue>(autoDraftControllerProvider,
+            (_, state) => state.showAlertDialogOnError(context));
+    final state = ref.watch(autoDraftControllerProvider);
     return PageScaffolding(
       pageTitle: 'Generate Lineup',
       child: Column(
@@ -90,17 +100,24 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
         children: [
           Text(
             'It looks like you missed the draft for your tour. You can still '
-            'generate a random lineup from the picks left over from the '
-            'main draft, and your Fantasy Corps will immediately '
-            'populate with the current scores from this season. Click the '
-            'button below to create a lineup. Once the lineup has been '
-            'created, it is permanent.',
-            style: Theme.of(context).textTheme.bodyLarge,
+                'generate a random lineup from the picks left over from the '
+                'main draft, and your Fantasy Corps will immediately '
+                'populate with the current scores from this season. Click the '
+                'button below to create a lineup. Once the lineup has been '
+                'created, it is permanent.',
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyLarge,
           ),
           gapH16,
           Text(
-            'There were ${widget.remainingPicksList.length} picks remaining after the draft.',
-            style: Theme.of(context).textTheme.titleMedium,
+            'There were ${remainingPicksList
+                .length} picks remaining after the draft.',
+            style: Theme
+                .of(context)
+                .textTheme
+                .titleMedium,
           ),
           gapH16,
           FilledButton.icon(
@@ -112,7 +129,7 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
             shrinkWrap: true,
             padding: const EdgeInsets.all(0),
             crossAxisCount:
-                ResponsiveBreakpoints.of(context).largerThan(TABLET) ? 4 : 2,
+            ResponsiveBreakpoints.of(context).largerThan(TABLET) ? 4 : 2,
             childAspectRatio: 2,
             children: [
               for (final caption in lineup.keys)
@@ -128,7 +145,10 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
                   const CircularProgressIndicator(),
                   gapH8,
                   Text('Saving Lineup...',
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge),
                 ],
               ),
             )
@@ -150,7 +170,7 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
 
   void _generateLineup() async {
     // Generate leftPicks Map<Caption, List<DrumCorpsCaption>>
-    for (final pick in widget.remainingPicksList) {
+    for (final pick in remainingPicksList) {
       leftPicks[pick.caption]!.add(pick);
     }
 
@@ -169,7 +189,12 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
       setState(() {
         lineup[caption] = leftPicks[caption]![index].corps;
       });
+      // Remove the random selection from the list of remaining picks
+      remainingPicksList.remove(leftPicks[caption]![index]);
     }
+
+    // Save new remaining picks to server
+    _saveRemainingPicks();
 
     setState(() => lineupCreated = true);
 
@@ -187,6 +212,11 @@ class _AutoDraftContentsState extends State<AutoDraftContents> {
           params: {'tid': widget.tourId}, extra: fantasyCorps);
     }
   }
+
+  Future<void> _saveRemainingPicks() async {
+    final controller = ref.read(autoDraftControllerProvider.notifier);
+    controller.updateRemainingPicks(widget.remainingPicks);
+  }
 }
 
 class DraftAlreadyRun extends StatelessWidget {
@@ -198,9 +228,12 @@ class DraftAlreadyRun extends StatelessWidget {
       children: [
         Text(
           'It looks like you already have a Fantasy Corps for this tour. '
-          'The tour admin can reset all corps for this tour, or click below '
-          'to go to your existing Fantasy Corps.',
-          style: Theme.of(context).textTheme.bodyLarge,
+              'The tour admin can reset all corps for this tour, or click below '
+              'to go to your existing Fantasy Corps.',
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyLarge,
         ),
         gapH8,
         FilledButton(
