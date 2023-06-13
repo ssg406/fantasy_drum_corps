@@ -17,6 +17,7 @@ import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart'
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
+import 'package:fantasy_drum_corps/src/utils/static_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -87,6 +88,19 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   @override
   Widget build(BuildContext context) {
+    return MainDraft(
+      remainingTime: 45,
+      roundNumber: 1,
+      currentPick: currentPick,
+      nextPick: nextPick,
+      lastPlayersPick: lastPlayersPick,
+      canPick: true,
+      availablePicks: DrumCorpsData.getAllPicks(),
+      fantasyCorps: fantasyCorps,
+      onCaptionSelected: _onCaptionSelected,
+      onCancelDraft:
+          widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+    );
     if (draftStarted) {
       return MainDraft(
         remainingTime: remainingTime,

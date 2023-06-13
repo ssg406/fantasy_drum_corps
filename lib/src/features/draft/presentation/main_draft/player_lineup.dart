@@ -24,7 +24,7 @@ class PlayerLineup extends StatelessWidget {
             ),
             gapH24,
             SizedBox(
-              height: 300,
+              height: ResponsiveBreakpoints.of(context).screenHeight * 0.4,
               child: GridView.count(
                 padding: const EdgeInsets.all(0),
                 crossAxisCount:
