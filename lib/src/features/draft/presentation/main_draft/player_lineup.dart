@@ -15,7 +15,9 @@ class PlayerLineup extends StatelessWidget {
     return Card(
       elevation: 8,
       child: Padding(
-        padding: cardPadding,
+        padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+            ? cardPadding
+            : mobileCardPadding,
         child: Column(
           children: [
             Text(
@@ -24,20 +26,32 @@ class PlayerLineup extends StatelessWidget {
             ),
             gapH24,
             SizedBox(
-              height: ResponsiveBreakpoints.of(context).screenHeight * 0.4,
-              child: GridView.count(
-                padding: const EdgeInsets.all(0),
-                crossAxisCount:
-                    ResponsiveBreakpoints.of(context).largerThan(TABLET)
-                        ? 2
-                        : 1,
-                childAspectRatio: 10 / 4,
+              height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
+              child: ListView(
                 children: [
                   for (final caption in lineup.keys)
-                    LineupCaptionSlot(pick: lineup[caption], caption: caption)
+                    LineupCaptionSlot(
+                      caption: caption,
+                      pick: lineup[caption],
+                    ),
                 ],
               ),
-            ),
+            )
+            // SizedBox(
+            //   height: ResponsiveBreakpoints.of(context).screenHeight * 0.4,
+            //   child: GridView.count(
+            //     //padding: const EdgeInsets.all(0),
+            //     crossAxisCount:
+            //         ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+            //             ? 1
+            //             : 2,
+            //     childAspectRatio: 12 / 4,
+            //     children: [
+            //       for (final caption in lineup.keys)
+            //         LineupCaptionSlot(pick: lineup[caption], caption: caption)
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
