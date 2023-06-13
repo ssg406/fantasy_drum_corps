@@ -113,6 +113,7 @@ class _MessagingBoxState extends ConsumerState<MessagingBox> {
         message: _textController.text,
         dateTime: DateTime.now());
     await controller.submitMessage(message);
+    _textController.clear();
   }
 }
 
