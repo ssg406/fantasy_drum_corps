@@ -20,7 +20,7 @@ class LastPickCard extends StatelessWidget {
           'LAST PICK',
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
         if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
@@ -28,7 +28,7 @@ class LastPickCard extends StatelessWidget {
           lastPlayersPick?.displayString ?? 'No Pick',
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: Colors.blue.shade900),
         ),
       ],

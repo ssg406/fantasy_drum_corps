@@ -35,7 +35,7 @@ class TimerCard extends StatelessWidget {
           'TIME LEFT',
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
         if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
@@ -43,7 +43,7 @@ class TimerCard extends StatelessWidget {
           ':${formatter.format(remainingTime)}',
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: _getTimerColor()),
         ),
       ],

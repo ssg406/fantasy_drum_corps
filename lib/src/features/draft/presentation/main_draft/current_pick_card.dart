@@ -30,14 +30,14 @@ class CurrentPickCard extends StatelessWidget {
               'Current Turn: ',
               style: Theme.of(context)
                   .textTheme
-                  .titleLarge!
+                  .titleMedium!
                   .copyWith(color: Theme.of(context).colorScheme.onTertiary),
             ),
             Text(
               '@$currentPick',
               style: Theme.of(context)
                   .textTheme
-                  .titleLarge!
+                  .titleMedium!
                   .copyWith(color: Colors.green.shade900),
             ),
           ],
@@ -49,14 +49,14 @@ class CurrentPickCard extends StatelessWidget {
               'Next Turn: ',
               style: Theme.of(context)
                   .textTheme
-                  .titleLarge!
+                  .titleMedium!
                   .copyWith(color: Theme.of(context).colorScheme.onTertiary),
             ),
             Text(
               '@$nextPick',
               style: Theme.of(context)
                   .textTheme
-                  .titleLarge!
+                  .titleMedium!
                   .copyWith(color: Colors.orange.shade900),
             ),
           ],

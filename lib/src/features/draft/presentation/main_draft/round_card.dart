@@ -25,7 +25,7 @@ class RoundCard extends StatelessWidget {
           'ROUND',
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: Theme.of(context).colorScheme.onTertiary),
         ),
         if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
@@ -33,7 +33,7 @@ class RoundCard extends StatelessWidget {
           formatter.format(roundNumber),
           style: Theme.of(context)
               .textTheme
-              .titleLarge!
+              .titleMedium!
               .copyWith(color: Colors.blue[900]),
         ),
       ],
