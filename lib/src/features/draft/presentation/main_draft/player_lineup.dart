@@ -17,12 +17,13 @@ class PlayerLineup extends StatelessWidget {
       child: Padding(
         padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
             ? cardPadding
-            : mobileCardPadding,
+            : const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
         child: Column(
           children: [
             Text(
               'YOUR FANTASY CORPS',
               style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
             ),
             gapH24,
             SizedBox(
@@ -37,21 +38,6 @@ class PlayerLineup extends StatelessWidget {
                 ],
               ),
             )
-            // SizedBox(
-            //   height: ResponsiveBreakpoints.of(context).screenHeight * 0.4,
-            //   child: GridView.count(
-            //     //padding: const EdgeInsets.all(0),
-            //     crossAxisCount:
-            //         ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-            //             ? 1
-            //             : 2,
-            //     childAspectRatio: 12 / 4,
-            //     children: [
-            //       for (final caption in lineup.keys)
-            //         LineupCaptionSlot(pick: lineup[caption], caption: caption)
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
