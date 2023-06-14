@@ -167,9 +167,9 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                           ),
                   if (!widget.canPick)
                     ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                        ? IconButton.filled(
+                        ? const IconButton.filled(
                             onPressed: null,
-                            icon: const Icon(Icons.hourglass_bottom_rounded),
+                            icon: Icon(Icons.hourglass_bottom_rounded),
                           )
                         : FilledButton.icon(
                             onPressed: null,
