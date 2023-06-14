@@ -53,7 +53,6 @@ class _CreateFantasyCorpsContentsState
   String? _corpsName;
   String? _showTitle;
   String? _repertoire;
-  bool _saved = false;
   final _focusNode = FocusScopeNode();
 
   @override
@@ -65,15 +64,6 @@ class _CreateFantasyCorpsContentsState
       _corpsName = _fantasyCorps.name;
       _showTitle = _fantasyCorps.showTitle;
       _repertoire = _fantasyCorps.repertoire;
-    }
-  }
-
-  // Prevent loss of fantasy corps if not saved before navigating away
-  @override
-  void dispose() {
-    super.dispose();
-    if (!_saved && !_isEditing) {
-      _saveFantasyCorps();
     }
   }
 
@@ -152,7 +142,6 @@ class _CreateFantasyCorpsContentsState
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _saveFantasyCorps();
-      _saved = true;
     }
   }
 
