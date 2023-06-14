@@ -104,43 +104,78 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
             gapH8,
             Expanded(
               child: ButtonBar(
+                overflowDirection: VerticalDirection.up,
                 children: [
-                  TextButton.icon(
-                    onPressed: () => setState(
-                        () => _isGroupedByCaption = !_isGroupedByCaption),
-                    icon: const Icon(Icons.sort),
-                    label: Text(_isGroupedByCaption
-                        ? 'Sort by Corps'
-                        : 'Sort by Caption'),
-                  ),
+                  ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                      ? IconButton(
+                          color: Theme.of(context).colorScheme.primary,
+                          onPressed: () => setState(
+                              () => _isGroupedByCaption = !_isGroupedByCaption),
+                          icon: const Icon(Icons.sort),
+                        )
+                      : TextButton.icon(
+                          onPressed: () => setState(
+                              () => _isGroupedByCaption = !_isGroupedByCaption),
+                          icon: const Icon(Icons.sort),
+                          label: Text(_isGroupedByCaption
+                              ? 'Sort by Corps'
+                              : 'Sort by Caption'),
+                        ),
                   if (widget.canPick)
-                    FilledButton.icon(
-                      icon: const Icon(Icons.play_circle_outline_rounded),
-                      label: const Text(
-                        'Draft',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () {
-                        if (_selectedCaption == null) {
-                          showAlertDialog(
-                              context: context,
-                              title: 'No Selection Made',
-                              content: 'Select a caption to draft first.');
-                          return;
-                        }
-                        widget.onCaptionSelected(_selectedCaption!);
-                        setState(() {
-                          // Reset the index and the caption to prevent duplication
-                          _selectedIndex = null;
-                          _selectedCaption = null;
-                        });
-                      },
-                    ),
+                    ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                        ? IconButton.filled(
+                            onPressed: () {
+                              if (_selectedCaption == null) {
+                                showAlertDialog(
+                                    context: context,
+                                    title: 'No Selection Made',
+                                    content:
+                                        'Select a caption to draft first.');
+                                return;
+                              }
+                              widget.onCaptionSelected(_selectedCaption!);
+                              setState(() {
+                                // Reset the index and the caption to prevent duplication
+                                _selectedIndex = null;
+                                _selectedCaption = null;
+                              });
+                            },
+                            icon: const Icon(Icons.play_circle_outline_rounded),
+                          )
+                        : FilledButton.icon(
+                            icon: const Icon(Icons.play_circle_outline_rounded),
+                            label: const Text(
+                              'Draft',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              if (_selectedCaption == null) {
+                                showAlertDialog(
+                                    context: context,
+                                    title: 'No Selection Made',
+                                    content:
+                                        'Select a caption to draft first.');
+                                return;
+                              }
+                              widget.onCaptionSelected(_selectedCaption!);
+                              setState(() {
+                                // Reset the index and the caption to prevent duplication
+                                _selectedIndex = null;
+                                _selectedCaption = null;
+                              });
+                            },
+                          ),
                   if (!widget.canPick)
-                    const FilledButton(
-                      onPressed: null,
-                      child: Text('WAITING'),
-                    ),
+                    ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                        ? IconButton.filled(
+                            onPressed: null,
+                            icon: const Icon(Icons.hourglass_bottom_rounded),
+                          )
+                        : FilledButton.icon(
+                            onPressed: null,
+                            icon: const Icon(Icons.hourglass_bottom_rounded),
+                            label: const Text('WAITING'),
+                          ),
                 ],
               ),
             )
