@@ -32,7 +32,7 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: widget.canPick ? 8 : 1,
+      elevation: widget.canPick ? 3 : 1,
       child: Padding(
         padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
             ? cardPadding

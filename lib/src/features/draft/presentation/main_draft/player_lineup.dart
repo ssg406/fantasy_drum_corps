@@ -13,7 +13,7 @@ class PlayerLineup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
+      elevation: 1,
       child: Padding(
         padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
             ? cardPadding

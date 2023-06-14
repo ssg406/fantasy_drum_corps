@@ -49,9 +49,11 @@ class MainDraft extends StatelessWidget {
           child: Column(
             children: [
               Card(
-                elevation: 8,
+                elevation: 1,
                 child: Padding(
-                  padding: cardPadding,
+                  padding: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                      ? mobileCardPadding
+                      : cardPadding,
                   child: Flex(
                     direction:
                         ResponsiveBreakpoints.of(context).largerThan(TABLET)
@@ -75,14 +77,16 @@ class MainDraft extends StatelessWidget {
               IntrinsicHeight(
                 child: Row(
                   children: [
-                    Expanded(
+                    Flexible(
+                      flex: 3,
                       child: AvailableCaptions(
                         canPick: canPick,
                         availableCaptions: availablePicks,
                         onCaptionSelected: onCaptionSelected,
                       ),
                     ),
-                    Expanded(
+                    Flexible(
+                      flex: 2,
                       child: PlayerLineup(
                         lineup: fantasyCorps,
                       ),
