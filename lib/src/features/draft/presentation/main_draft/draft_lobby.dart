@@ -289,7 +289,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         const SnackBar(
           content: Text('You\'re up! Make a selection in the next 45 seconds.'),
           showCloseIcon: true,
-          duration: Duration(milliseconds: 1500),
+          duration: Duration(seconds: 3),
         ),
       );
     }

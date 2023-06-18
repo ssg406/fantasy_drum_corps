@@ -13,31 +13,31 @@ class PlayerLineup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 8,
+      elevation: 1,
       child: Padding(
-        padding: cardPadding,
+        padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+            ? cardPadding
+            : const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
         child: Column(
           children: [
             Text(
               'YOUR FANTASY CORPS',
               style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
             ),
             gapH24,
             SizedBox(
-              height: 300,
-              child: GridView.count(
-                padding: const EdgeInsets.all(0),
-                crossAxisCount:
-                    ResponsiveBreakpoints.of(context).largerThan(TABLET)
-                        ? 2
-                        : 1,
-                childAspectRatio: 10 / 4,
+              height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
+              child: ListView(
                 children: [
                   for (final caption in lineup.keys)
-                    LineupCaptionSlot(pick: lineup[caption], caption: caption)
+                    LineupCaptionSlot(
+                      caption: caption,
+                      pick: lineup[caption],
+                    ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
