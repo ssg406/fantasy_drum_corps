@@ -24,7 +24,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 const turnLength = 45;
 
-const rootServerUrl = 'https://fantasy-drum-corps-server.herokuapp.com';
+const rootServerUrl = 'http://localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -152,10 +152,13 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     socket.onError((data) {
       dev.log('There was a Socket.io error', name: 'DRAFT', error: data);
     });
+
+    socket.onDisconnect((_) => dev.log('Socket disconnecting', name: 'DRAFT'));
   }
 
   /// Set up initial socket connection to tour namespace
   void _initSocket() {
+    dev.log('Running initSocket()', name: 'DRAFT');
     final tourId = widget.tour.id!;
     socket = io.io('$rootServerUrl/$tourId',
         io.OptionBuilder().setTransports(['websocket']).build());
@@ -163,7 +166,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   /// Set up socket listeners that process active draft events
   void _registerActiveDraftListeners() {
-    dev.log('Server starting draft countdown', name: 'DRAFT');
+    dev.log('Registering active draft listeners', name: 'DRAFT');
     socket.on(SERVER_BEGIN_DRAFT_COUNTDOWN, (_) {
       setState(() => showCountdown = true);
     });
@@ -236,11 +239,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
 
   /// Emit client identification, and listen for initial waiting room state updates
   void _registerDraftSetupListeners() {
-    // Wait for server to confirm namespace
-    socket.on(SERVER_TOUR_FOUND, (_) {
-      // Emit identification
-      socket.emit(CLIENT_SENDS_IDENTIFICATION, {'playerId': widget.playerId});
-    });
+    dev.log('Sending ID to server', name: 'DRAFT');
+    socket.emit(CLIENT_SENDS_IDENTIFICATION, {'playerId': widget.playerId});
 
     // Server sends if draft is started or in countdown to start
     socket.on(SERVER_SENDS_DRAFT_STATE, (data) => _updateDraftState(data));

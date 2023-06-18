@@ -83,18 +83,15 @@ class ResultsContainer extends StatelessWidget {
       return lowerName.contains(lowerSearch) || lowerDesc.contains(lowerSearch);
     });
 
-    return Card(
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.6,
-        child: ListView(
-          children: [
-            for (final tour in filteredTours)
-              TourSearchTile(
-                tour: tour,
-              ),
-          ],
-        ),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.6,
+      child: ListView(
+        children: [
+          for (final tour in filteredTours)
+            TourSearchTile(
+              tour: tour,
+            ),
+        ],
       ),
     );
   }
