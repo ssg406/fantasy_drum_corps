@@ -32,14 +32,14 @@ class AuthRepository {
   Future<void> setEmail(String newEmail, String password) async {
     final user = _auth.currentUser;
     if (user != null) {
-      await _validatePassword(password);
+      await validatePassword(password);
       return user.updateEmail(newEmail);
     } else {
       throw AssertionError('User cannot be null when updating email');
     }
   }
 
-  Future<bool> _validatePassword(String password) async {
+  Future<bool> validatePassword(String password) async {
     final user = _auth.currentUser;
     if (user == null) {
       throw AssertionError('User cannot be null when updating password');
@@ -54,7 +54,7 @@ class AuthRepository {
       {required String oldPassword, required String newPassword}) async {
     final user = _auth.currentUser;
     if (user != null) {
-      await _validatePassword(oldPassword);
+      await validatePassword(oldPassword);
       return user.updatePassword(newPassword);
     } else {
       throw AssertionError('User cannot be null when updating password.');
@@ -109,12 +109,9 @@ AuthRepository authRepository(AuthRepositoryRef ref) =>
     AuthRepository(ref.watch(firebaseAuthProvider));
 
 @riverpod
-Stream<User?> userChangesStream(UserChangesStreamRef ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return repository.userChanges();
-}
+Stream<User?> userChangesStream(UserChangesStreamRef ref) =>
+    ref.watch(authRepositoryProvider).userChanges();
 
 @riverpod
-Future<bool> currentUserIsAdmin(CurrentUserIsAdminRef ref) async {
-  return ref.watch(authRepositoryProvider).currentUserIsAdmin;
-}
+Future<bool> currentUserIsAdmin(CurrentUserIsAdminRef ref) async =>
+    ref.watch(authRepositoryProvider).currentUserIsAdmin;

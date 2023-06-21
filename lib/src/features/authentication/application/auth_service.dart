@@ -20,12 +20,19 @@ class AuthService {
   final PlayersRepository _playersRepo;
 
   // Remove user and associated data
-  Future<void> deleteCurrentUser() async {
+  Future<bool> deleteCurrentUser(String currentPassword) async {
     final user = _authRepo.currentUser;
     if (user != null) {
-      await _playersRepo.deletePlayer(user.uid);
-      user.delete();
+      final passwordVerified =
+          await _authRepo.validatePassword(currentPassword);
+      if (passwordVerified) {
+        _playersRepo.deletePlayer(user.uid).then((_) async {
+          await user.delete();
+          return true;
+        });
+      }
     }
+    return false;
   }
 
   // Create a new user and save to Firebase auth and player repository

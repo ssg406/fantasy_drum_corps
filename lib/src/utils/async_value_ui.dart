@@ -8,25 +8,31 @@ extension AsyncValueUI on AsyncValue {
   void showAlertDialogOnError(BuildContext context) {
     debugPrint('isLoading: $isLoading    hasError: $hasError');
     if (!isLoading && hasError) {
+      String? message;
       if (error is FirebaseAuthException) {
-        final e = error as FirebaseAuthException;
-        debugPrint('the message is ${e.message}\nThe code is ${e.code}');
+        final e = (error as FirebaseAuthException).toString();
+        if (e.contains('wrong-password') ||
+            e.contains('user-not-found') ||
+            e.contains('user-disabled')) {
+          message = 'Authentication details are not valid';
+        } else if (e.contains('invalid-email')) {
+          message = 'Invalid email address';
+        } else if (e.contains('email-already-in-use')) {
+          message = 'An account with that email already exists. Try signing '
+              'in instead';
+        } else if (e.contains('weak-password')) {
+          message = 'Make sure your password is at least 6 characters and '
+              'contains at least numbers in addition to letters';
+        } else if (e.contains('too-many-requests')) {
+          message = 'Too many failed attempts to access or change this '
+              'account have been made. Try again later or reset your password '
+              'to regain access immediately.';
+        }
       }
-
-      /// signInWithEmailAndPassword:
-      /// wrong-password
-      /// invalid-email
-      /// user-disabled
-      /// user-not-found
-      /// createUserWithEmailAndPassword
-      /// email-already-in-use
-      /// invalid-email
-      /// operation-not-allowed
-      /// weak-password
-      final message = error.toString();
-      debugPrintStack();
       showExceptionAlertDialog(
-          context: context, title: 'Error'.hardcoded, exception: message);
+          context: context,
+          title: 'Error'.hardcoded,
+          exception: message ?? 'An unknown error occurred');
     }
   }
 }

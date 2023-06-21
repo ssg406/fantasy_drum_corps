@@ -60,15 +60,16 @@ class _DashboardState extends ConsumerState<Dashboard> {
                             if (player.displayName == null ||
                                 player.selectedCorps == null) ...[
                               gapW24,
+                              Text(
+                                'The Corps Hall is your dashboard to keep track of your tours, corps, messages and scores.',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              gapH16,
                               const CompleteProfileCard()
                             ]
                           ],
                         );
                 },
-              ),
-              Text(
-                'The Corps Hall is your dashboard to keep track of your tours, corps, messages and scores.',
-                style: Theme.of(context).textTheme.bodyLarge,
               ),
               if (user != null && !user.emailVerified) ...[
                 gapH24,

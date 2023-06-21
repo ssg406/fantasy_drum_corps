@@ -160,8 +160,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   void _initSocket() {
     dev.log('Running initSocket()', name: 'DRAFT');
     final tourId = widget.tour.id!;
-    socket = io.io('$rootServerUrl/$tourId',
-        io.OptionBuilder().setTransports(['websocket']).build());
+    socket = io.io(
+        rootServerUrl, io.OptionBuilder().setTransports(['websocket']).build());
   }
 
   /// Set up socket listeners that process active draft events
@@ -240,7 +240,8 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   /// Emit client identification, and listen for initial waiting room state updates
   void _registerDraftSetupListeners() {
     dev.log('Sending ID to server', name: 'DRAFT');
-    socket.emit(CLIENT_SENDS_IDENTIFICATION, {'playerId': widget.playerId});
+    socket.emit(CLIENT_SENDS_IDENTIFICATION,
+        {'playerId': widget.playerId, 'tourId': widget.tour.id!});
 
     // Server sends if draft is started or in countdown to start
     socket.on(SERVER_SENDS_DRAFT_STATE, (data) => _updateDraftState(data));

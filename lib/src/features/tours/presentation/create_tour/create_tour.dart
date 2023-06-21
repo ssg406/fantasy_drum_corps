@@ -17,6 +17,7 @@ import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -36,19 +37,28 @@ class CreateTour extends ConsumerWidget {
       return AsyncValueWidget(
           value: ref.watch(playerStreamProvider),
           data: (Player? player) {
-            final currentUser = ref.watch(authRepositoryProvider).currentUser;
             final hasDisplayName = player?.hasDisplayName ?? false;
-            final emailVerified = currentUser?.emailVerified ?? false;
-            return hasDisplayName && emailVerified
-                ? const CreateTourContents()
-                : const IncompleteProfileWarning();
+            return AsyncValueWidget(
+              value: ref.watch(userChangesStreamProvider),
+              data: (User? user) {
+                _reloadUser(user);
+                final emailVerified = user?.emailVerified ?? false;
+                return hasDisplayName && emailVerified
+                    ? const CreateTourContents()
+                    : const IncompleteProfileWarning();
+              },
+            );
           });
     } else {
       return AsyncValueWidget(
           value: ref.watch(fetchTourProvider(tourId!)),
           data: (Tour? tour) =>
-              tour == null ? const NotFound() : CreateTourContents(tour: tour));
+          tour == null ? const NotFound() : CreateTourContents(tour: tour));
     }
+  }
+
+  void _reloadUser(User? user) async {
+    await user?.reload();
   }
 }
 
@@ -96,7 +106,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(createTourControllerProvider,
-        (_, state) => state.showAlertDialogOnError(context));
+            (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(createTourControllerProvider);
 
     return PageScaffolding(
@@ -131,13 +141,13 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
               gapH32,
               Flex(
                 direction:
-                    ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
-                        ? Axis.horizontal
-                        : Axis.vertical,
+                ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+                    ? Axis.horizontal
+                    : Axis.vertical,
                 mainAxisAlignment:
-                    ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
-                        ? MainAxisAlignment.spaceBetween
-                        : MainAxisAlignment.center,
+                ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET)
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.center,
                 children: [
                   PrivateTourSwitch(
                     publicSelected: _publicSelected,
@@ -159,14 +169,14 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
                         decoration: const InputDecoration(
                             labelText: 'Tour Password',
                             hintText:
-                                'Other players will need this password to join'),
+                            'Other players will need this password to join'),
                       ),
                     ),
                 ],
               ),
               DateTimePicker(
                 labelText:
-                    'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
+                'Select a tour draft date and time. You will still need to sign in and initiate the draft as the tour owner.',
                 selectedDate: pickedDate,
                 selectedTime: pickedTime,
                 dateTimeErrorText: _dateTimeErrorText,
@@ -197,7 +207,8 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
       if (pickedDate == null || pickedTime == null) {
         // Error if no date or time was saved
         setState(
-            () => _dateTimeErrorText = 'Please enter a draft date and time');
+                () =>
+            _dateTimeErrorText = 'Please enter a draft date and time');
         // Fail validation: missing date
         return false;
       } else {
@@ -212,10 +223,11 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
   void _submitEditedTour() async {
     if (!_validate()) return;
     debugPrint(
-        'submitted values: name: $_name, description: $_description, public: $_publicSelected, password: $_password, owner: ${widget.tour!.owner},  pickedDate: $pickedDate, pickedTime: $pickedTime');
+        'submitted values: name: $_name, description: $_description, public: $_publicSelected, password: $_password, owner: ${widget
+            .tour!.owner},  pickedDate: $pickedDate, pickedTime: $pickedTime');
     final controller = ref.read(createTourControllerProvider.notifier);
     final draftDateTime =
-        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+    DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
     final updatedTour = Tour(
         id: _id,
         name: _name!,
@@ -234,7 +246,7 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
     if (!_validate()) return;
     final controller = ref.read(createTourControllerProvider.notifier);
     final draftDateTime =
-        DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
+    DateTimeUtils.combineDateAndTime(pickedDate!, pickedTime!);
     await controller.submitTour(
       name: _name!,
       description: _description!,

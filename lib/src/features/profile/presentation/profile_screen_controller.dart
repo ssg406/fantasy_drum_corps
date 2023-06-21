@@ -12,9 +12,9 @@ class ProfileScreenController extends _$ProfileScreenController {
     return ref.read(authServiceProvider).getUserProvider();
   }
 
-  Future<void> deleteAccount() async {
+  Future<void> deleteAccount(String currentPassword) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-        () => ref.read(authServiceProvider).deleteCurrentUser());
+        () => ref.read(authServiceProvider).deleteCurrentUser(currentPassword));
   }
 }
