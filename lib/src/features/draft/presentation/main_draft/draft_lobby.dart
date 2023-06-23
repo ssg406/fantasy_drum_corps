@@ -24,7 +24,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 const turnLength = 45;
 
-const rootServerUrl = 'http://localhost:3000';
+const rootServerUrl = 'localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -160,8 +160,9 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   void _initSocket() {
     dev.log('Running initSocket()', name: 'DRAFT');
     final tourId = widget.tour.id!;
-    socket = io.io(
-        rootServerUrl, io.OptionBuilder().setTransports(['websocket']).build());
+    dev.log('Attempting to connect to: $rootServerUrl/tourId', name: 'DRAFT');
+    socket = io.io('$rootServerUrl/tourId',
+        io.OptionBuilder().setTransports(['websocket']).build());
   }
 
   /// Set up socket listeners that process active draft events

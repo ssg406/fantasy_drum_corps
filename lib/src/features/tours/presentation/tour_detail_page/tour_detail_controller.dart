@@ -6,4 +6,5 @@ part 'tour_detail_controller.g.dart';
 class TourDetailController extends _$TourDetailController {
   @override
   FutureOr<void> build() {}
+
 }

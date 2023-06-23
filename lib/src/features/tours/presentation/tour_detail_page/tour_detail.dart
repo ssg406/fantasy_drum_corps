@@ -10,12 +10,16 @@ import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_members.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_owner_widget.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
+import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
+
+import '../../../draft/presentation/main_draft/draft_lobby.dart';
 
 class TourDetail extends ConsumerWidget {
   const TourDetail({Key? key, this.tourId}) : super(key: key);
@@ -196,11 +200,36 @@ class TourDetailContents extends StatelessWidget {
         if (tour.members.contains(user.uid))
           FilledButton.icon(
             icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () => context.pushNamed(AppRoutes.draftLobby.name,
-                params: {'tid': tour.id!}),
+            onPressed: () {
+              _startDraft().then((isReady) {
+                if (isReady) {
+                  Future.delayed(const Duration(seconds: 2)).then((_) => context
+                      .pushNamed(AppRoutes.draftLobby.name,
+                          params: {'tid': tour.id!}));
+                  // context.pushNamed(AppRoutes.draftLobby.name,
+                  //     params: {'tid': tour.id!});
+                } else {
+                  showAlertDialog(
+                      context: context,
+                      title: 'Draft Error',
+                      content:
+                          'There was an error setting up the draft server. Try'
+                          ' again later or contact us if the problem persists.');
+                }
+              });
+            },
             label: const Text('Go to Draft'),
           ),
       ],
     );
+  }
+
+  Future<bool> _startDraft() async {
+    final server = Uri.http(rootServerUrl, '/createNamespace');
+    debugPrint('Server URI is $server');
+    final response = await http.patch(server, body: {'tourId': tour.id!});
+    debugPrint(
+        'Got response from server: ${response.body} with code ${response.statusCode}');
+    return response.statusCode == 200;
   }
 }
