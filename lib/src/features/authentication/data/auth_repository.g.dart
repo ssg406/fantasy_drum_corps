@@ -35,7 +35,7 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 );
 
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$userChangesStreamHash() => r'895bfdba5f0bb14dc4db3faa0852e0cb7cc4cc04';
+String _$userChangesStreamHash() => r'7b335e588be26c3ea0b07ae45e3c9ac1ad69130f';
 
 /// See also [userChangesStream].
 @ProviderFor(userChangesStream)
@@ -51,7 +51,7 @@ final userChangesStreamProvider = AutoDisposeStreamProvider<User?>.internal(
 
 typedef UserChangesStreamRef = AutoDisposeStreamProviderRef<User?>;
 String _$currentUserIsAdminHash() =>
-    r'dc8ba90b4b3eeabb88d248288142fc86568e2930';
+    r'f00832ad8551b950e0eddbb6f2ba555e9ebe4c02';
 
 /// See also [currentUserIsAdmin].
 @ProviderFor(currentUserIsAdmin)

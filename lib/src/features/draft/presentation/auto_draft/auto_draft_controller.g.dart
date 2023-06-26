@@ -7,7 +7,7 @@ part of 'auto_draft_controller.dart';
 // **************************************************************************
 
 String _$autoDraftControllerHash() =>
-    r'd104767ea8f10105d71122ea05c5e37441a4da12';
+    r'0c19df586a61e379aa191d1289aaddc4ec4b5a0c';
 
 /// See also [AutoDraftController].
 @ProviderFor(AutoDraftController)

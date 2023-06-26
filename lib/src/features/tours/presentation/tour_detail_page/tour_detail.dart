@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/labeled_flex_row.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
@@ -7,10 +9,11 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/messaging/presentation/messaging_box.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail_controller.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_members.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_owner_widget.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
-import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
+import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +22,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
+import '../../../../utils/alert_dialogs.dart';
 import '../../../draft/presentation/main_draft/draft_lobby.dart';
 
 class TourDetail extends ConsumerWidget {
@@ -31,39 +35,53 @@ class TourDetail extends ConsumerWidget {
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-            value: ref.watch(watchTourProvider(tourId!)),
-            data: (Tour? tour) {
-              final currentUser = ref.watch(authRepositoryProvider).currentUser;
-              return tour == null
-                  ? const NotFound()
-                  : TourDetailContents(tour: tour, user: currentUser!);
-            },
-          );
+      value: ref.watch(watchTourProvider(tourId!)),
+      data: (Tour? tour) {
+        final currentUser = ref
+            .watch(authRepositoryProvider)
+            .currentUser;
+        return tour == null
+            ? const NotFound()
+            : TourDetailContents(tour: tour, user: currentUser!);
+      },
+    );
   }
 }
 
-class TourDetailContents extends StatelessWidget {
+class TourDetailContents extends ConsumerWidget {
   const TourDetailContents({Key? key, required this.tour, required this.user})
       : super(key: key);
   final Tour tour;
   final User user;
 
-  @override
-  Widget build(BuildContext context) {
-    final name = tour.name;
-    final description = tour.description;
-    final isPublic = tour.isPublic;
-    final slots = tour.slotsAvailable;
-    final draftDateTime = tour.draftDateTime;
-    final members = tour.members;
+  String get name => tour.name;
 
+  String get description => tour.description;
+
+  bool get isPublic => tour.isPublic;
+
+  int get slots => tour.slotsAvailable;
+
+  DateTime get draftDateTime => tour.draftDateTime;
+
+  List<String> get members => tour.members;
+
+  String get tourId => tour.id!;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue>(tourDetailControllerProvider,
+            (_, state) => state.showAlertDialogOnError(context));
+    final state = ref.watch(tourDetailControllerProvider);
     return PageScaffolding(
       showImage: false,
       pageTitle: 'Tour Detail',
       child: Column(
         children: [
           Flex(
-            direction: ResponsiveBreakpoints.of(context).screenWidth > 1024
+            direction: ResponsiveBreakpoints
+                .of(context)
+                .screenWidth > 1024
                 ? Axis.horizontal
                 : Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +93,10 @@ class TourDetailContents extends StatelessWidget {
                     label: 'Tour Name',
                     item: Text(
                       name,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
                     ),
                   ),
                   gapH24,
@@ -90,13 +111,16 @@ class TourDetailContents extends StatelessWidget {
                           child: Icon(
                             isPublic ? Icons.lock_open : Icons.lock,
                             color:
-                                isPublic ? Colors.green[300] : Colors.red[300],
+                            isPublic ? Colors.green[300] : Colors.red[300],
                           ),
                         ),
                         gapW8,
                         Text(
                           isPublic ? 'Public' : 'Private',
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyLarge,
                         )
                       ],
                     ),
@@ -106,14 +130,20 @@ class TourDetailContents extends StatelessWidget {
                     label: 'Tour Description',
                     item: Text(
                       description,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
                     ),
                   ),
                   gapH24,
                   LabeledFlexRow(
                     label: 'Slots Available',
                     item: Text(_getSlotsText(slots),
-                        style: Theme.of(context).textTheme.bodyLarge),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyLarge),
                   ),
                   gapH24,
                   TourMembers(members: members),
@@ -122,15 +152,21 @@ class TourDetailContents extends StatelessWidget {
                     label: 'Draft Time',
                     item: tour.draftComplete
                         ? Text(
-                            'Draft Complete',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          )
+                      'Draft Complete',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
+                    )
                         : Text(
-                            DateFormat.yMMMMd('en_US')
-                                .add_jm()
-                                .format(draftDateTime),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+                      DateFormat.yMMMMd('en_US')
+                          .add_jm()
+                          .format(draftDateTime),
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyLarge,
+                    ),
                   ),
                   gapH24,
                   const Divider(thickness: 0.5),
@@ -145,7 +181,75 @@ class TourDetailContents extends StatelessWidget {
             ],
           ),
           gapH32,
-          _getButtonBar(context),
+          ButtonBar(
+            children: [
+              if (tour.owner != user.uid &&
+                  !tour.members.contains(user.uid) &&
+                  tour.slotsAvailable > 0)
+                TextButton.icon(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    context.pushNamed(AppRoutes.joinTour.name,
+                        params: {'tid': tour.id!}, extra: tour);
+                  },
+                  label: const Text('Join Tour'),
+                ),
+              if (tour.owner == user.uid)
+                TextButton.icon(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    context.pushNamed(AppRoutes.manageTour.name,
+                        params: {'tid': tour.id!}, extra: tour);
+                  },
+                  label: const Text('ManageTour'),
+                ),
+              if (tour.owner == user.uid)
+                TextButton.icon(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    context.pushNamed(AppRoutes.editTour.name,
+                        params: {'tid': tour.id!}, extra: tour);
+                  },
+                  label: const Text('Edit Tour'),
+                ),
+              if (tour.members.contains(user.uid) && tour.owner != user.uid)
+                TextButton.icon(
+                  icon: const Icon(Icons.remove),
+                  onPressed: () =>
+                      context.pushNamed(AppRoutes.leaveTour.name,
+                          params: {'tid': tour.id!}, extra: tour),
+                  label: const Text('Leave Tour'),
+                ),
+              if (tour.members.contains(user.uid))
+                FilledButton.icon(
+                  icon: const Icon(Icons.play_circle_outline_outlined),
+                  onPressed: () {
+                    final server = Uri.http(rootServerUrl, '/createNamespace');
+                    http.patch(server, body: {'tourId': tourId}).then(
+                            (response) {
+                          dev.log(
+                              'Got response from PATCH request. ${response
+                                  .body} with code ${response.statusCode}',
+                              name: 'DRAFT');
+                          if (response.statusCode == 200) {
+                            Future.delayed(const Duration(milliseconds: 1500))
+                                .then((_) =>
+                                context.pushNamed(AppRoutes.draftLobby.name,
+                                    params: {'tid': tourId}));
+                          } else {
+                            showAlertDialog(
+                                context: context,
+                                title: 'Draft Error',
+                                content:
+                                'There was an error setting up the draft server. Try'
+                                    ' again later or contact us if the problem persists.');
+                          }
+                        });
+                  },
+                  label: const Text('Go to Draft'),
+                ),
+            ],
+          ),
         ],
       ),
     );
@@ -156,80 +260,5 @@ class TourDetailContents extends StatelessWidget {
       return 'Tour Full';
     }
     return '$openSlots ${openSlots == 1 ? 'slot' : 'slots'}';
-  }
-
-  Widget _getButtonBar(BuildContext context) {
-    return ButtonBar(
-      children: [
-        if (tour.owner != user.uid &&
-            !tour.members.contains(user.uid) &&
-            tour.slotsAvailable > 0)
-          TextButton.icon(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              context.pushNamed(AppRoutes.joinTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
-            },
-            label: const Text('Join Tour'),
-          ),
-        if (tour.owner == user.uid)
-          TextButton.icon(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.pushNamed(AppRoutes.manageTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
-            },
-            label: const Text('ManageTour'),
-          ),
-        if (tour.owner == user.uid)
-          TextButton.icon(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              context.pushNamed(AppRoutes.editTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
-            },
-            label: const Text('Edit Tour'),
-          ),
-        if (tour.members.contains(user.uid) && tour.owner != user.uid)
-          TextButton.icon(
-            icon: const Icon(Icons.remove),
-            onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
-                params: {'tid': tour.id!}, extra: tour),
-            label: const Text('Leave Tour'),
-          ),
-        if (tour.members.contains(user.uid))
-          FilledButton.icon(
-            icon: const Icon(Icons.play_circle_outline_outlined),
-            onPressed: () {
-              _startDraft().then((isReady) {
-                if (isReady) {
-                  Future.delayed(const Duration(seconds: 2)).then((_) => context
-                      .pushNamed(AppRoutes.draftLobby.name,
-                          params: {'tid': tour.id!}));
-                  // context.pushNamed(AppRoutes.draftLobby.name,
-                  //     params: {'tid': tour.id!});
-                } else {
-                  showAlertDialog(
-                      context: context,
-                      title: 'Draft Error',
-                      content:
-                          'There was an error setting up the draft server. Try'
-                          ' again later or contact us if the problem persists.');
-                }
-              });
-            },
-            label: const Text('Go to Draft'),
-          ),
-      ],
-    );
-  }
-
-  Future<bool> _startDraft() async {
-    final server = Uri.http(rootServerUrl, '/createNamespace');
-    debugPrint('Server URI is $server');
-    final response = await http.patch(server, body: {'tourId': tour.id!});
-    debugPrint(
-        'Got response from server: ${response.body} with code ${response.statusCode}');
-    return response.statusCode == 200;
   }
 }

@@ -161,7 +161,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     dev.log('Running initSocket()', name: 'DRAFT');
     final tourId = widget.tour.id!;
     dev.log('Attempting to connect to: $rootServerUrl/tourId', name: 'DRAFT');
-    socket = io.io('$rootServerUrl/tourId',
+    socket = io.io('http://$rootServerUrl/$tourId',
         io.OptionBuilder().setTransports(['websocket']).build());
   }
 

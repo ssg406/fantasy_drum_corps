@@ -5,6 +5,5 @@ part 'tour_detail_controller.g.dart';
 @riverpod
 class TourDetailController extends _$TourDetailController {
   @override
-  FutureOr<void> build() {}
-
+  FutureOr<bool> build() => false;
 }
