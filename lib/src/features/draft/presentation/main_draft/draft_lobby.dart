@@ -192,6 +192,9 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         draftStarted = false;
       });
     }
+
+    intervalTimer?.cancel();
+
     showAlertDialog(
         context: context,
         title: 'Draft Error',
