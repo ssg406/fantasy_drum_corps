@@ -3,14 +3,14 @@ import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../domain/tour_model.dart';
+
 part 'tour_corps_service.g.dart';
 
 class TourCorpsService {
-  const TourCorpsService(
-    this.toursRepository,
-    this.corpsRepository,
-    this.picksRepository,
-  );
+  const TourCorpsService(this.toursRepository,
+      this.corpsRepository,
+      this.picksRepository,);
 
   final ToursRepository toursRepository;
   final FantasyCorpsRepository corpsRepository;
@@ -23,22 +23,30 @@ class TourCorpsService {
     if (tour == null) {
       throw ArgumentError('Tour to reset could not be found.');
     }
-    await toursRepository.updateTour(tour.copyWith(draftComplete: false));
+    await _resetDraftComplete(tour);
 
-    // Remove remaining picks if present
-    final remainingPicks =
-        await picksRepository.fetchTourRemainingPicks(tourId);
-    if (remainingPicks != null) {
-      picksRepository.deleteTourRemainingPicks(remainingPicks.id!);
-    }
+    // Remove remaining picks
+    await _deleteRemainingPicks(tourId);
 
     // delete all associated fantasy corps
-    await corpsRepository.deleteAllTourFantasyCorps(tourId);
+    await _deleteTourFantasyCorps(tourId);
   }
+
+  Future<void> _resetDraftComplete(Tour tour) =>
+      toursRepository.updateTour(tour.copyWith(draftComplete: false));
+
+  Future<void> _deleteRemainingPicks(String tourId) =>
+      picksRepository.deleteTourRemainingPicks(tourId);
+
+  Future<void> _deleteTourFantasyCorps(String tourId) =>
+      corpsRepository.deleteAllTourFantasyCorps(tourId);
+
+
 }
 
 @riverpod
-TourCorpsService tourCorpsService(TourCorpsServiceRef ref) => TourCorpsService(
-    ref.watch(toursRepositoryProvider),
-    ref.watch(fantasyCorpsRepositoryProvider),
-    ref.watch(remainingPicksRepositoryProvider));
+TourCorpsService tourCorpsService(TourCorpsServiceRef ref) =>
+    TourCorpsService(
+        ref.watch(toursRepositoryProvider),
+        ref.watch(fantasyCorpsRepositoryProvider),
+        ref.watch(remainingPicksRepositoryProvider));

@@ -14,38 +14,44 @@ class RemainingPicksRepository {
 
   static String remainingPickPath(String id) => 'remainingPicks/$id';
 
-  Future<void> updateRemainingPicks(RemainingPicks remainingPicks) =>
-      db.doc(remainingPickPath(remainingPicks.id!)).update(
-          remainingPicks.toJson());
+  Future<void> updateRemainingPicks(RemainingPicks remainingPicks) => db
+      .doc(remainingPickPath(remainingPicks.id!))
+      .update(remainingPicks.toJson());
 
   Future<RemainingPicks?> fetchTourRemainingPicks(String tourId) async {
-    final remainingPicks = await db.collection(remainingPicksPath)
+    final remainingPicks = await db
+        .collection(remainingPicksPath)
         .withConverter(
-      fromFirestore: (snapshot, _) =>
-          RemainingPicks.fromJson(snapshot.data()!, snapshot.id),
-      toFirestore: (remainingPick, _) => remainingPick.toJson(),
-    )
+          fromFirestore: (snapshot, _) =>
+              RemainingPicks.fromJson(snapshot.data()!, snapshot.id),
+          toFirestore: (remainingPick, _) => remainingPick.toJson(),
+        )
         .where('tourId', isEqualTo: tourId)
         .get();
-    return remainingPicks.docs
-        .map((doc) => doc.data())
-        .first;
+    return remainingPicks.docs.map((doc) => doc.data()).first;
   }
 
-  Future<void> deleteTourRemainingPicks(String id) async {
-    final docRef = db.doc(remainingPickPath(id));
-    await docRef.delete();
+  Future<void> deleteTourRemainingPicks(String tourId) async {
+    db
+        .collection(remainingPicksPath)
+        .where('tourId', isEqualTo: tourId)
+        .get()
+        .then((querySnapshot) {
+      for (final doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
   }
 }
 
 @riverpod
 RemainingPicksRepository remainingPicksRepository(
-    RemainingPicksRepositoryRef ref) =>
+        RemainingPicksRepositoryRef ref) =>
     RemainingPicksRepository(ref.watch(firebaseFirestoreProvider));
 
 @riverpod
-Future<RemainingPicks?> fetchTourRemainingPicks(FetchTourRemainingPicksRef ref,
-    String tourId) async {
+Future<RemainingPicks?> fetchTourRemainingPicks(
+    FetchTourRemainingPicksRef ref, String tourId) async {
   return ref
       .read(remainingPicksRepositoryProvider)
       .fetchTourRemainingPicks(tourId);

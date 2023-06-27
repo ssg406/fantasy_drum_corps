@@ -35,16 +35,14 @@ class TourDetail extends ConsumerWidget {
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-      value: ref.watch(watchTourProvider(tourId!)),
-      data: (Tour? tour) {
-        final currentUser = ref
-            .watch(authRepositoryProvider)
-            .currentUser;
-        return tour == null
-            ? const NotFound()
-            : TourDetailContents(tour: tour, user: currentUser!);
-      },
-    );
+            value: ref.watch(watchTourProvider(tourId!)),
+            data: (Tour? tour) {
+              final currentUser = ref.watch(authRepositoryProvider).currentUser;
+              return tour == null
+                  ? const NotFound()
+                  : TourDetailContents(tour: tour, user: currentUser!);
+            },
+          );
   }
 }
 
@@ -71,16 +69,14 @@ class TourDetailContents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue>(tourDetailControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     return PageScaffolding(
       showImage: false,
       pageTitle: 'Tour Detail',
       child: Column(
         children: [
           Flex(
-            direction: ResponsiveBreakpoints
-                .of(context)
-                .screenWidth > 1024
+            direction: ResponsiveBreakpoints.of(context).screenWidth > 1024
                 ? Axis.horizontal
                 : Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,10 +88,7 @@ class TourDetailContents extends ConsumerWidget {
                     label: 'Tour Name',
                     item: Text(
                       name,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                   gapH24,
@@ -110,16 +103,13 @@ class TourDetailContents extends ConsumerWidget {
                           child: Icon(
                             isPublic ? Icons.lock_open : Icons.lock,
                             color:
-                            isPublic ? Colors.green[300] : Colors.red[300],
+                                isPublic ? Colors.green[300] : Colors.red[300],
                           ),
                         ),
                         gapW8,
                         Text(
                           isPublic ? 'Public' : 'Private',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .bodyLarge,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         )
                       ],
                     ),
@@ -129,20 +119,14 @@ class TourDetailContents extends ConsumerWidget {
                     label: 'Tour Description',
                     item: Text(
                       description,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ),
                   gapH24,
                   LabeledFlexRow(
                     label: 'Slots Available',
                     item: Text(_getSlotsText(slots),
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyLarge),
+                        style: Theme.of(context).textTheme.bodyLarge),
                   ),
                   gapH24,
                   TourMembers(members: members),
@@ -151,21 +135,15 @@ class TourDetailContents extends ConsumerWidget {
                     label: 'Draft Time',
                     item: tour.draftComplete
                         ? Text(
-                      'Draft Complete',
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
-                    )
+                            'Draft Complete',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )
                         : Text(
-                      DateFormat.yMMMMd('en_US')
-                          .add_jm()
-                          .format(draftDateTime),
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .bodyLarge,
-                    ),
+                            DateFormat.yMMMMd('en_US')
+                                .add_jm()
+                                .format(draftDateTime),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                   ),
                   gapH24,
                   const Divider(thickness: 0.5),
@@ -214,9 +192,8 @@ class TourDetailContents extends ConsumerWidget {
               if (tour.members.contains(user.uid) && tour.owner != user.uid)
                 TextButton.icon(
                   icon: const Icon(Icons.remove),
-                  onPressed: () =>
-                      context.pushNamed(AppRoutes.leaveTour.name,
-                          params: {'tid': tour.id!}, extra: tour),
+                  onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
+                      params: {'tid': tour.id!}, extra: tour),
                   label: const Text('Leave Tour'),
                 ),
               if (tour.members.contains(user.uid))
@@ -224,33 +201,30 @@ class TourDetailContents extends ConsumerWidget {
                   icon: const Icon(Icons.play_circle_outline_outlined),
                   onPressed: () {
                     if (tour.draftComplete) {
-                      context.pushNamed(
-                          AppRoutes.draftLobby.name, params: {'tid': tourId});
+                      context.pushNamed(AppRoutes.draftLobby.name,
+                          params: {'tid': tourId});
                     } else {
-                      final server = Uri.http(
-                          rootServerUrl, '/createNamespace');
+                      final server =
+                          Uri.https(rootServerUrl, '/createNamespace');
                       http.patch(server, body: {'tourId': tourId}).then(
-                              (response) {
-                            dev.log(
-                                'Got response from PATCH request. ${response
-                                    .body} with code ${response.statusCode}',
-                                name: 'DRAFT');
-                            if (response.statusCode == 200) {
-                              Future.delayed(const Duration(milliseconds: 1500))
-                                  .then(
-                                      (_) =>
-                                      context.pushNamed(
-                                          AppRoutes.draftLobby.name,
-                                          params: {'tid': tourId}));
-                            } else {
-                              showAlertDialog(
-                                  context: context,
-                                  title: 'Draft Error',
-                                  content:
+                          (response) {
+                        dev.log(
+                            'Got response from PATCH request. ${response.body} with code ${response.statusCode}',
+                            name: 'DRAFT');
+                        if (response.statusCode == 200) {
+                          Future.delayed(const Duration(milliseconds: 1500))
+                              .then((_) => context.pushNamed(
+                                  AppRoutes.draftLobby.name,
+                                  params: {'tid': tourId}));
+                        } else {
+                          showAlertDialog(
+                              context: context,
+                              title: 'Draft Error',
+                              content:
                                   'There was an error setting up the draft server. Try'
-                                      ' again later or contact us if the problem persists.');
-                            }
-                          });
+                                  ' again later or contact us if the problem persists.');
+                        }
+                      });
                     }
                   },
                   label: const Text('Go to Draft'),
