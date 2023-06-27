@@ -36,28 +36,25 @@ class DraftLobby extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playerId = ref
-        .watch(authRepositoryProvider)
-        .currentUser
-        ?.uid;
+    final playerId = ref.watch(authRepositoryProvider).currentUser?.uid;
     return tourId == null
         ? const NotFound()
         : AsyncValueWidget(
-      value: ref.watch(watchTourProvider(tourId!)),
-      data: (Tour? tour) {
-        if (tour == null) {
-          return const NotFound();
-        } else if (playerId == null) {
-          return const NotFound();
-        }
-        return tour.draftComplete
-            ? AutoDraft(tour: tour)
-            : DraftLobbyContents(
-          tour: tour,
-          playerId: playerId,
-        );
-      },
-    );
+            value: ref.watch(watchTourProvider(tourId!)),
+            data: (Tour? tour) {
+              if (tour == null) {
+                return const NotFound();
+              } else if (playerId == null) {
+                return const NotFound();
+              }
+              return tour.draftComplete
+                  ? AutoDraft(tour: tour)
+                  : DraftLobbyContents(
+                      tour: tour,
+                      playerId: playerId,
+                    );
+            },
+          );
   }
 }
 
@@ -104,7 +101,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         fantasyCorps: fantasyCorps,
         onCaptionSelected: _onCaptionSelected,
         onCancelDraft:
-        widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
       );
     }
     if (showCountdown) {
@@ -120,10 +117,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
             gapH24,
             Text(
                 'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge)
+                style: Theme.of(context).textTheme.titleLarge)
           ],
         ),
       );
@@ -133,7 +127,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         players: players,
         isTourOwner: widget.tour.owner == widget.playerId,
         onOwnerStartsDraft:
-        widget.tour.owner == widget.playerId ? _startDraft : null,
+            widget.tour.owner == widget.playerId ? _startDraft : null,
       );
     }
   }
@@ -160,14 +154,6 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
           {'playerId': widget.playerId, 'tourId': widget.tour.id!});
       _registerDraftListeners();
     });
-    socket.on(SERVER_FATAL_ERROR, (_) {
-      showAlertDialog(
-          context: context,
-          title: 'Draft Server Error',
-          content:
-          'There was an error on the draft server. Try again in a few minutes or contact us if the error persists.');
-      context.pop();
-    });
   }
 
   void _registerDraftListeners() {
@@ -187,20 +173,38 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
           context: context,
           title: 'Draft Server Error',
           content:
-          'There was an error on the draft server. Try again in a few minutes or contact us if the error persists.');
+              'There was an error on the draft server. Try again in a few minutes or contact us if the error persists.');
       context.pop();
     });
 
     socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
 
     socket.on(SERVER_SENDS_PLAYER_PICK, (data) => _updateLastPick(data));
+
+    socket.on(SERVER_FATAL_ERROR, (_) => _onServerError());
+  }
+
+  void _onServerError() {
+    dev.log('Received fatal error from server', name: 'DRAFT');
+    if (mounted) {
+      setState(() {
+        draftStarted = false;
+      });
+    }
+    showAlertDialog(
+        context: context,
+        title: 'Draft Error',
+        content: 'The draft server experienced an unexpected error. The tour '
+            'owner should attempt to restart the draft in a few minutes.');
+    context
+        .pushNamed(AppRoutes.tourDetail.name, params: {'tid': widget.tour.id!});
   }
 
   void _updateLastPick(Map<String, dynamic> data) {
     final lastPick = data['lastPick'];
     dev.log('Received last pick from server: $lastPick', name: 'DRAFT');
     final pick =
-    DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
+        DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
     if (mounted) {
       setState(() => lastPlayersPick = pick);
     }
@@ -238,8 +242,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
       });
     }
     dev.log(
-        'Got updated players list from server. ${newPlayers
-            .length} are in the draft',
+        'Got updated players list from server. ${newPlayers.length} are in the draft',
         name: 'DRAFT');
   }
 
@@ -257,14 +260,12 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
       showAlertDialog(
           context: context,
           title:
-          'You already have ${drumCorpsCaption.corps
-              .fullName} in your lineup.');
+              'You already have ${drumCorpsCaption.corps.fullName} in your lineup.');
       return;
     }
 
     dev.log(
-        'Caption selected, sending pick to server: ${drumCorpsCaption
-            .caption} ${drumCorpsCaption.corps}',
+        'Caption selected, sending pick to server: ${drumCorpsCaption.caption} ${drumCorpsCaption.corps}',
         name: 'DRAFT');
 
     // Send selection back to server
@@ -369,10 +370,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     }
   }
 
-  int _getOpenLineupSlots() =>
-      fantasyCorps.values.fold(
-          0, (previousValue, element) =>
-      previousValue + (element == null ? 1 : 0));
+  int _getOpenLineupSlots() => fantasyCorps.values.fold(
+      0, (previousValue, element) => previousValue + (element == null ? 1 : 0));
 
   void _onLineupComplete() {
     // Cancel timer in case server emits a start turn event before exit
@@ -398,7 +397,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     dev.log('Auto-selecting a pick', name: 'DRAFT');
     // Create a list of indexes representing positions in availableCaptions
     final availableCaptionsIndices =
-    List.generate(availableCaptions.length, (index) => index);
+        List.generate(availableCaptions.length, (index) => index);
 
     // Shuffle the list
     availableCaptionsIndices.shuffle();
