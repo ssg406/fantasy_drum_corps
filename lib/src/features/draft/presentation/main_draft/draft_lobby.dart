@@ -444,6 +444,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
   @override
   void dispose() {
     dev.log('Disposing DraftLobbyContents widget', name: 'DRAFT');
+    intervalTimer?.cancel();
     socket.disconnect();
     socket.dispose();
     super.dispose();
