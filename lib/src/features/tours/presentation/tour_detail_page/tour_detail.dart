@@ -205,7 +205,7 @@ class TourDetailContents extends ConsumerWidget {
                           params: {'tid': tourId});
                     } else {
                       final server =
-                          Uri.https(rootServerUrl, '/createNamespace');
+                          Uri.http(rootServerUrl, '/createNamespace');
                       http.patch(server, body: {'tourId': tourId}).then(
                           (response) {
                         dev.log(
