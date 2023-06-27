@@ -1,5 +1,3 @@
-import 'dart:developer' as dev;
-
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/labeled_flex_row.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
@@ -200,30 +198,22 @@ class TourDetailContents extends ConsumerWidget {
                 FilledButton.icon(
                   icon: const Icon(Icons.play_circle_outline_outlined),
                   onPressed: () {
-                    if (tour.draftComplete) {
-                      context.pushNamed(AppRoutes.draftLobby.name,
-                          params: {'tid': tourId});
+                    if (tour.draftComplete || tour.owner != user.uid) {
+                      _navigateToDraftLobby(context);
                     } else {
-                      final server =
-                          Uri.http(rootServerUrl, '/createNamespace');
-                      http.patch(server, body: {'tourId': tourId}).then(
-                          (response) {
-                        dev.log(
-                            'Got response from PATCH request. ${response.body} with code ${response.statusCode}',
-                            name: 'DRAFT');
-                        if (response.statusCode == 200) {
-                          Future.delayed(const Duration(milliseconds: 1500))
-                              .then((_) => context.pushNamed(
-                                  AppRoutes.draftLobby.name,
-                                  params: {'tid': tourId}));
-                        } else {
+                      _requestDraftSetup().then((draftIsSetup) {
+                        if (!draftIsSetup) {
                           showAlertDialog(
                               context: context,
-                              title: 'Draft Error',
+                              title: 'Draft Setup Error',
                               content:
-                                  'There was an error setting up the draft server. Try'
-                                  ' again later or contact us if the problem persists.');
+                                  'There was an error setting up the draft '
+                                  'server. Try again in a few minutes or contact '
+                                  'us if the problem persists.');
+                          return;
                         }
+                        Future.delayed(const Duration(milliseconds: 1500))
+                            .then((_) => _navigateToDraftLobby(context));
                       });
                     }
                   },
@@ -241,5 +231,18 @@ class TourDetailContents extends ConsumerWidget {
       return 'Tour Full';
     }
     return '$openSlots ${openSlots == 1 ? 'slot' : 'slots'}';
+  }
+
+  void _navigateToDraftLobby(BuildContext context) =>
+      context.pushNamed(AppRoutes.draftLobby.name, params: {'tid': tourId});
+
+  Future<bool> _requestDraftSetup() async {
+    final server = Uri.http(rootServerUrl, '/createNamespace');
+    try {
+      final response = await http.patch(server, body: {'tourId': tourId});
+      return response.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
   }
 }
