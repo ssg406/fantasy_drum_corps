@@ -183,6 +183,18 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     });
 
     socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
+
+    socket.on(SERVER_SENDS_PLAYER_PICK, (data) => _updateLastPick(data));
+  }
+
+  void _updateLastPick(Map<String, dynamic> data) {
+    final lastPick = data['lastPick'];
+    dev.log('Received last pick from server: $lastPick', name: 'DRAFT');
+    final pick =
+    DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
+    if (mounted) {
+      setState(() => lastPlayersPick = pick);
+    }
   }
 
   void _updateDraftState(Map<String, dynamic> data) {
@@ -195,10 +207,12 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         'Got draft status update from server: isCountingDown = $isCountingDown isDraftStarted = $isDraftStarted');
 
     // Update widget state
-    setState(() {
-      showCountdown = isCountingDown;
-      draftStarted = isDraftStarted;
-    });
+    if (mounted) {
+      setState(() {
+        showCountdown = isCountingDown;
+        draftStarted = isDraftStarted;
+      });
+    }
   }
 
   void _updatePlayers(Map<String, dynamic> data) {
@@ -208,9 +222,12 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     for (var player in playersFromServer) {
       newPlayers.add(Player.fromJson(player, player['id']));
     }
-    setState(() {
-      players = newPlayers;
-    });
+
+    if (mounted) {
+      setState(() {
+        players = newPlayers;
+      });
+    }
     dev.log(
         'Got updated players list from server. ${newPlayers
             .length} are in the draft',
@@ -266,9 +283,11 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
   void _onOwnerCancelledDraft() {
     dev.log('Tour owner cancelled draft', name: 'DRAFT');
 
-    setState(() {
-      draftStarted = false;
-    });
+    if (mounted) {
+      setState(() {
+        draftStarted = false;
+      });
+    }
     showAlertDialog(
         context: context,
         title: 'Draft Cancelled',
@@ -313,14 +332,17 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
       );
 
       // Update widget state
-      setState(() {
-        availableCaptions = availablePicks;
-        isPlayersTurn = currentPickerId == widget.playerId;
-        currentPick = currentPickName;
-        nextPick = nextPickName;
-        roundNumber = round;
-        remainingTime = turnLength.inSeconds;
-      });
+      if (mounted) {
+        setState(() {
+          availableCaptions = availablePicks;
+          isPlayersTurn = currentPickerId == widget.playerId;
+          currentPick = currentPickName;
+          nextPick = nextPickName;
+          roundNumber = round;
+          remainingTime = turnLength.inSeconds;
+        });
+      }
+
 
       dev.log('Starting turn timer', name: 'DRAFT');
       intervalTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -329,11 +351,12 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
           timer.cancel();
           _autoSelectPick();
         }
-
-        setState(() {
-          // Prevent remainingTime from going below 0
-          remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
-        });
+        if (mounted) {
+          setState(() {
+            // Prevent remainingTime from going below 0
+            remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
+          });
+        }
       });
     }
   }
@@ -392,19 +415,18 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         'playerId': widget.playerId,
         'drumCorpsCaption': pick.toJson(),
       });
-      dev.log(
-          'Caption selected, sending pick to server: ${pick.caption} ${pick
-              .corps}',
+      dev.log('Caption selected, sending pick to server: ${pick.displayString}',
           name: 'DRAFT');
-
-      // Send selection back to server
-      socket.emit(CLIENT_ENDS_TURN,
-          {'playerId': widget.playerId, 'drumCorpsCaption': pick.toJson()});
 
       // Cancel turn timer
       intervalTimer?.cancel();
+
       // Exit the loop if a selection was made.
       break;
+    }
+
+    if (_getOpenLineupSlots() == 0) {
+      _onLineupComplete();
     }
   }
 
