@@ -174,7 +174,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
           title: 'Draft Server Error',
           content:
               'There was an error on the draft server. Try again in a few minutes or contact us if the error persists.');
-      context.pop();
+      context.pushNamed(AppRoutes.tourDetail.name,
+          params: {'tid': widget.tour.id!});
     });
 
     socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
