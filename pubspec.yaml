@@ -63,7 +63,8 @@ dev_dependencies:
 flutter:
   generate: true
   assets:
-    - assets/
+    - images/
+    - google_fonts/
 
   uses-material-design: true
 

@@ -36,14 +36,14 @@ class LineupCaptionSlot extends StatelessWidget {
   }
 
   Widget? _getLeading(BuildContext context) {
-    String pathPrefix = kDebugMode ? '' : 'assets/';
+    String pathPrefix = kDebugMode ? '' : 'assets/assets/';
 
     if (ResponsiveBreakpoints.of(context).smallerThan(TABLET)) {
       return null;
     }
     return pick != null
         ? Image.asset(
-            '${pathPrefix}corps_logos/${pick!.name}.png',
+            '${pathPrefix}images/corps_logos/${pick!.name}.png',
             height: 25,
           )
         : const Icon(
