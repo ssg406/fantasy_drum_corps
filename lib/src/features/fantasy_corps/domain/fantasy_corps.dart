@@ -95,10 +95,18 @@ class FantasyCorps {
     );
   }
 
-  double get totalScore => lineupScore == null
-      ? 0
-      : lineupScore!.values
-          .fold(0, (previousValue, element) => previousValue + element);
+  double get totalScore {
+    double totalScore = 0;
+    if (lineupScore == null) return totalScore;
+    for (final caption in lineupScore!.keys) {
+      if (caption == Caption.ge1 || caption == Caption.ge2) {
+        totalScore += lineupScore![caption] ?? 0;
+      } else {
+        totalScore += (lineupScore![caption]) ?? 0 / 2;
+      }
+    }
+    return totalScore;
+  }
 }
 
 class LineupFromJson {
