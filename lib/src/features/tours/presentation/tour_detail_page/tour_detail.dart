@@ -4,24 +4,19 @@ import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_lobby.dart';
 import 'package:fantasy_drum_corps/src/features/messaging/presentation/messaging_box.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail_button_bar.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail_controller.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_members.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_owner_widget.dart';
-import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
-
-import '../../../../utils/alert_dialogs.dart';
 
 class TourDetail extends ConsumerWidget {
   const TourDetail({Key? key, this.tourId}) : super(key: key);
@@ -156,71 +151,7 @@ class TourDetailContents extends ConsumerWidget {
             ],
           ),
           gapH32,
-          ButtonBar(
-            children: [
-              if (tour.owner != user.uid &&
-                  !tour.members.contains(user.uid) &&
-                  tour.slotsAvailable > 0)
-                TextButton.icon(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    context.pushNamed(AppRoutes.joinTour.name,
-                        params: {'tid': tour.id!}, extra: tour);
-                  },
-                  label: const Text('Join Tour'),
-                ),
-              if (tour.owner == user.uid)
-                TextButton.icon(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    context.pushNamed(AppRoutes.manageTour.name,
-                        params: {'tid': tour.id!}, extra: tour);
-                  },
-                  label: const Text('ManageTour'),
-                ),
-              if (tour.owner == user.uid)
-                TextButton.icon(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    context.pushNamed(AppRoutes.editTour.name,
-                        params: {'tid': tour.id!}, extra: tour);
-                  },
-                  label: const Text('Edit Tour'),
-                ),
-              if (tour.members.contains(user.uid) && tour.owner != user.uid)
-                TextButton.icon(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
-                      params: {'tid': tour.id!}, extra: tour),
-                  label: const Text('Leave Tour'),
-                ),
-              if (tour.members.contains(user.uid))
-                FilledButton.icon(
-                  icon: const Icon(Icons.play_circle_outline_outlined),
-                  onPressed: () {
-                    if (tour.draftComplete || tour.owner != user.uid) {
-                      _navigateToDraftLobby(context);
-                    } else {
-                      _requestDraftSetup().then((draftIsSetup) {
-                        if (!draftIsSetup) {
-                          showAlertDialog(
-                              context: context,
-                              title: 'Draft Setup Error',
-                              content:
-                                  'There was an error setting up the draft '
-                                  'server. Try again in a few minutes or contact '
-                                  'us if the problem persists.');
-                          return;
-                        }
-                        Future.delayed(const Duration(milliseconds: 1500))
-                            .then((_) => _navigateToDraftLobby(context));
-                      });
-                    }
-                  },
-                  label: const Text('Go to Draft'),
-                ),
-            ],
-          ),
+          TourDetailButtonBar(tour: tour, userId: user.uid),
         ],
       ),
     );
@@ -231,18 +162,5 @@ class TourDetailContents extends ConsumerWidget {
       return 'Tour Full';
     }
     return '$openSlots ${openSlots == 1 ? 'slot' : 'slots'}';
-  }
-
-  void _navigateToDraftLobby(BuildContext context) =>
-      context.pushNamed(AppRoutes.draftLobby.name, params: {'tid': tourId});
-
-  Future<bool> _requestDraftSetup() async {
-    final server = Uri.http(rootServerUrl, '/createNamespace');
-    try {
-      final response = await http.patch(server, body: {'tourId': tourId});
-      return response.statusCode == 200;
-    } catch (_) {
-      return false;
-    }
   }
 }
