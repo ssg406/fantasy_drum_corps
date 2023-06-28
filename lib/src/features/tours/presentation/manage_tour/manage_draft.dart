@@ -1,18 +1,11 @@
-import 'dart:developer' as dev;
-
 import 'package:fantasy_drum_corps/src/common_widgets/item_label.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour_controller.dart';
-import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
+import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/start_draft_button.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-
-import '../../../draft/presentation/main_draft/draft_lobby.dart';
 
 class ManageDraft extends StatelessWidget {
   const ManageDraft({Key? key, required this.tourId, required this.tour})
@@ -67,35 +60,10 @@ class ManageDraft extends StatelessWidget {
                 },
               ),
             if (!tour.draftComplete)
-              FilledButton.icon(
-                onPressed: () {
-                  final server = Uri.http(rootServerUrl, '/createNamespace');
-                  http.patch(server, body: {'tourId': tourId}).then((response) {
-                    dev.log(
-                        'Got response from PATCH request. ${response.body} with code ${response.statusCode}',
-                        name: 'DRAFT');
-                    if (response.statusCode == 200) {
-                      Future.delayed(const Duration(milliseconds: 1500)).then(
-                          (_) => context.pushNamed(AppRoutes.draftLobby.name,
-                              params: {'tid': tourId}));
-                    } else {
-                      showAlertDialog(
-                          context: context,
-                          title: 'Draft Error',
-                          content:
-                              'There was an error setting up the draft server. Try'
-                              ' again later or contact us if the problem persists.');
-                    }
-                  });
-                },
-                icon: const FaIcon(FontAwesomeIcons.circlePlay),
-                label: const Tooltip(
-                  message: 'Go to the draft page.',
-                  child: Text(
-                    'Go to Draft',
-                  ),
-                ),
-              ),
+              DraftButton(
+                  tourId: tourId,
+                  draftComplete: tour.draftComplete,
+                  isOwner: true),
           ],
         ),
       ],
