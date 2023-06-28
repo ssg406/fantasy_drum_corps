@@ -84,6 +84,7 @@ class ScoresList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    scoresList.sort((a, b) => a.lastUpdate.compareTo(b.lastUpdate));
     return SizedBox(
       height: 400,
       child: ListView(
