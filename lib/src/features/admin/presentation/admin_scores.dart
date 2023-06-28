@@ -66,7 +66,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -79,7 +80,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -92,7 +94,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -105,7 +108,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -118,7 +122,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -131,7 +136,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -144,7 +150,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _node.nextFocus(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
@@ -157,7 +164,8 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       validator: scoreValidator,
                       onEditingComplete: () => _submitForm(),
                       autocorrect: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       keyboardAppearance: Brightness.light,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
