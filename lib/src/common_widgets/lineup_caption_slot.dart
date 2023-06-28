@@ -1,6 +1,5 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
@@ -36,14 +35,13 @@ class LineupCaptionSlot extends StatelessWidget {
   }
 
   Widget? _getLeading(BuildContext context) {
-    String pathPrefix = kDebugMode ? '' : 'assets/assets/';
-
     if (ResponsiveBreakpoints.of(context).smallerThan(TABLET)) {
       return null;
     }
+
     return pick != null
         ? Image.asset(
-            '${pathPrefix}images/corps_logos/${pick!.name}.png',
+            'assets/images/${pick!.name}.png',
             height: 25,
           )
         : const Icon(
