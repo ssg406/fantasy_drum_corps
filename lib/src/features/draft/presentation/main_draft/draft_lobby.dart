@@ -26,8 +26,8 @@ import 'main_draft.dart';
 
 const turnLength = Duration(seconds: 45);
 
-//const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
-const rootServerUrl = 'localhost:3000';
+const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
+//const rootServerUrl = 'localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -195,6 +195,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
 
     intervalTimer?.cancel();
 
+    socket.dispose();
+
     showAlertDialog(
         context: context,
         title: 'Draft Error',
@@ -302,6 +304,9 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         draftStarted = false;
       });
     }
+
+    socket.dispose();
+
     showAlertDialog(
         context: context,
         title: 'Draft Cancelled',
@@ -358,19 +363,22 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
       }
 
       dev.log('Starting turn timer', name: 'DRAFT');
-      intervalTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (remainingTime == 0) {
-          dev.log('Turn time elapsed', name: 'DRAFT');
-          timer.cancel();
-          _autoSelectPick();
-        }
-        if (mounted) {
-          setState(() {
-            // Prevent remainingTime from going below 0
-            remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
-          });
-        }
-      });
+
+      intervalTimer = intervalTimer != null
+          ? null
+          : Timer.periodic(const Duration(seconds: 1), (timer) {
+              if (remainingTime == 0) {
+                dev.log('Turn time elapsed', name: 'DRAFT');
+                timer.cancel();
+                _autoSelectPick();
+              }
+              if (mounted) {
+                setState(() {
+                  // Prevent remainingTime from going below 0
+                  remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
+                });
+              }
+            });
     }
   }
 
@@ -384,6 +392,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     dev.log('Player lineup complete, leaving draft...', name: 'DRAFT');
 
     socket.emit(CLIENT_LINEUP_COMPLETE, {'playerId': widget.playerId});
+
+    socket.dispose();
 
     // Create a new fantasy corps object and write it to the server
     FantasyCorps corps = FantasyCorps(
