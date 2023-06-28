@@ -102,7 +102,7 @@ class FantasyCorps {
       if (caption == Caption.ge1 || caption == Caption.ge2) {
         totalScore += lineupScore![caption] ?? 0;
       } else {
-        totalScore += (lineupScore![caption]) ?? 0 / 2;
+        totalScore += (lineupScore![caption] ?? 0) / 2;
       }
     }
     return totalScore;
