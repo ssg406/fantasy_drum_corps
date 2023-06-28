@@ -26,8 +26,8 @@ import 'main_draft.dart';
 
 const turnLength = Duration(seconds: 45);
 
-//const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
-const rootServerUrl = 'localhost:3000';
+const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
+// const rootServerUrl = 'localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -145,7 +145,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
   void _initSocket() {
     final tourId = widget.tour.id!;
     dev.log('Attempting to connect to: $rootServerUrl/tourId', name: 'DRAFT');
-    socket = io.io('http://$rootServerUrl/$tourId',
+    socket = io.io('https://$rootServerUrl/$tourId',
         io.OptionBuilder().setTransports(['websocket']).build());
     socket.onConnect((_) {
       dev.log('Connected. Sending ID to server', name: 'DRAFT');

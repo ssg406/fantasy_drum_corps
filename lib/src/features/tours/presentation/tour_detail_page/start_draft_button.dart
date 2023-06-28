@@ -69,7 +69,7 @@ class _DraftButtonState extends State<DraftButton> {
       context.pushNamed(AppRoutes.draftLobby.name, params: {'tid': tourId});
 
   Future<bool> _requestDraftSetup() async {
-    final server = Uri.http(rootServerUrl, '/createNamespace');
+    final server = Uri.https(rootServerUrl, '/createNamespace');
     try {
       final response = await http.patch(server, body: {'tourId': tourId});
       return response.statusCode == 200;
