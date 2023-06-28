@@ -26,8 +26,8 @@ import 'main_draft.dart';
 
 const turnLength = Duration(seconds: 45);
 
-const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
-//const rootServerUrl = 'localhost:3000';
+//const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
+const rootServerUrl = 'localhost:3000';
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -85,7 +85,6 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
   int remainingTime = turnLength.inSeconds;
   DrumCorpsCaption? lastPlayersPick;
   Timer? turnTimer;
-  Timer? intervalTimer;
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +192,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
       });
     }
 
-    intervalTimer?.cancel();
+    turnTimer?.cancel();
 
     socket.dispose();
 
@@ -281,7 +280,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     });
 
     // Cancel turn timer
-    intervalTimer?.cancel();
+    turnTimer?.cancel();
 
     // Add to list of picked captions
     alreadySelectedCorps.add(drumCorpsCaption.corps);
@@ -304,6 +303,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
         draftStarted = false;
       });
     }
+
+    turnTimer?.cancel();
 
     socket.dispose();
 
@@ -364,21 +365,19 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
 
       dev.log('Starting turn timer', name: 'DRAFT');
 
-      intervalTimer = intervalTimer != null
-          ? null
-          : Timer.periodic(const Duration(seconds: 1), (timer) {
-              if (remainingTime == 0) {
-                dev.log('Turn time elapsed', name: 'DRAFT');
-                timer.cancel();
-                _autoSelectPick();
-              }
-              if (mounted) {
-                setState(() {
-                  // Prevent remainingTime from going below 0
-                  remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
-                });
-              }
-            });
+      turnTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (remainingTime == 0) {
+          dev.log('Turn time elapsed', name: 'DRAFT');
+          timer.cancel();
+          _autoSelectPick();
+        }
+        if (mounted) {
+          setState(() {
+            // Prevent remainingTime from going below 0
+            remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
+          });
+        }
+      });
     }
   }
 
@@ -387,7 +386,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
 
   void _onLineupComplete() {
     // Cancel timer in case server emits a start turn event before exit
-    intervalTimer?.cancel();
+    turnTimer?.cancel();
 
     dev.log('Player lineup complete, leaving draft...', name: 'DRAFT');
 
@@ -440,7 +439,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
           name: 'DRAFT');
 
       // Cancel turn timer
-      intervalTimer?.cancel();
+      turnTimer?.cancel();
 
       // Exit the loop if a selection was made.
       break;
@@ -454,7 +453,7 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
   @override
   void dispose() {
     dev.log('Disposing DraftLobbyContents widget', name: 'DRAFT');
-    intervalTimer?.cancel();
+    turnTimer?.cancel();
     socket.disconnect();
     socket.dispose();
     super.dispose();
