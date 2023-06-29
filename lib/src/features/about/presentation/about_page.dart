@@ -14,55 +14,41 @@ class AboutPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'A short blurb about what fantasy corps is, how it started, and what is in store for the future',
-            style: theme.textTheme.bodyLarge,
-          ),
-          gapH16,
-          Text(
-            'HOW IT WORKS',
-            style: theme.textTheme.titleMedium!
-                .copyWith(color: theme.colorScheme.primary),
-          ),
-          gapH8,
-          Text(
-            'A short blurb about the gameplay describing the process of joining or creating a tour, setting up a draft, drafting a lineup, and then watching the leaderboard.',
-            style: theme.textTheme.bodyLarge,
-          ),
-          gapH16,
+          // Text(
+          //   'The idea for Fantasy Drum Corps was developed by Kenny Dahill and '
+          //       'Ben Jones. Both have been drum c',
+          //   style: theme.textTheme.bodyLarge,
+          // ),
+          // gapH16,
           Text(
             'CONTACT',
-            style: theme.textTheme.titleMedium!
-                .copyWith(color: theme.colorScheme.primary),
+            style: theme.textTheme.titleLarge,
           ),
+          gapH16,
           Text(
             'Reach us at the email below for assistance with Fantasy Drum Corps or with other questions.',
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          Align(
-            alignment: Alignment.bottomRight,
-            child: TextButton(
-              onPressed: () {
-                final Uri emailUri = Uri(
-                  scheme: 'mailto',
-                  path: 'help@fantasydrumcorps.com',
-                  query: encodeQueryParameters(<String, String>{
-                    'subject': 'A question about Fantasy Drum Corps',
-                  }),
-                );
-                launchUrl(emailUri);
-              },
-              child: const Text('Email Us'),
-            ),
+          FilledButton(
+            onPressed: () {
+              final Uri emailUri = Uri(
+                scheme: 'mailto',
+                path: 'help@fantasydrumcorps.com',
+                query: encodeQueryParameters(<String, String>{
+                  'subject': 'A question about Fantasy Drum Corps',
+                }),
+              );
+              launchUrl(emailUri);
+            },
+            child: const Text('Email Us'),
           ),
-          gapH16,
+          gapH24,
           Text(
             'LICENSE',
-            style: theme.textTheme.titleMedium!
-                .copyWith(color: theme.colorScheme.primary),
+            style: theme.textTheme.titleLarge,
           ),
-          gapH8,
+          gapH16,
           Text(
             'This program is free software: you can redistribute it and/or '
             'modify it under the terms of the GNU General Public License as '
@@ -75,22 +61,18 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          Align(
-            alignment: Alignment.bottomRight,
-            child: TextButton(
-              onPressed: () async {
-                await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
-              },
-              child: const Text('GNU Licenses'),
-            ),
+          FilledButton(
+            onPressed: () async {
+              await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
+            },
+            child: const Text('GNU Licenses'),
           ),
-          gapH16,
+          gapH24,
           Text(
             'SOURCE',
-            style: theme.textTheme.titleMedium!
-                .copyWith(color: theme.colorScheme.primary),
+            style: theme.textTheme.titleLarge,
           ),
-          gapH8,
+          gapH16,
           Text(
             'Fantasy Drum Corps was created using Flutter and compiled for Web, '
             'Android, and iOS. The draft server was created using Socket.io '
@@ -100,15 +82,15 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          ButtonBar(children: [
-            TextButton(
+          ButtonBar(alignment: MainAxisAlignment.start, children: [
+            FilledButton(
               onPressed: () async {
                 await launchUrl(
                     Uri.parse('http://github.com/ssg406/fantasy-drum-corps'));
               },
               child: const Text('Fantasy Drum Corps App'),
             ),
-            TextButton(
+            FilledButton(
               onPressed: () async {
                 await launchUrl(Uri.parse(
                     'http://github.com/ssg406/fantasy-drum-corps-server'));
