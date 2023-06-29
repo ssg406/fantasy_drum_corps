@@ -182,6 +182,8 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     socket.on(SERVER_SENDS_PLAYER_PICK, (data) => _updateLastPick(data));
 
     socket.on(SERVER_FATAL_ERROR, (_) => _onServerError());
+
+    socket.on(SERVER_LINEUP_ACKNOWLEDGED, (_) => socket.dispose());
   }
 
   void _onServerError() {
@@ -391,8 +393,6 @@ class _DraftLobbyContentsState extends State<DraftLobbyContents> {
     dev.log('Player lineup complete, leaving draft...', name: 'DRAFT');
 
     socket.emit(CLIENT_LINEUP_COMPLETE, {'playerId': widget.playerId});
-
-    socket.dispose();
 
     // Create a new fantasy corps object and write it to the server
     FantasyCorps corps = FantasyCorps(
