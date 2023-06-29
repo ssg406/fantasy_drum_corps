@@ -13,6 +13,7 @@ firebase.json
 firestore.rules
 storage.rules
 .firebase/
+firebase_options.dart
 
 # IntelliJ related
 *.iml
