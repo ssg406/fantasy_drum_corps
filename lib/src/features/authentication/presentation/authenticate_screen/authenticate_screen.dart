@@ -342,7 +342,7 @@ class IntroText extends StatelessWidget {
         ),
         gapH24,
         Text(
-          'LAUNCHING 6.14',
+          'AVAILABLE NOW',
           style: Theme.of(context).textTheme.titleLarge,
         )
       ],
