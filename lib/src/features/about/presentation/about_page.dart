@@ -86,14 +86,14 @@ class AboutPage extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 await launchUrl(
-                    Uri.parse('http://github.com/ssg406/fantasy-drum-corps'));
+                    Uri.parse('http://github.com/ssg406/fantasy_drum_corps'));
               },
               child: const Text('Fantasy Drum Corps App'),
             ),
             FilledButton(
               onPressed: () async {
                 await launchUrl(Uri.parse(
-                    'http://github.com/ssg406/fantasy-drum-corps-server'));
+                    'http://github.com/ssg406/fantasy_drum_corps_server'));
               },
               child: const Text('Fantasy Drum Corps Server'),
             ),
