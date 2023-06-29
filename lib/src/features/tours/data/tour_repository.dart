@@ -36,17 +36,10 @@ class ToursRepository {
   }
 
   // Delete league
-  Future<void> deleteTour(
-      {required TourID tourId, required String userId}) async {
+  Future<void> deleteTour({required TourID tourId}) {
     //Check user is deleting their own tour
     final tourRef = _database.doc(tourPath(tourId));
-    tourRef.get().then((doc) {
-      final tour = Tour.fromJson(doc.data()!, doc.id);
-      if (tour.owner != userId) {
-        throw AssertionError('User can only delete their own tours');
-      }
-    });
-    await tourRef.delete();
+    return tourRef.delete();
   }
 
   // Add user to tour
@@ -135,17 +128,6 @@ Stream<Tour?> watchTour(WatchTourRef ref, String tourId) =>
 @riverpod
 Future<Tour?> fetchTour(FetchTourRef ref, String tourId) =>
     ref.watch(toursRepositoryProvider).fetchTour(tourId: tourId);
-
-@riverpod
-Future<void> deleteTour(DeleteTourRef ref, String tourId) {
-  final user = ref.watch(authRepositoryProvider).currentUser;
-  if (user == null) {
-    throw AssertionError('User cannot be null when deleting a tour');
-  }
-  return ref
-      .read(toursRepositoryProvider)
-      .deleteTour(userId: user.uid, tourId: tourId);
-}
 
 @riverpod
 Stream<List<Tour>> watchJoinedTours(WatchJoinedToursRef ref) {

@@ -8,13 +8,27 @@ import '../domain/tour_model.dart';
 part 'tour_corps_service.g.dart';
 
 class TourCorpsService {
-  const TourCorpsService(this.toursRepository,
-      this.corpsRepository,
-      this.picksRepository,);
+  const TourCorpsService(
+    this.toursRepository,
+    this.corpsRepository,
+    this.picksRepository,
+  );
 
   final ToursRepository toursRepository;
   final FantasyCorpsRepository corpsRepository;
   final RemainingPicksRepository picksRepository;
+
+  // Removes all corps in a tour and deletes the tour
+  Future<void> deleteTour(String tourId) async {
+    // Remove remaining picks should they exist
+    await _deleteRemainingPicks(tourId);
+
+    // Remove any fantasy corps created
+    await _deleteTourFantasyCorps(tourId);
+
+    // Delete the tour
+    await toursRepository.deleteTour(tourId: tourId);
+  }
 
   // Removes all corps in a tour and resets draft status
   Future<void> resetTourDraft(String tourId) async {
@@ -40,13 +54,10 @@ class TourCorpsService {
 
   Future<void> _deleteTourFantasyCorps(String tourId) =>
       corpsRepository.deleteAllTourFantasyCorps(tourId);
-
-
 }
 
 @riverpod
-TourCorpsService tourCorpsService(TourCorpsServiceRef ref) =>
-    TourCorpsService(
-        ref.watch(toursRepositoryProvider),
-        ref.watch(fantasyCorpsRepositoryProvider),
-        ref.watch(remainingPicksRepositoryProvider));
+TourCorpsService tourCorpsService(TourCorpsServiceRef ref) => TourCorpsService(
+    ref.watch(toursRepositoryProvider),
+    ref.watch(fantasyCorpsRepositoryProvider),
+    ref.watch(remainingPicksRepositoryProvider));
