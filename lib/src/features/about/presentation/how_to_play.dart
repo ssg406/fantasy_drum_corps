@@ -21,9 +21,9 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH16,
           Text(
-            'After you create an account you will be prompted to set a display '
-            'name and verify your email. Make sure you set a display name '
-            'so that other players can more easily identify you in the tour '
+            'After you create an account, set a display '
+            'name and verify your email. Your display name will help '
+            'other players more easily identify you in the tour '
             'and during the draft.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
@@ -38,9 +38,7 @@ class HowToPlay extends StatelessWidget {
             'created at any point in the season. Players can create private '
             'tours accessible only to those with a password, or public tours that'
             ' can be found by anyone with an account. If you would like to '
-            'join a tour, use the menu to go to the \'Join Tour\' page. '
-            'You can leave any tour that you create, but if you already '
-            'created a fantasy corps it will be lost when you leave. Tour '
+            'join a tour, use the menu to go to the \'Join Tour\' page. Tour '
             'owners can delete tours, but this will also delete all associated '
             'fantasy corps in the tour. ',
             style: Theme.of(context).textTheme.bodyLarge,
@@ -57,12 +55,12 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH16,
           Text(
-            'When creating a tour, the tour owner selects the date and time that '
-            'they plan to start the draft. Any changes to this date should '
+            'When creating a tour, the tour owner selects the draft date and time. '
+            'Any changes to this date should '
             'be communicated on the tour message board so all players know '
             'when to login. When the tour owner and members are ready, '
-            'they should login and click \'Go to Draft\' on the tour detail '
-            'page. The server will create a room for this tour\'s draft and '
+            'login and click \'Go to Draft\' on the tour detail '
+            'page. This will create a room for this tour\'s draft and '
             'start accepting new players. Each player can see who is in the '
             'room, but only the tour owner will be able to start the draft. '
             'When the tour owner is satisfied with the players in attendance, '
@@ -78,7 +76,7 @@ class HowToPlay extends StatelessWidget {
           Text(
             'Once the draft has started, you will be notified when it is your '
             'turn to pick. Choose a caption from the left and click \'Draft\''
-            ' when it is your turn. You can only have a drum corps appear '
+            ' when it is your turn. A particular corps can only appear '
             'in your lineup once, so choose wisely. Each turn lasts 45 '
             'seconds. If time runs out, you will be assigned a caption randomly '
             'from the list of available choices. When your fantasy corps lineup '
@@ -98,7 +96,7 @@ class HowToPlay extends StatelessWidget {
             'can return to the draft page where they will be presented with the opportunity '
             'to create a random lineup from the picks left over from the main draft. '
             'These picks are available on a first come, first serve basis. '
-            'Random lineups can be created at any point in the season as long '
+            'Random lineups can be created at any point in the season so long '
             'as picks still remain in the pool.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
@@ -109,7 +107,7 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH16,
           Text(
-            'Your lineup will have a score immediately after you create it. At '
+            'Your fantasy corps will have a score immediately after you create it. At '
             'the beginning of the season, scores are based on DCI scores '
             'from the beginning of the 2022 or 2019 season. Each time a corps performs in the '
             '2023 season, lineup scores are updated. The leaderboard always '

@@ -14,6 +14,8 @@ firestore.rules
 storage.rules
 .firebase/
 firebase_options.dart
+firestore.indexes.json
+
 
 # IntelliJ related
 *.iml
