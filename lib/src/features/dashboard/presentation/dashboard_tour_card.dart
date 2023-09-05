@@ -37,7 +37,7 @@ class DashboardTourCard extends StatelessWidget {
                       '${tour.description}\n${_getDraftDateText(tour.draftDateTime, tour.draftComplete)}',
                       style: Theme.of(context).textTheme.bodyMedium!),
                   onTap: () => context.pushNamed(AppRoutes.tourDetail.name,
-                      params: {'tid': tour.id!}),
+                      pathParameters: {'tid': tour.id!}),
                 ),
               )
           ],

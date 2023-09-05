@@ -71,7 +71,7 @@ class MyCorpsContents extends StatelessWidget {
                         ),
                         onTap: () => context.pushNamed(
                             AppRoutes.corpsDetail.name,
-                            params: {'cid': corps.fantasyCorpsId!}),
+                            pathParameters: {'cid': corps.fantasyCorpsId!}),
                       ),
                   ],
                 ),

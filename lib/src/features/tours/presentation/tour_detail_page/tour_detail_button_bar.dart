@@ -24,7 +24,7 @@ class TourDetailButtonBar extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               context.pushNamed(AppRoutes.joinTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
+                  pathParameters: {'tid': tour.id!}, extra: tour);
             },
             label: const Text('Join Tour'),
           ),
@@ -33,7 +33,7 @@ class TourDetailButtonBar extends StatelessWidget {
             icon: const Icon(Icons.settings),
             onPressed: () {
               context.pushNamed(AppRoutes.manageTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
+                  pathParameters: {'tid': tour.id!}, extra: tour);
             },
             label: const Text('ManageTour'),
           ),
@@ -42,7 +42,7 @@ class TourDetailButtonBar extends StatelessWidget {
             icon: const Icon(Icons.edit),
             onPressed: () {
               context.pushNamed(AppRoutes.editTour.name,
-                  params: {'tid': tour.id!}, extra: tour);
+                  pathParameters: {'tid': tour.id!}, extra: tour);
             },
             label: const Text('Edit Tour'),
           ),
@@ -50,7 +50,7 @@ class TourDetailButtonBar extends StatelessWidget {
           TextButton.icon(
             icon: const Icon(Icons.remove),
             onPressed: () => context.pushNamed(AppRoutes.leaveTour.name,
-                params: {'tid': tour.id!}, extra: tour),
+                pathParameters: {'tid': tour.id!}, extra: tour),
             label: const Text('Leave Tour'),
           ),
         if (tour.members.contains(userId))

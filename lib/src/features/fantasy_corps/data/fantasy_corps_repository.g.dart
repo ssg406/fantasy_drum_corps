@@ -66,9 +66,6 @@ class _SystemHash {
   }
 }
 
-typedef WatchTourFantasyCorpsRef
-    = AutoDisposeStreamProviderRef<List<FantasyCorps>>;
-
 /// See also [watchTourFantasyCorps].
 @ProviderFor(watchTourFantasyCorps)
 const watchTourFantasyCorpsProvider = WatchTourFantasyCorpsFamily();
@@ -117,10 +114,10 @@ class WatchTourFantasyCorpsProvider
     extends AutoDisposeStreamProvider<List<FantasyCorps>> {
   /// See also [watchTourFantasyCorps].
   WatchTourFantasyCorpsProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => watchTourFantasyCorps(
-            ref,
+            ref as WatchTourFantasyCorpsRef,
             tourId,
           ),
           from: watchTourFantasyCorpsProvider,
@@ -132,9 +129,44 @@ class WatchTourFantasyCorpsProvider
           dependencies: WatchTourFantasyCorpsFamily._dependencies,
           allTransitiveDependencies:
               WatchTourFantasyCorpsFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  WatchTourFantasyCorpsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    Stream<List<FantasyCorps>> Function(WatchTourFantasyCorpsRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchTourFantasyCorpsProvider._internal(
+        (ref) => create(ref as WatchTourFantasyCorpsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<List<FantasyCorps>> createElement() {
+    return _WatchTourFantasyCorpsProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -148,6 +180,21 @@ class WatchTourFantasyCorpsProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin WatchTourFantasyCorpsRef
+    on AutoDisposeStreamProviderRef<List<FantasyCorps>> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _WatchTourFantasyCorpsProviderElement
+    extends AutoDisposeStreamProviderElement<List<FantasyCorps>>
+    with WatchTourFantasyCorpsRef {
+  _WatchTourFantasyCorpsProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as WatchTourFantasyCorpsProvider).tourId;
 }
 
 String _$watchUserFantasyCorpsHash() =>
@@ -169,7 +216,6 @@ final watchUserFantasyCorpsProvider =
 typedef WatchUserFantasyCorpsRef
     = AutoDisposeStreamProviderRef<List<FantasyCorps>>;
 String _$watchFantasyCorpsHash() => r'e7d9a9c7560408af96da724ef1bf020e2f2129b9';
-typedef WatchFantasyCorpsRef = AutoDisposeStreamProviderRef<FantasyCorps?>;
 
 /// See also [watchFantasyCorps].
 @ProviderFor(watchFantasyCorps)
@@ -218,10 +264,10 @@ class WatchFantasyCorpsProvider
     extends AutoDisposeStreamProvider<FantasyCorps?> {
   /// See also [watchFantasyCorps].
   WatchFantasyCorpsProvider(
-    this.id,
-  ) : super.internal(
+    String id,
+  ) : this._internal(
           (ref) => watchFantasyCorps(
-            ref,
+            ref as WatchFantasyCorpsRef,
             id,
           ),
           from: watchFantasyCorpsProvider,
@@ -233,9 +279,43 @@ class WatchFantasyCorpsProvider
           dependencies: WatchFantasyCorpsFamily._dependencies,
           allTransitiveDependencies:
               WatchFantasyCorpsFamily._allTransitiveDependencies,
+          id: id,
         );
 
+  WatchFantasyCorpsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
   final String id;
+
+  @override
+  Override overrideWith(
+    Stream<FantasyCorps?> Function(WatchFantasyCorpsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchFantasyCorpsProvider._internal(
+        (ref) => create(ref as WatchFantasyCorpsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<FantasyCorps?> createElement() {
+    return _WatchFantasyCorpsProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -250,4 +330,19 @@ class WatchFantasyCorpsProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin WatchFantasyCorpsRef on AutoDisposeStreamProviderRef<FantasyCorps?> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _WatchFantasyCorpsProviderElement
+    extends AutoDisposeStreamProviderElement<FantasyCorps?>
+    with WatchFantasyCorpsRef {
+  _WatchFantasyCorpsProviderElement(super.provider);
+
+  @override
+  String get id => (origin as WatchFantasyCorpsProvider).id;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

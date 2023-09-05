@@ -73,6 +73,7 @@ class CustomTourTile extends ConsumerWidget {
   }
 
   void _goToTourPage(BuildContext context) {
-    context.pushNamed(AppRoutes.tourDetail.name, params: {'tid': tour.id!});
+    context.pushNamed(AppRoutes.tourDetail.name,
+        pathParameters: {'tid': tour.id!});
   }
 }

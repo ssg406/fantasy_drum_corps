@@ -61,8 +61,6 @@ class _SystemHash {
   }
 }
 
-typedef WatchCorpsScoreRef = AutoDisposeStreamProviderRef<CorpsScore>;
-
 /// See also [watchCorpsScore].
 @ProviderFor(watchCorpsScore)
 const watchCorpsScoreProvider = WatchCorpsScoreFamily();
@@ -109,10 +107,10 @@ class WatchCorpsScoreFamily extends Family<AsyncValue<CorpsScore>> {
 class WatchCorpsScoreProvider extends AutoDisposeStreamProvider<CorpsScore> {
   /// See also [watchCorpsScore].
   WatchCorpsScoreProvider(
-    this.id,
-  ) : super.internal(
+    String id,
+  ) : this._internal(
           (ref) => watchCorpsScore(
-            ref,
+            ref as WatchCorpsScoreRef,
             id,
           ),
           from: watchCorpsScoreProvider,
@@ -124,9 +122,43 @@ class WatchCorpsScoreProvider extends AutoDisposeStreamProvider<CorpsScore> {
           dependencies: WatchCorpsScoreFamily._dependencies,
           allTransitiveDependencies:
               WatchCorpsScoreFamily._allTransitiveDependencies,
+          id: id,
         );
 
+  WatchCorpsScoreProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
   final String id;
+
+  @override
+  Override overrideWith(
+    Stream<CorpsScore> Function(WatchCorpsScoreRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchCorpsScoreProvider._internal(
+        (ref) => create(ref as WatchCorpsScoreRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<CorpsScore> createElement() {
+    return _WatchCorpsScoreProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -141,4 +173,19 @@ class WatchCorpsScoreProvider extends AutoDisposeStreamProvider<CorpsScore> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin WatchCorpsScoreRef on AutoDisposeStreamProviderRef<CorpsScore> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _WatchCorpsScoreProviderElement
+    extends AutoDisposeStreamProviderElement<CorpsScore>
+    with WatchCorpsScoreRef {
+  _WatchCorpsScoreProviderElement(super.provider);
+
+  @override
+  String get id => (origin as WatchCorpsScoreProvider).id;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

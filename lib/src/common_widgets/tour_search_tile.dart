@@ -14,8 +14,8 @@ class TourSearchTile extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       isThreeLine: true,
-      onTap: () => context
-          .pushNamed(AppRoutes.tourDetail.name, params: {'tid': tour.id!}),
+      onTap: () => context.pushNamed(AppRoutes.tourDetail.name,
+          pathParameters: {'tid': tour.id!}),
       leading: Tooltip(
         message: tour.isPublic ? 'Public Tour' : 'Private Tour',
         child: RoundIcon(
@@ -34,7 +34,7 @@ class TourSearchTile extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () => context.pushNamed(AppRoutes.tourDetail.name,
-                params: {'tid': tour.id!}),
+                pathParameters: {'tid': tour.id!}),
             icon: const FaIcon(FontAwesomeIcons.ellipsis),
           ),
         ],

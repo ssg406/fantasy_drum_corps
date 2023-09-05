@@ -46,8 +46,6 @@ class _SystemHash {
   }
 }
 
-typedef WatchTourMessagesRef = AutoDisposeStreamProviderRef<List<TourMessage>>;
-
 /// See also [watchTourMessages].
 @ProviderFor(watchTourMessages)
 const watchTourMessagesProvider = WatchTourMessagesFamily();
@@ -95,10 +93,10 @@ class WatchTourMessagesProvider
     extends AutoDisposeStreamProvider<List<TourMessage>> {
   /// See also [watchTourMessages].
   WatchTourMessagesProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => watchTourMessages(
-            ref,
+            ref as WatchTourMessagesRef,
             tourId,
           ),
           from: watchTourMessagesProvider,
@@ -110,9 +108,43 @@ class WatchTourMessagesProvider
           dependencies: WatchTourMessagesFamily._dependencies,
           allTransitiveDependencies:
               WatchTourMessagesFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  WatchTourMessagesProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    Stream<List<TourMessage>> Function(WatchTourMessagesRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchTourMessagesProvider._internal(
+        (ref) => create(ref as WatchTourMessagesRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<List<TourMessage>> createElement() {
+    return _WatchTourMessagesProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -127,4 +159,19 @@ class WatchTourMessagesProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin WatchTourMessagesRef on AutoDisposeStreamProviderRef<List<TourMessage>> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _WatchTourMessagesProviderElement
+    extends AutoDisposeStreamProviderElement<List<TourMessage>>
+    with WatchTourMessagesRef {
+  _WatchTourMessagesProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as WatchTourMessagesProvider).tourId;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

@@ -34,7 +34,7 @@ class Player {
           ? null
           : DrumCorps.values.byName(json['selectedCorps']),
       avatarString: json['avatarString'] as String?,
-      isActive: json['isActive'] as bool,
+      isActive: (json['isActive'] as bool?) ?? true,
     );
   }
 

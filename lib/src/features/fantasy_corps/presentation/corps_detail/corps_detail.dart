@@ -62,7 +62,7 @@ class CorpsDetail extends ConsumerWidget {
                       onPressed: () => context.pushNamed(
                           AppRoutes.editCorps.name,
                           extra: corps,
-                          params: {'cid': corps.fantasyCorpsId!}),
+                          pathParameters: {'cid': corps.fantasyCorpsId!}),
                       label: const Text('Edit Details'),
                     ),
                     gapH24,

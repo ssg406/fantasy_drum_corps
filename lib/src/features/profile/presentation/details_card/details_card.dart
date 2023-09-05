@@ -141,7 +141,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
       items: [
         PopupMenuItem(
           onTap: () => context.pushNamed(AppRoutes.createFluttermoji.name,
-              params: {'uid': widget.player.playerId!}),
+              pathParameters: {'uid': widget.player.playerId!}),
           child: const ListTile(
             leading: Icon(Icons.upload),
             title: Text('Create Avatar'),

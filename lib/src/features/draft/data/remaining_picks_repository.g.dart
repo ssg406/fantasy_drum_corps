@@ -48,9 +48,6 @@ class _SystemHash {
   }
 }
 
-typedef FetchTourRemainingPicksRef
-    = AutoDisposeFutureProviderRef<RemainingPicks?>;
-
 /// See also [fetchTourRemainingPicks].
 @ProviderFor(fetchTourRemainingPicks)
 const fetchTourRemainingPicksProvider = FetchTourRemainingPicksFamily();
@@ -99,10 +96,10 @@ class FetchTourRemainingPicksProvider
     extends AutoDisposeFutureProvider<RemainingPicks?> {
   /// See also [fetchTourRemainingPicks].
   FetchTourRemainingPicksProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => fetchTourRemainingPicks(
-            ref,
+            ref as FetchTourRemainingPicksRef,
             tourId,
           ),
           from: fetchTourRemainingPicksProvider,
@@ -114,9 +111,44 @@ class FetchTourRemainingPicksProvider
           dependencies: FetchTourRemainingPicksFamily._dependencies,
           allTransitiveDependencies:
               FetchTourRemainingPicksFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  FetchTourRemainingPicksProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    FutureOr<RemainingPicks?> Function(FetchTourRemainingPicksRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchTourRemainingPicksProvider._internal(
+        (ref) => create(ref as FetchTourRemainingPicksRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<RemainingPicks?> createElement() {
+    return _FetchTourRemainingPicksProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -131,4 +163,20 @@ class FetchTourRemainingPicksProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin FetchTourRemainingPicksRef
+    on AutoDisposeFutureProviderRef<RemainingPicks?> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _FetchTourRemainingPicksProviderElement
+    extends AutoDisposeFutureProviderElement<RemainingPicks?>
+    with FetchTourRemainingPicksRef {
+  _FetchTourRemainingPicksProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as FetchTourRemainingPicksProvider).tourId;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

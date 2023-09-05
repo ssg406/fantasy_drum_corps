@@ -1,5 +1,4 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/accent_button.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/player_widget.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
@@ -13,30 +12,48 @@ class DraftWaitingRoom extends StatelessWidget {
     required this.tourName,
     required this.players,
     required this.isTourOwner,
+    required this.markPlayerReady,
+    required this.playerIsReady,
+    this.canStartDraft = false,
     this.onOwnerStartsDraft,
+    this.onBackPressed,
   });
 
   final String tourName;
-  final List<Player> players;
+  final Map<Player, bool> players;
   final bool isTourOwner;
+  final VoidCallback markPlayerReady;
+  final bool playerIsReady;
+  final bool canStartDraft;
   final VoidCallback? onOwnerStartsDraft;
+  final VoidCallback? onBackPressed;
 
   @override
   Widget build(BuildContext context) {
+    // TODO add message that clearly shows if player is not ready
     return PageScaffolding(
-      pageTitle: '$tourName Draft Lobby',
+      pageTitle: '$tourName Draft Waiting Room',
       child: Column(
         children: [
           players.isEmpty
               ? _getNoPlayersDisplay(context)
               : _getJoinedPlayersDisplay(context),
           gapH16,
-          isTourOwner
-              ? AccentButton(
-                  label: 'START DRAFT',
-                  onPressed: onOwnerStartsDraft!,
-                )
-              : _getNonOwnerWaitingText(context),
+          ButtonBar(
+            children: [
+              if (isTourOwner)
+                FilledButton(
+                  onPressed: canStartDraft ? onOwnerStartsDraft : null,
+                  child:
+                      Text(canStartDraft ? 'START DRAFT' : 'PLAYERS NOT READY'),
+                ),
+              FilledButton(
+                onPressed: playerIsReady ? null : markPlayerReady,
+                child: Text(playerIsReady ? 'PLAYER READY' : 'READY TO PLAY'),
+              )
+            ],
+          ),
+          if (!isTourOwner) _getNonOwnerWaitingText(context),
         ],
       ),
     );
@@ -93,10 +110,25 @@ class DraftWaitingRoom extends StatelessWidget {
         gapH16,
         Row(
           children: [
-            for (final player in players) ...[
-              PlayerWidget(
-                name: player.displayName,
-                avatarString: player.avatarString,
+            for (final playerEntry in players.entries) ...[
+              Column(
+                children: [
+                  PlayerWidget(
+                    name: playerEntry.key.displayName,
+                    avatarString: playerEntry.key.avatarString,
+                  ),
+                  gapH8,
+                  if (playerEntry.value)
+                    Text(
+                      'READY',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    )
+                  else
+                    Text(
+                      'NOT READY',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                ],
               ),
               gapW16,
             ]

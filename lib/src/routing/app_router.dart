@@ -49,7 +49,7 @@ GoRouter goRouter(GoRouterRef ref) {
       final isLoggedIn = currentUser != null;
       if (isLoggedIn) {
         // If logged in and at the sign in page, go to dashboard
-        if (state.subloc.startsWith('/signIn')) {
+        if (state.matchedLocation.startsWith('/signIn')) {
           return '/dashboard';
         }
         // If location is under admin pages
@@ -58,7 +58,7 @@ GoRouter goRouter(GoRouterRef ref) {
           '6QatDzHl9PNN4DQOsK304aqCeMB2',
           'BiWZp0rcwGgAD2ac2YkExxJFLx73'
         ];
-        if (state.subloc.startsWith('/admin')) {
+        if (state.matchedLocation.startsWith('/admin')) {
           // And UID is not Sam's, Kenny's, or Ben's
           if (!adminUids.contains(currentUser.uid)) {
             // Send back to dashboard
@@ -67,12 +67,12 @@ GoRouter goRouter(GoRouterRef ref) {
         }
         // If not logged in and at any internal page, go back to sign in
       } else {
-        if (state.subloc.startsWith('/dashboard') ||
-            state.subloc.startsWith('/profile') ||
-            state.subloc.startsWith('/tours') ||
-            state.subloc.startsWith('/about') ||
-            state.subloc.startsWith('/myCorps') ||
-            state.subloc.startsWith('/leaderboard')) {
+        if (state.matchedLocation.startsWith('/dashboard') ||
+            state.matchedLocation.startsWith('/profile') ||
+            state.matchedLocation.startsWith('/tours') ||
+            state.matchedLocation.startsWith('/about') ||
+            state.matchedLocation.startsWith('/myCorps') ||
+            state.matchedLocation.startsWith('/leaderboard')) {
           return '/signIn';
         }
       }
@@ -155,7 +155,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 path: ':tid',
                 name: AppRoutes.tourDetail.name,
                 pageBuilder: (context, state) {
-                  final tourId = state.params['tid'] as String;
+                  final tourId = state.pathParameters['tid'] as String;
                   return MaterialPage(
                     fullscreenDialog: true,
                     key: state.pageKey,
@@ -179,7 +179,7 @@ GoRouter goRouter(GoRouterRef ref) {
                       path: 'manage',
                       name: AppRoutes.manageTour.name,
                       pageBuilder: (context, state) {
-                        final tourId = state.params['tid']!;
+                        final tourId = state.pathParameters['tid']!;
                         return NoTransitionPage(
                           key: state.pageKey,
                           child: ManageTour(tourId: tourId),
@@ -189,7 +189,7 @@ GoRouter goRouter(GoRouterRef ref) {
                       path: 'leave',
                       name: AppRoutes.leaveTour.name,
                       pageBuilder: (context, state) {
-                        final tourId = state.params['tid']!;
+                        final tourId = state.pathParameters['tid']!;
                         return NoTransitionPage(
                           key: state.pageKey,
                           child: LeaveTour(tourId: tourId),
@@ -199,7 +199,7 @@ GoRouter goRouter(GoRouterRef ref) {
                       path: 'join',
                       name: AppRoutes.joinTour.name,
                       pageBuilder: (context, state) {
-                        final tourId = state.params['tid']!;
+                        final tourId = state.pathParameters['tid']!;
                         return NoTransitionPage(
                           key: state.pageKey,
                           child: JoinTour(tourId: tourId),
@@ -209,7 +209,7 @@ GoRouter goRouter(GoRouterRef ref) {
                       path: 'edit',
                       name: AppRoutes.editTour.name,
                       pageBuilder: (context, state) {
-                        final tourId = state.params['tid']!;
+                        final tourId = state.pathParameters['tid']!;
                         return NoTransitionPage(
                           key: state.pageKey,
                           child: CreateTour(tourId: tourId),
@@ -219,7 +219,7 @@ GoRouter goRouter(GoRouterRef ref) {
                     path: 'draftLobby',
                     name: AppRoutes.draftLobby.name,
                     pageBuilder: (context, state) {
-                      final tourId = state.params['tid'];
+                      final tourId = state.pathParameters['tid'];
                       return NoTransitionPage(
                           key: state.pageKey,
                           child: DraftLobby(tourId: tourId));
@@ -241,7 +241,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 pageBuilder: (context, state) => MaterialPage(
                   key: state.pageKey,
                   child: CorpsDetail(
-                    fantasyCorpsId: state.params['cid'],
+                    fantasyCorpsId: state.pathParameters['cid'],
                   ),
                 ),
               ),
@@ -283,7 +283,8 @@ GoRouter goRouter(GoRouterRef ref) {
                 name: AppRoutes.createFluttermoji.name,
                 pageBuilder: (context, state) => NoTransitionPage(
                   key: state.pageKey,
-                  child: FlutterMojiPicker(playerId: state.params['uid']!),
+                  child:
+                      FlutterMojiPicker(playerId: state.pathParameters['uid']!),
                 ),
               ),
             ],

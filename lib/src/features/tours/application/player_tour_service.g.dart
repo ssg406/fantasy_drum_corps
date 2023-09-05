@@ -45,8 +45,6 @@ class _SystemHash {
   }
 }
 
-typedef WatchTourPlayersRef = AutoDisposeStreamProviderRef<List<Player>>;
-
 /// See also [watchTourPlayers].
 @ProviderFor(watchTourPlayers)
 const watchTourPlayersProvider = WatchTourPlayersFamily();
@@ -93,10 +91,10 @@ class WatchTourPlayersFamily extends Family<AsyncValue<List<Player>>> {
 class WatchTourPlayersProvider extends AutoDisposeStreamProvider<List<Player>> {
   /// See also [watchTourPlayers].
   WatchTourPlayersProvider(
-    this.members,
-  ) : super.internal(
+    List<String> members,
+  ) : this._internal(
           (ref) => watchTourPlayers(
-            ref,
+            ref as WatchTourPlayersRef,
             members,
           ),
           from: watchTourPlayersProvider,
@@ -108,9 +106,43 @@ class WatchTourPlayersProvider extends AutoDisposeStreamProvider<List<Player>> {
           dependencies: WatchTourPlayersFamily._dependencies,
           allTransitiveDependencies:
               WatchTourPlayersFamily._allTransitiveDependencies,
+          members: members,
         );
 
+  WatchTourPlayersProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.members,
+  }) : super.internal();
+
   final List<String> members;
+
+  @override
+  Override overrideWith(
+    Stream<List<Player>> Function(WatchTourPlayersRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchTourPlayersProvider._internal(
+        (ref) => create(ref as WatchTourPlayersRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        members: members,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<List<Player>> createElement() {
+    return _WatchTourPlayersProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -126,8 +158,21 @@ class WatchTourPlayersProvider extends AutoDisposeStreamProvider<List<Player>> {
   }
 }
 
+mixin WatchTourPlayersRef on AutoDisposeStreamProviderRef<List<Player>> {
+  /// The parameter `members` of this provider.
+  List<String> get members;
+}
+
+class _WatchTourPlayersProviderElement
+    extends AutoDisposeStreamProviderElement<List<Player>>
+    with WatchTourPlayersRef {
+  _WatchTourPlayersProviderElement(super.provider);
+
+  @override
+  List<String> get members => (origin as WatchTourPlayersProvider).members;
+}
+
 String _$fetchTourPlayersHash() => r'9b7945746aae4986cc1d7136e516fb3c0557684f';
-typedef FetchTourPlayersRef = AutoDisposeFutureProviderRef<List<Player>>;
 
 /// See also [fetchTourPlayers].
 @ProviderFor(fetchTourPlayers)
@@ -175,10 +220,10 @@ class FetchTourPlayersFamily extends Family<AsyncValue<List<Player>>> {
 class FetchTourPlayersProvider extends AutoDisposeFutureProvider<List<Player>> {
   /// See also [fetchTourPlayers].
   FetchTourPlayersProvider(
-    this.members,
-  ) : super.internal(
+    List<String> members,
+  ) : this._internal(
           (ref) => fetchTourPlayers(
-            ref,
+            ref as FetchTourPlayersRef,
             members,
           ),
           from: fetchTourPlayersProvider,
@@ -190,9 +235,43 @@ class FetchTourPlayersProvider extends AutoDisposeFutureProvider<List<Player>> {
           dependencies: FetchTourPlayersFamily._dependencies,
           allTransitiveDependencies:
               FetchTourPlayersFamily._allTransitiveDependencies,
+          members: members,
         );
 
+  FetchTourPlayersProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.members,
+  }) : super.internal();
+
   final List<String> members;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Player>> Function(FetchTourPlayersRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchTourPlayersProvider._internal(
+        (ref) => create(ref as FetchTourPlayersRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        members: members,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Player>> createElement() {
+    return _FetchTourPlayersProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -207,4 +286,19 @@ class FetchTourPlayersProvider extends AutoDisposeFutureProvider<List<Player>> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin FetchTourPlayersRef on AutoDisposeFutureProviderRef<List<Player>> {
+  /// The parameter `members` of this provider.
+  List<String> get members;
+}
+
+class _FetchTourPlayersProviderElement
+    extends AutoDisposeFutureProviderElement<List<Player>>
+    with FetchTourPlayersRef {
+  _FetchTourPlayersProviderElement(super.provider);
+
+  @override
+  List<String> get members => (origin as FetchTourPlayersProvider).members;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

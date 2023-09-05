@@ -8,7 +8,7 @@ class AccentButton extends StatelessWidget {
     required this.label,
     this.isLoading = false,
   }) : super(key: key);
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String label;
   final bool isLoading;
 

@@ -75,8 +75,6 @@ class _SystemHash {
   }
 }
 
-typedef PlayerStreamByIdRef = AutoDisposeStreamProviderRef<Player?>;
-
 /// See also [playerStreamById].
 @ProviderFor(playerStreamById)
 const playerStreamByIdProvider = PlayerStreamByIdFamily();
@@ -123,10 +121,10 @@ class PlayerStreamByIdFamily extends Family<AsyncValue<Player?>> {
 class PlayerStreamByIdProvider extends AutoDisposeStreamProvider<Player?> {
   /// See also [playerStreamById].
   PlayerStreamByIdProvider(
-    this.id,
-  ) : super.internal(
+    String id,
+  ) : this._internal(
           (ref) => playerStreamById(
-            ref,
+            ref as PlayerStreamByIdRef,
             id,
           ),
           from: playerStreamByIdProvider,
@@ -138,9 +136,43 @@ class PlayerStreamByIdProvider extends AutoDisposeStreamProvider<Player?> {
           dependencies: PlayerStreamByIdFamily._dependencies,
           allTransitiveDependencies:
               PlayerStreamByIdFamily._allTransitiveDependencies,
+          id: id,
         );
 
+  PlayerStreamByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.id,
+  }) : super.internal();
+
   final String id;
+
+  @override
+  Override overrideWith(
+    Stream<Player?> Function(PlayerStreamByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: PlayerStreamByIdProvider._internal(
+        (ref) => create(ref as PlayerStreamByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        id: id,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<Player?> createElement() {
+    return _PlayerStreamByIdProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -156,8 +188,20 @@ class PlayerStreamByIdProvider extends AutoDisposeStreamProvider<Player?> {
   }
 }
 
+mixin PlayerStreamByIdRef on AutoDisposeStreamProviderRef<Player?> {
+  /// The parameter `id` of this provider.
+  String get id;
+}
+
+class _PlayerStreamByIdProviderElement
+    extends AutoDisposeStreamProviderElement<Player?> with PlayerStreamByIdRef {
+  _PlayerStreamByIdProviderElement(super.provider);
+
+  @override
+  String get id => (origin as PlayerStreamByIdProvider).id;
+}
+
 String _$setDisplayNameHash() => r'e3b78350bd2c9af10ac3ee8d5089380de38dc962';
-typedef SetDisplayNameRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [setDisplayName].
 @ProviderFor(setDisplayName)
@@ -205,10 +249,10 @@ class SetDisplayNameFamily extends Family<AsyncValue<void>> {
 class SetDisplayNameProvider extends AutoDisposeFutureProvider<void> {
   /// See also [setDisplayName].
   SetDisplayNameProvider({
-    required this.displayName,
-  }) : super.internal(
+    required String displayName,
+  }) : this._internal(
           (ref) => setDisplayName(
-            ref,
+            ref as SetDisplayNameRef,
             displayName: displayName,
           ),
           from: setDisplayNameProvider,
@@ -220,9 +264,43 @@ class SetDisplayNameProvider extends AutoDisposeFutureProvider<void> {
           dependencies: SetDisplayNameFamily._dependencies,
           allTransitiveDependencies:
               SetDisplayNameFamily._allTransitiveDependencies,
+          displayName: displayName,
         );
 
+  SetDisplayNameProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.displayName,
+  }) : super.internal();
+
   final String displayName;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SetDisplayNameRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SetDisplayNameProvider._internal(
+        (ref) => create(ref as SetDisplayNameRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        displayName: displayName,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SetDisplayNameProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -238,8 +316,20 @@ class SetDisplayNameProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+mixin SetDisplayNameRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `displayName` of this provider.
+  String get displayName;
+}
+
+class _SetDisplayNameProviderElement
+    extends AutoDisposeFutureProviderElement<void> with SetDisplayNameRef {
+  _SetDisplayNameProviderElement(super.provider);
+
+  @override
+  String get displayName => (origin as SetDisplayNameProvider).displayName;
+}
+
 String _$setSelectedCorpsHash() => r'badf3e2b405876803d3b929a73ba60cef3725da1';
-typedef SetSelectedCorpsRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [setSelectedCorps].
 @ProviderFor(setSelectedCorps)
@@ -287,10 +377,10 @@ class SetSelectedCorpsFamily extends Family<AsyncValue<void>> {
 class SetSelectedCorpsProvider extends AutoDisposeFutureProvider<void> {
   /// See also [setSelectedCorps].
   SetSelectedCorpsProvider({
-    required this.selectedCorps,
-  }) : super.internal(
+    required DrumCorps selectedCorps,
+  }) : this._internal(
           (ref) => setSelectedCorps(
-            ref,
+            ref as SetSelectedCorpsRef,
             selectedCorps: selectedCorps,
           ),
           from: setSelectedCorpsProvider,
@@ -302,9 +392,43 @@ class SetSelectedCorpsProvider extends AutoDisposeFutureProvider<void> {
           dependencies: SetSelectedCorpsFamily._dependencies,
           allTransitiveDependencies:
               SetSelectedCorpsFamily._allTransitiveDependencies,
+          selectedCorps: selectedCorps,
         );
 
+  SetSelectedCorpsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.selectedCorps,
+  }) : super.internal();
+
   final DrumCorps selectedCorps;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SetSelectedCorpsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SetSelectedCorpsProvider._internal(
+        (ref) => create(ref as SetSelectedCorpsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        selectedCorps: selectedCorps,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SetSelectedCorpsProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -320,4 +444,19 @@ class SetSelectedCorpsProvider extends AutoDisposeFutureProvider<void> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin SetSelectedCorpsRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `selectedCorps` of this provider.
+  DrumCorps get selectedCorps;
+}
+
+class _SetSelectedCorpsProviderElement
+    extends AutoDisposeFutureProviderElement<void> with SetSelectedCorpsRef {
+  _SetSelectedCorpsProviderElement(super.provider);
+
+  @override
+  DrumCorps get selectedCorps =>
+      (origin as SetSelectedCorpsProvider).selectedCorps;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

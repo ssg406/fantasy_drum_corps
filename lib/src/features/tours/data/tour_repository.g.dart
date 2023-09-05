@@ -62,8 +62,6 @@ class _SystemHash {
   }
 }
 
-typedef WatchTourRef = AutoDisposeStreamProviderRef<Tour?>;
-
 /// See also [watchTour].
 @ProviderFor(watchTour)
 const watchTourProvider = WatchTourFamily();
@@ -110,10 +108,10 @@ class WatchTourFamily extends Family<AsyncValue<Tour?>> {
 class WatchTourProvider extends AutoDisposeStreamProvider<Tour?> {
   /// See also [watchTour].
   WatchTourProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => watchTour(
-            ref,
+            ref as WatchTourRef,
             tourId,
           ),
           from: watchTourProvider,
@@ -124,9 +122,43 @@ class WatchTourProvider extends AutoDisposeStreamProvider<Tour?> {
                   : _$watchTourHash,
           dependencies: WatchTourFamily._dependencies,
           allTransitiveDependencies: WatchTourFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  WatchTourProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    Stream<Tour?> Function(WatchTourRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchTourProvider._internal(
+        (ref) => create(ref as WatchTourRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<Tour?> createElement() {
+    return _WatchTourProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -142,8 +174,20 @@ class WatchTourProvider extends AutoDisposeStreamProvider<Tour?> {
   }
 }
 
+mixin WatchTourRef on AutoDisposeStreamProviderRef<Tour?> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _WatchTourProviderElement extends AutoDisposeStreamProviderElement<Tour?>
+    with WatchTourRef {
+  _WatchTourProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as WatchTourProvider).tourId;
+}
+
 String _$fetchTourHash() => r'86be6826c0efbe83d2723a2e0e7e3ac32f73b1a3';
-typedef FetchTourRef = AutoDisposeFutureProviderRef<Tour?>;
 
 /// See also [fetchTour].
 @ProviderFor(fetchTour)
@@ -191,10 +235,10 @@ class FetchTourFamily extends Family<AsyncValue<Tour?>> {
 class FetchTourProvider extends AutoDisposeFutureProvider<Tour?> {
   /// See also [fetchTour].
   FetchTourProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => fetchTour(
-            ref,
+            ref as FetchTourRef,
             tourId,
           ),
           from: fetchTourProvider,
@@ -205,9 +249,43 @@ class FetchTourProvider extends AutoDisposeFutureProvider<Tour?> {
                   : _$fetchTourHash,
           dependencies: FetchTourFamily._dependencies,
           allTransitiveDependencies: FetchTourFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  FetchTourProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Tour?> Function(FetchTourRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchTourProvider._internal(
+        (ref) => create(ref as FetchTourRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Tour?> createElement() {
+    return _FetchTourProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -221,6 +299,19 @@ class FetchTourProvider extends AutoDisposeFutureProvider<Tour?> {
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin FetchTourRef on AutoDisposeFutureProviderRef<Tour?> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _FetchTourProviderElement extends AutoDisposeFutureProviderElement<Tour?>
+    with FetchTourRef {
+  _FetchTourProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as FetchTourProvider).tourId;
 }
 
 String _$watchJoinedToursHash() => r'd5809d33d7115878a1d2007f8fb93822623783b6';
@@ -254,7 +345,6 @@ final watchOwnedToursProvider = AutoDisposeStreamProvider<List<Tour>>.internal(
 
 typedef WatchOwnedToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
 String _$addSelfToTourHash() => r'6523419213a25b8c2f7649a3acaf3a00cec278c5';
-typedef AddSelfToTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [addSelfToTour].
 @ProviderFor(addSelfToTour)
@@ -302,10 +392,10 @@ class AddSelfToTourFamily extends Family<AsyncValue<void>> {
 class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
   /// See also [addSelfToTour].
   AddSelfToTourProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => addSelfToTour(
-            ref,
+            ref as AddSelfToTourRef,
             tourId,
           ),
           from: addSelfToTourProvider,
@@ -317,9 +407,43 @@ class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
           dependencies: AddSelfToTourFamily._dependencies,
           allTransitiveDependencies:
               AddSelfToTourFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  AddSelfToTourProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(AddSelfToTourRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: AddSelfToTourProvider._internal(
+        (ref) => create(ref as AddSelfToTourRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _AddSelfToTourProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -335,9 +459,21 @@ class AddSelfToTourProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+mixin AddSelfToTourRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _AddSelfToTourProviderElement
+    extends AutoDisposeFutureProviderElement<void> with AddSelfToTourRef {
+  _AddSelfToTourProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as AddSelfToTourProvider).tourId;
+}
+
 String _$removeSelfFromTourHash() =>
     r'de472e24a39c5cf955db96fc1e2d7c5261a67abc';
-typedef RemoveSelfFromTourRef = AutoDisposeFutureProviderRef<void>;
 
 /// See also [removeSelfFromTour].
 @ProviderFor(removeSelfFromTour)
@@ -385,10 +521,10 @@ class RemoveSelfFromTourFamily extends Family<AsyncValue<void>> {
 class RemoveSelfFromTourProvider extends AutoDisposeFutureProvider<void> {
   /// See also [removeSelfFromTour].
   RemoveSelfFromTourProvider(
-    this.tourId,
-  ) : super.internal(
+    String tourId,
+  ) : this._internal(
           (ref) => removeSelfFromTour(
-            ref,
+            ref as RemoveSelfFromTourRef,
             tourId,
           ),
           from: removeSelfFromTourProvider,
@@ -400,9 +536,43 @@ class RemoveSelfFromTourProvider extends AutoDisposeFutureProvider<void> {
           dependencies: RemoveSelfFromTourFamily._dependencies,
           allTransitiveDependencies:
               RemoveSelfFromTourFamily._allTransitiveDependencies,
+          tourId: tourId,
         );
 
+  RemoveSelfFromTourProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tourId,
+  }) : super.internal();
+
   final String tourId;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(RemoveSelfFromTourRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RemoveSelfFromTourProvider._internal(
+        (ref) => create(ref as RemoveSelfFromTourRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tourId: tourId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _RemoveSelfFromTourProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -418,8 +588,20 @@ class RemoveSelfFromTourProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
+mixin RemoveSelfFromTourRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `tourId` of this provider.
+  String get tourId;
+}
+
+class _RemoveSelfFromTourProviderElement
+    extends AutoDisposeFutureProviderElement<void> with RemoveSelfFromTourRef {
+  _RemoveSelfFromTourProviderElement(super.provider);
+
+  @override
+  String get tourId => (origin as RemoveSelfFromTourProvider).tourId;
+}
+
 String _$watchAllToursHash() => r'd5fa1216969e9d74068b771cc3aa1f9aa39e352d';
-typedef WatchAllToursRef = AutoDisposeStreamProviderRef<List<Tour>>;
 
 /// See also [watchAllTours].
 @ProviderFor(watchAllTours)
@@ -467,10 +649,10 @@ class WatchAllToursFamily extends Family<AsyncValue<List<Tour>>> {
 class WatchAllToursProvider extends AutoDisposeStreamProvider<List<Tour>> {
   /// See also [watchAllTours].
   WatchAllToursProvider(
-    this.watchPublicOnly,
-  ) : super.internal(
+    bool watchPublicOnly,
+  ) : this._internal(
           (ref) => watchAllTours(
-            ref,
+            ref as WatchAllToursRef,
             watchPublicOnly,
           ),
           from: watchAllToursProvider,
@@ -482,9 +664,43 @@ class WatchAllToursProvider extends AutoDisposeStreamProvider<List<Tour>> {
           dependencies: WatchAllToursFamily._dependencies,
           allTransitiveDependencies:
               WatchAllToursFamily._allTransitiveDependencies,
+          watchPublicOnly: watchPublicOnly,
         );
 
+  WatchAllToursProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.watchPublicOnly,
+  }) : super.internal();
+
   final bool watchPublicOnly;
+
+  @override
+  Override overrideWith(
+    Stream<List<Tour>> Function(WatchAllToursRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: WatchAllToursProvider._internal(
+        (ref) => create(ref as WatchAllToursRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        watchPublicOnly: watchPublicOnly,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<List<Tour>> createElement() {
+    return _WatchAllToursProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -500,4 +716,18 @@ class WatchAllToursProvider extends AutoDisposeStreamProvider<List<Tour>> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin WatchAllToursRef on AutoDisposeStreamProviderRef<List<Tour>> {
+  /// The parameter `watchPublicOnly` of this provider.
+  bool get watchPublicOnly;
+}
+
+class _WatchAllToursProviderElement
+    extends AutoDisposeStreamProviderElement<List<Tour>> with WatchAllToursRef {
+  _WatchAllToursProviderElement(super.provider);
+
+  @override
+  bool get watchPublicOnly => (origin as WatchAllToursProvider).watchPublicOnly;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
