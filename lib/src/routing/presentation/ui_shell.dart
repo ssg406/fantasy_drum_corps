@@ -40,7 +40,8 @@ class NavShell extends ConsumerWidget {
     final textSize =
         ResponsiveBreakpoints.of(context).largerOrEqualTo(TABLET) ? 24.0 : 16.0;
 
-    final route = GoRouter.of(context).location;
+    final route =
+        GoRouter.of(context).routerDelegate.currentConfiguration.uri.toString();
 
     return Scaffold(
       key: scaffoldStateKey,
