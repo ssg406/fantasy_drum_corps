@@ -1,33 +1,24 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_controller.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_connection_waiting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../../common_widgets/async_value_widget.dart';
 import '../../../../common_widgets/not_found.dart';
-import '../../../../constants/app_sizes.dart';
 import '../../../../routing/app_routes.dart';
 import '../../../../utils/alert_dialogs.dart';
 import '../../../authentication/data/auth_repository.dart';
-import '../../../fantasy_corps/domain/caption_model.dart';
-import '../../../fantasy_corps/domain/drum_corps_enum.dart';
 import '../../../fantasy_corps/domain/fantasy_corps.dart';
-import '../../../players/domain/player_model.dart';
 import '../../../tours/data/tour_repository.dart';
 import '../../../tours/domain/tour_model.dart';
-import '../../domain/socket_events.dart';
 import '../auto_draft/auto_draft.dart';
 import 'draft_waiting_room.dart';
 import 'main_draft.dart';
 
-const turnLength = Duration(seconds: 45);
-
-const rootServerUrl = 'fantasy-drum-corps-server.herokuapp.com';
-// const rootServerUrl = 'localhost:3000';
+// TODO thought checks if room created and player exists, and if they do, then just takes that existing spot, so as long as draft is going they can go and come back from the page, unless they actually click something that says 'leave draft' or hit refresh
 
 class DraftLobby extends ConsumerWidget {
   const DraftLobby({super.key, this.tourId});
@@ -58,7 +49,7 @@ class DraftLobby extends ConsumerWidget {
   }
 }
 
-class DraftLobbyContents extends StatefulWidget {
+class DraftLobbyContents extends ConsumerStatefulWidget {
   const DraftLobbyContents(
       {Key? key, required this.tour, required this.playerId})
       : super(key: key);
@@ -67,395 +58,87 @@ class DraftLobbyContents extends StatefulWidget {
   final String playerId;
 
   @override
-  State<DraftLobbyContents> createState() => _DraftLobbyContentsState();
+  ConsumerState<DraftLobbyContents> createState() => _DraftLobbyContentsState();
 }
 
-class _DraftLobbyContentsState extends State<DraftLobbyContents> {
-  List<Player> players = List.empty(growable: true);
-  List<DrumCorpsCaption> availableCaptions = List.empty(growable: true);
-  List<DrumCorps> alreadySelectedCorps = List.empty(growable: true);
-  bool draftStarted = false;
-  bool showCountdown = false;
-  bool isPlayersTurn = false;
-  late io.Socket socket;
-  final Lineup fantasyCorps = {};
-  int roundNumber = 0;
-  String? currentPick;
-  String? nextPick;
-  int remainingTime = turnLength.inSeconds;
-  DrumCorpsCaption? lastPlayersPick;
+class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
   Timer? turnTimer;
 
   @override
   Widget build(BuildContext context) {
-    if (draftStarted) {
+    final controller = ref.read(draftControllerProvider.notifier);
+    final state = ref.watch(draftControllerProvider);
+
+    if (state.draftError) {
+      showAlertDialog(
+          context: context,
+          title: 'Draft Error',
+          content: state.errorMessage ??
+              'The draft server experienced an unexpected error. The tour '
+                  'owner should attempt to restart the draft in a few minutes.');
+    }
+
+    if (state.draftStarted) {
       return MainDraft(
-        remainingTime: remainingTime,
-        roundNumber: roundNumber,
-        currentPick: currentPick,
-        nextPick: nextPick,
-        lastPlayersPick: lastPlayersPick,
-        canPick: isPlayersTurn,
-        availablePicks: availableCaptions,
-        fantasyCorps: fantasyCorps,
-        onCaptionSelected: _onCaptionSelected,
-        onCancelDraft:
-            widget.tour.owner == widget.playerId ? _onCancelDraft : null,
+        remainingTime: state.remainingTime,
+        roundNumber: state.roundNumber,
+        currentPick: state.currentPlayerName,
+        nextPick: state.nextPlayerName,
+        lastPlayersPick: state.lastPick,
+        canPick: state.currentPlayerId == widget.playerId,
+        availablePicks: state.availablePicks,
+        fantasyCorps: state.playerLineup,
+        onCaptionSelected: controller.onCaptionSelected,
+        onCancelDraft: widget.tour.owner == widget.playerId
+            ? controller.ownerCancelDraft
+            : null,
       );
     }
-    if (showCountdown) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-                width: 300,
-                child: LinearProgressIndicator(
-                  semanticsLabel: 'Waiting for players indicator',
-                )),
-            gapH24,
-            Text(
-                'Tour owner has started the draft countdown. Waiting for server...',
-                style: Theme.of(context).textTheme.titleLarge)
-          ],
-        ),
-      );
-    } else {
+    if (state.joinedRoom) {
       return DraftWaitingRoom(
         tourName: widget.tour.name,
-        players: players,
+        players: state.joinedPlayers,
         isTourOwner: widget.tour.owner == widget.playerId,
-        onOwnerStartsDraft:
-            widget.tour.owner == widget.playerId ? _startDraft : null,
+        markPlayerReady: controller.clientReadyForDraft,
+        playerIsReady: state.playerReady,
+        onOwnerStartsDraft: widget.tour.owner == widget.playerId
+            ? controller.ownerBeginDraft
+            : null,
+        canStartDraft: state.allPlayersReady,
+        onBackPressed: _onBackPressed,
       );
+    }
+    if (state.lineupComplete) {
+      FantasyCorps corps = FantasyCorps(
+          tourId: widget.tour.id!,
+          userId: widget.playerId,
+          lineup: state.playerLineup,
+          name: 'Unnamed Corps');
+
+      // Exit draft room and send user to Fantasy Corps main page to enter details
+      context.pushNamed(AppRoutes.createCorps.name,
+          pathParameters: {'tid': widget.tour.id!}, extra: corps);
+    }
+    return DraftConnectionWaiting(onBackPressed: _onBackPressed);
+  }
+
+  void _onBackPressed() {
+    ref.read(draftControllerProvider.notifier).leaveRoom();
+    if (Navigator.of(context).canPop()) {
+      context.pop();
+    } else {
+      context.goNamed(AppRoutes.dashboard.name);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _initSocket();
+    final controller = ref.read(draftControllerProvider.notifier);
 
-    // Set empty lineup
-    for (final caption in Caption.values) {
-      fantasyCorps.addAll({caption: null});
-    }
-  }
-
-  void _initSocket() {
-    final tourId = widget.tour.id!;
-    dev.log('Attempting to connect to: $rootServerUrl/tourId', name: 'DRAFT');
-    socket = io.io('https://$rootServerUrl/$tourId',
-        io.OptionBuilder().setTransports(['websocket']).build());
-    socket.onConnect((_) {
-      dev.log('Connected. Sending ID to server', name: 'DRAFT');
-      socket.emit(CLIENT_SENDS_IDENTIFICATION,
-          {'playerId': widget.playerId, 'tourId': widget.tour.id!});
-      _registerDraftListeners();
-    });
-  }
-
-  void _registerDraftListeners() {
-    // Server sends if draft is started or in countdown to start
-    socket.on(SERVER_SENDS_DRAFT_STATE, (data) => _updateDraftState(data));
-
-    // Server sends update on players waiting to join draft
-    socket.on(SERVER_UPDATE_JOINED_PLAYERS, (data) => _updatePlayers(data));
-
-    // Server starts turn and emits available picks and currently picking player
-    socket.on(SERVER_STARTS_TURN, (data) {
-      _startTurn(data);
-    });
-
-    socket.on(SERVER_PLAYER_NOT_FOUND, (_) {
-      showAlertDialog(
-          context: context,
-          title: 'Draft Server Error',
-          content:
-              'There was an error on the draft server. Try again in a few minutes or contact us if the error persists.');
-      context.pushNamed(AppRoutes.tourDetail.name,
-          params: {'tid': widget.tour.id!});
-    });
-
-    socket.on(SERVER_DRAFT_CANCELLED_BY_OWNER, (_) => _onOwnerCancelledDraft());
-
-    socket.on(SERVER_SENDS_PLAYER_PICK, (data) => _updateLastPick(data));
-
-    socket.on(SERVER_FATAL_ERROR, (_) => _onServerError());
-
-    socket.on(SERVER_LINEUP_ACKNOWLEDGED, (_) => socket.dispose());
-  }
-
-  void _onServerError() {
-    dev.log('Received fatal error from server', name: 'DRAFT');
-    if (mounted) {
-      setState(() {
-        draftStarted = false;
-      });
-    }
-
-    turnTimer?.cancel();
-
-    socket.dispose();
-
-    showAlertDialog(
-        context: context,
-        title: 'Draft Error',
-        content: 'The draft server experienced an unexpected error. The tour '
-            'owner should attempt to restart the draft in a few minutes.');
-    context
-        .pushNamed(AppRoutes.tourDetail.name, params: {'tid': widget.tour.id!});
-  }
-
-  void _updateLastPick(Map<String, dynamic> data) {
-    final lastPick = data['lastPick'];
-    dev.log('Received last pick from server: $lastPick', name: 'DRAFT');
-    final pick =
-        DrumCorpsCaption.fromJson(lastPick, lastPick['drumCorpsCaptionId']);
-    if (mounted) {
-      setState(() => lastPlayersPick = pick);
-    }
-  }
-
-  void _updateDraftState(Map<String, dynamic> data) {
-    dev.log('Raw data from server: $data', name: 'DRAFT');
-    // Read draft state data from server
-    final isCountingDown = data['draftCountingDown'] as bool;
-    final isDraftStarted = data['draftStarted'] as bool;
-
-    dev.log(
-        'Got draft status update from server: isCountingDown = $isCountingDown isDraftStarted = $isDraftStarted');
-
-    // Update widget state
-    if (mounted) {
-      setState(() {
-        showCountdown = isCountingDown;
-        draftStarted = isDraftStarted;
-      });
-    }
-  }
-
-  void _updatePlayers(Map<String, dynamic> data) {
-    // Generate list of players from server data
-    final playersFromServer = data['joinedPlayers'] as List<dynamic>;
-    final List<Player> newPlayers = [];
-    for (var player in playersFromServer) {
-      newPlayers.add(Player.fromJson(player, player['id']));
-    }
-
-    if (mounted) {
-      setState(() {
-        players = newPlayers;
-      });
-    }
-    dev.log(
-        'Got updated players list from server. ${newPlayers.length} are in the draft',
-        name: 'DRAFT');
-  }
-
-  void _onCaptionSelected(DrumCorpsCaption drumCorpsCaption) {
-    // Check for an existing pick
-    if (fantasyCorps[drumCorpsCaption.caption] != null) {
-      showAlertDialog(
-          context: context,
-          title: 'No ${drumCorpsCaption.caption.fullName} slot available');
-      return;
-    }
-
-    // Check if corps already exists in lineup
-    if (alreadySelectedCorps.contains(drumCorpsCaption.corps)) {
-      showAlertDialog(
-          context: context,
-          title:
-              'You already have ${drumCorpsCaption.corps.fullName} in your lineup.');
-      return;
-    }
-
-    dev.log(
-        'Caption selected, sending pick to server: ${drumCorpsCaption.caption} ${drumCorpsCaption.corps}',
-        name: 'DRAFT');
-
-    // Send selection back to server
-    socket.emit(CLIENT_ENDS_TURN, {
-      'playerId': widget.playerId,
-      'drumCorpsCaption': drumCorpsCaption.toJson()
-    });
-
-    // Cancel turn timer
-    turnTimer?.cancel();
-
-    // Add to list of picked captions
-    alreadySelectedCorps.add(drumCorpsCaption.corps);
-
-    // Update the lineup locally
-    setState(() {
-      fantasyCorps.addAll({drumCorpsCaption.caption: drumCorpsCaption.corps});
-    });
-
-    if (_getOpenLineupSlots() == 0) {
-      _onLineupComplete();
-    }
-  }
-
-  void _onOwnerCancelledDraft() {
-    dev.log('Tour owner cancelled draft', name: 'DRAFT');
-
-    if (mounted) {
-      setState(() {
-        draftStarted = false;
-      });
-    }
-
-    turnTimer?.cancel();
-
-    socket.dispose();
-
-    showAlertDialog(
-        context: context,
-        title: 'Draft Cancelled',
-        content: 'The draft was cancelled by the tour owner.');
-    context
-        .pushNamed(AppRoutes.tourDetail.name, params: {'tid': widget.tour.id!});
-  }
-
-  void _onCancelDraft() {
-    socket.emit(CLIENT_CANCEL_DRAFT);
-  }
-
-  void _startDraft() {
-    dev.log('Draft started by client', name: 'DRAFT');
-    socket.emit(CLIENT_START_DRAFT);
-  }
-
-  void _startTurn(Map<String, dynamic> data) {
-    dev.log('Turn started by server.\nData Received: $data');
-    // Read data from server
-    final allPicks = data['availablePicks'] as List<dynamic>;
-    final currentPickerId = data['currentPick'] as String;
-    final currentPickName = data['currentPickName'] as String;
-    final nextPickName = data['nextPickName'] as String;
-    final round = data['roundNumber'] as int;
-
-    // Create list of [DrumCorpsCaption] from server message
-    final List<DrumCorpsCaption> availablePicks = List.empty(growable: true);
-    for (var pick in allPicks) {
-      availablePicks
-          .add(DrumCorpsCaption.fromJson(pick, pick['drumCorpsCaptionId']));
-    }
-
-    // Show alert if it is the players turn
-    if (currentPickerId == widget.playerId) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You\'re up! Make a selection in the next 45 seconds.'),
-          showCloseIcon: true,
-          duration: Duration(seconds: 3),
-        ),
-      );
-
-      // Update widget state
-      if (mounted) {
-        setState(() {
-          availableCaptions = availablePicks;
-          isPlayersTurn = currentPickerId == widget.playerId;
-          currentPick = currentPickName;
-          nextPick = nextPickName;
-          roundNumber = round;
-          remainingTime = turnLength.inSeconds;
-        });
-      }
-
-      dev.log('Starting turn timer', name: 'DRAFT');
-
-      turnTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (remainingTime == 0) {
-          dev.log('Turn time elapsed', name: 'DRAFT');
-          timer.cancel();
-          _autoSelectPick();
-        }
-        if (mounted) {
-          setState(() {
-            // Prevent remainingTime from going below 0
-            remainingTime = remainingTime == 0 ? 0 : remainingTime - 1;
-          });
-        }
-      });
-    }
-  }
-
-  int _getOpenLineupSlots() => fantasyCorps.values.fold(
-      0, (previousValue, element) => previousValue + (element == null ? 1 : 0));
-
-  void _onLineupComplete() {
-    // Cancel timer in case server emits a start turn event before exit
-    turnTimer?.cancel();
-
-    dev.log('Player lineup complete, leaving draft...', name: 'DRAFT');
-
-    socket.emit(CLIENT_LINEUP_COMPLETE, {'playerId': widget.playerId});
-
-    // Create a new fantasy corps object and write it to the server
-    FantasyCorps corps = FantasyCorps(
+    controller.joinRoom(
+        playerId: widget.playerId,
         tourId: widget.tour.id!,
-        userId: widget.playerId,
-        lineup: fantasyCorps,
-        name: 'Unnamed Corps');
-
-    // Exit draft room and send user to Fantasy Corps main page to enter details
-    context.pushNamed(AppRoutes.createCorps.name,
-        params: {'tid': widget.tour.id!}, extra: corps);
-  }
-
-  void _autoSelectPick() {
-    dev.log('Auto-selecting a pick', name: 'DRAFT');
-    // Create a list of indexes representing positions in availableCaptions
-    final availableCaptionsIndices =
-        List.generate(availableCaptions.length, (index) => index);
-
-    // Shuffle the list
-    availableCaptionsIndices.shuffle();
-
-    for (final pickIndex in availableCaptionsIndices) {
-      // Get the DrumCorpsCaption pick from the available captions
-      final pick = availableCaptions[pickIndex];
-
-      // Check if pick corps already exists in lineup
-      if (alreadySelectedCorps.contains(pick.corps)) continue;
-
-      // Determine if the slot at this caption is available, continue if not
-      if (fantasyCorps[pick.caption] != null) continue;
-
-      // Execute the logic for adding a pick to the lineup
-      fantasyCorps.addAll({pick.caption: pick.corps});
-
-      // Add the selection to list of already picked corps
-      alreadySelectedCorps.add(pick.corps);
-
-      socket.emit(CLIENT_ENDS_TURN, {
-        'playerId': widget.playerId,
-        'drumCorpsCaption': pick.toJson(),
-      });
-      dev.log('Caption selected, sending pick to server: ${pick.displayString}',
-          name: 'DRAFT');
-
-      // Cancel turn timer
-      turnTimer?.cancel();
-
-      // Exit the loop if a selection was made.
-      break;
-    }
-
-    if (_getOpenLineupSlots() == 0) {
-      _onLineupComplete();
-    }
-  }
-
-  @override
-  void dispose() {
-    dev.log('Disposing DraftLobbyContents widget', name: 'DRAFT');
-    turnTimer?.cancel();
-    socket.disconnect();
-    socket.dispose();
-    super.dispose();
+        action: widget.tour.owner == widget.playerId ? 'create' : 'join');
   }
 }
