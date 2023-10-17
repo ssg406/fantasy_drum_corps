@@ -26,10 +26,11 @@ class AuthService {
       final passwordVerified =
           await _authRepo.validatePassword(currentPassword);
       if (passwordVerified) {
-        _playersRepo.deletePlayer(user.uid).then((_) async {
-          await user.delete();
-          return true;
-        });
+        await Future.wait([
+          _playersRepo.deletePlayer(user.uid),
+          user.delete(),
+        ]);
+        return true;
       }
     }
     return false;
