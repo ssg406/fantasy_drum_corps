@@ -170,7 +170,7 @@ class SocketService {
   void onServerEndTurn() {
     client.socket.on(SERVER_END_TURN, (data) {
       dev.log('Received server ended turn', name: 'Socket Service');
-      final pickJson = data['lastPick'];
+      final pickJson = data['lastPlayerPick'];
       final pick =
           DrumCorpsCaption.fromJson(pickJson, pickJson['drumCorpsCaptionId']);
       socketResponseStream.add(EndOfTurn(captionPick: pick));

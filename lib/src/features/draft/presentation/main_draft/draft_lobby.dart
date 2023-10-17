@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fantasy_drum_corps/src/features/draft/domain/draft_state.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_controller.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_connection_waiting.dart';
 import 'package:flutter/material.dart';
@@ -69,14 +70,10 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
     final controller = ref.read(draftControllerProvider.notifier);
     final state = ref.watch(draftControllerProvider);
 
-    if (state.draftError) {
-      showAlertDialog(
-          context: context,
-          title: 'Draft Error',
-          content: state.errorMessage ??
-              'The draft server experienced an unexpected error. The tour '
-                  'owner should attempt to restart the draft in a few minutes.');
-    }
+    ref.listen(draftControllerProvider, (_, newState) {
+      newState.showAlertOnDraftError(context);
+      newState.exitWhenLineupComplete(context, widget.tour.id!, widget.playerId);
+    });
 
     if (state.draftStarted) {
       return MainDraft(
@@ -94,6 +91,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
             : null,
       );
     }
+
     if (state.joinedRoom) {
       return DraftWaitingRoom(
         tourName: widget.tour.name,
@@ -108,17 +106,7 @@ class _DraftLobbyContentsState extends ConsumerState<DraftLobbyContents> {
         onBackPressed: _onBackPressed,
       );
     }
-    if (state.lineupComplete) {
-      FantasyCorps corps = FantasyCorps(
-          tourId: widget.tour.id!,
-          userId: widget.playerId,
-          lineup: state.playerLineup,
-          name: 'Unnamed Corps');
 
-      // Exit draft room and send user to Fantasy Corps main page to enter details
-      context.pushNamed(AppRoutes.createCorps.name,
-          pathParameters: {'tid': widget.tour.id!}, extra: corps);
-    }
     return DraftConnectionWaiting(onBackPressed: _onBackPressed);
   }
 

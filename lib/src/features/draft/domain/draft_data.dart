@@ -3,7 +3,7 @@ import '../../players/domain/player_model.dart';
 
 typedef JoinedPlayers = Map<Player, bool>;
 
-abstract class DraftData {
+sealed class DraftData {
   String? currentPlayerId;
   String? currentPlayerName;
   String? nextPlayerName;

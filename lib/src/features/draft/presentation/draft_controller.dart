@@ -28,52 +28,51 @@ class DraftController extends _$DraftController {
     ref.listen(socketServiceStreamProvider, (_, data) {
       final draftData = data.value;
       final tempState = state.copyWith(isLoading: true);
-      if (draftData is StartOfTurn) {
-        state = tempState.copyWith(
-          roundNumber: draftData.roundNumber,
-          availablePicks: draftData.availablePicks,
-          currentPlayerName: draftData.currentPlayerName,
-          nextPlayerName: draftData.nextPlayerName,
-          currentPlayerId: draftData.currentPlayerId,
-          remainingTime: 45,
-        );
+      switch (draftData) {
+        case StartOfTurn():
+          state = tempState.copyWith(
+            roundNumber: draftData.roundNumber,
+            availablePicks: draftData.availablePicks,
+            currentPlayerName: draftData.currentPlayerName,
+            nextPlayerName: draftData.nextPlayerName,
+            currentPlayerId: draftData.currentPlayerId,
+            remainingTime: 45,
+          );
+        case RoomCreated():
+          state = tempState.copyWith(
+            roomCreated: draftData.roomCreated,
+          );
+        case AllPlayersReady():
+          state = tempState.copyWith(
+            allPlayersReady: draftData.allPlayersReady,
+          );
+        case DraftStarted():
+          state = tempState.copyWith(draftStarted: draftData.draftStarted);
+        case JoinedRoom():
+          state = tempState.copyWith(
+            joinedRoom: draftData.joinedRoom,
+          );
+        case MissedTurn():
+          _playerMissedTurn();
+        case EndOfTurn():
+          state = tempState.copyWith(
+            lastPick: draftData.captionPick,
+          );
+        case DraftError():
+          state = tempState.copyWith(
+            draftError: true,
+            errorMessage: draftData.errorMessage,
+          );
+          ref.read(socketServiceProvider).disposeSocket();
+        case UpdateJoinedPlayers():
+          state = tempState.copyWith(joinedPlayers: draftData.joinedPlayers);
+        case DraftCancelled():
+          state = tempState.copyWith(draftCancelled: true, draftStarted: false);
+          ref.read(socketServiceProvider).disposeSocket();
+        case null:
       }
-      if (draftData is RoomCreated) {
-        state = tempState.copyWith(
-          roomCreated: draftData.roomCreated,
-        );
-      }
-      if (draftData is AllPlayersReady) {
-        state = tempState.copyWith(
-          allPlayersReady: draftData.allPlayersReady,
-        );
-      }
-      if (draftData is DraftStarted) {
-        state = tempState.copyWith(draftStarted: draftData.draftStarted);
-      }
-      if (draftData is JoinedRoom) {
-        state = tempState.copyWith(
-          joinedRoom: draftData.joinedRoom,
-        );
-      }
-      if (draftData is MissedTurn) {
-        _playerMissedTurn();
-      }
-      if (draftData is EndOfTurn) {
-        state = tempState.copyWith(
-          lastPick: draftData.captionPick,
-        );
-      }
-      if (draftData is DraftError) {
-        state = tempState.copyWith(
-          draftError: true,
-          errorMessage: draftData.errorMessage,
-        );
-      }
-      if (draftData is UpdateJoinedPlayers) {
-        state = tempState.copyWith(joinedPlayers: draftData.joinedPlayers);
-      }
-      state = state.copyWith(isLoading: false);
+      // Reset loading flag and error/cancelled flags
+      state = state.copyWith(isLoading: false, draftError: false, draftCancelled: false);
     });
 
     final Lineup playerLineup = {};
@@ -127,12 +126,14 @@ class DraftController extends _$DraftController {
       state = state.copyWith(
           draftError: true,
           errorMessage: 'No ${pick.caption.fullName} slot available');
+      return;
     }
     if (state.alreadySelectedCorps.contains(pick.corps)) {
       state = state.copyWith(
           draftError: true,
           errorMessage:
               'You already have ${pick.corps.fullName} in your lineup.');
+      return;
     }
 
     final alreadySelectedCorps = state.alreadySelectedCorps;
@@ -143,7 +144,7 @@ class DraftController extends _$DraftController {
     state = state.copyWith(
         alreadySelectedCorps: alreadySelectedCorps, playerLineup: playerLineup);
 
-    ref.watch(socketServiceProvider).playerEndTurn(pick);
+    ref.read(socketServiceProvider).playerEndTurn(pick);
 
     _checkLineupComplete();
   }

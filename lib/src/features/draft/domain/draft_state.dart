@@ -1,6 +1,10 @@
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../routing/app_routes.dart';
+import '../../../utils/alert_dialogs.dart';
 import '../../fantasy_corps/domain/drum_corps_enum.dart';
 import 'draft_data.dart';
 
@@ -122,5 +126,34 @@ class DraftState {
         'draftCancelled: $draftCancelled, '
         'remainingTime: $remainingTime, '
         'lineupComplete: $lineupComplete }';
+  }
+}
+
+extension DraftStateUI on DraftState {
+  void showAlertOnDraftError(BuildContext context) {
+    if (!isLoading && draftError) {
+      showAlertDialog(
+        context: context,
+        title: 'Error',
+        content: errorMessage ?? 'There was an error while running the draft'
+      );
+    }
+    if (!isLoading && draftCancelled) {
+      showAlertDialog(context: context, title: 'Draft Cancelled', content: 'The tour owner cancelled the draft');
+    }
+  }
+
+  void exitWhenLineupComplete(BuildContext context, String tourId, String playerId) {
+    if (!isLoading && lineupComplete) {
+      FantasyCorps corps = FantasyCorps(
+          tourId: tourId,
+          userId: playerId,
+          lineup: playerLineup,
+          name: 'Unnamed Corps');
+
+      // Exit draft room and send user to Fantasy Corps main page to enter details
+      context.pushNamed(AppRoutes.createCorps.name,
+          pathParameters: {'tid': tourId}, extra: corps);
+    }
   }
 }

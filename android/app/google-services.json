@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "865655864882-cd3jshctb5mou87sc62n5berjo0gqp14.apps.googleusercontent.com",
+          "client_id": "865655864882-mkjgo2qvr7pk21srd54o20bf7kv076pg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +29,13 @@
             {
               "client_id": "865655864882-cd3jshctb5mou87sc62n5berjo0gqp14.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "865655864882-3c4pqfapdioutpgmn0aecfg2t6mmlkq2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fantasydrumcorps.fantasyDrumCorps"
+              }
             }
           ]
         }

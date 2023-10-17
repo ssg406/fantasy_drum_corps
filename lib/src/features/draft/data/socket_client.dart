@@ -23,5 +23,5 @@ class SocketClient {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 SocketClient socketClient(SocketClientRef ref) => SocketClient();
