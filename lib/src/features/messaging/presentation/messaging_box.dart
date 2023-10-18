@@ -103,6 +103,7 @@ class _MessagingBoxState extends ConsumerState<MessagingBox> {
 
   Future<void> _submitMessage() async {
     if (_textController.text.isEmpty) return;
+    FocusManager.instance.primaryFocus?.unfocus();
     final controller = ref.read(messagingBoxControllerProvider.notifier);
     final displayName =
         await ref.read(playerServiceProvider).fetchDisplayName(userId);
