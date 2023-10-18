@@ -58,12 +58,15 @@ class ManageTourContents extends StatelessWidget {
                       thickness: 1.0,
                     ),
                     gapH8,
-                    ManageDraft(tourId: tour.id!, tour: tour),
-                    gapH8,
-                    const Divider(
-                      thickness: 1.0,
-                    ),
-                    gapH8,
+                    if (tour.draftComplete)
+                      ...[
+                        ManageDraft(tourId: tour.id!, tour: tour),
+                        gapH8,
+                        const Divider(
+                          thickness: 1.0,
+                        ),
+                        gapH8,
+                      ],
                     DeleteTour(tour: tour),
                   ],
                 ),
