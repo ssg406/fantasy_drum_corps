@@ -57,7 +57,9 @@ class TourDetailButtonBar extends StatelessWidget {
           DraftButton(
               tourId: tour.id!,
               draftComplete: tour.draftComplete,
-              isOwner: tour.owner == userId),
+              isOwner: tour.owner == userId,
+            playerId: userId,
+          ),
       ],
     );
   }
