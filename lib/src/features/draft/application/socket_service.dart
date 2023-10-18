@@ -21,7 +21,10 @@ class SocketService {
   });
 
   // EMITTERS
-  void disposeSocket() => client.socket.dispose();
+  void disposeSocket() {
+    dev.log('Disposing socket', name: 'Socket Service');
+    client.socket.dispose();
+  }
 
   void clientJoinRoom(String playerId, String tourId, String action) {
     client.socket.emit(CLIENT_REQUESTS_ROOM, {
@@ -62,16 +65,30 @@ class SocketService {
   }
 
   void playerLeavesRoom() {
-    dev.log('Player is leaving room', name: 'Socket Service');
+    dev.log('Emitting player leaving room', name: 'Socket Service');
     client.socket.emit(CLIENT_LEAVE_ROOM);
   }
 
   // LISTENERS
+  void setListeners() {
+    dev.log('Setting socket listeners', name: 'SocketService');
+    onDraftCancelled();
+    onDraftOver();
+    onDraftStarted();
+    onRoomCreated();
+    onRoomJoined();
+    onPlayerMissedTurn();
+    onServerEndTurn();
+    onServerError();
+    onUpdateJoinedPlayers();
+    onTurnStarted();
+  }
+
   void onServerError() {
     client.socket.on(SERVER_ERROR, (data) {
       dev.log('Server error received', name: 'Socket Service');
       socketResponseStream
-          .add(DraftError(errorMessage: data['errorMessage'] as String));
+          .add(ServerError(errorMessage: data['errorMessage'] as String));
     });
   }
 
@@ -122,14 +139,14 @@ class SocketService {
         final isReady = playerEntry['isReady'] as bool;
         joinedPlayers.addAll({player: isReady});
       }
-      dev.log('joined players received: $joinedPlayers',
-          name: 'Socket Service');
       socketResponseStream
           .add(UpdateJoinedPlayers(joinedPlayers: joinedPlayers));
       final allPlayersReady =
           joinedPlayers.values.every((playerReady) => playerReady);
       if (allPlayersReady) {
         socketResponseStream.add(AllPlayersReady(allPlayersReady: true));
+      } else {
+        socketResponseStream.add(AllPlayersReady(allPlayersReady: false));
       }
     });
   }
@@ -178,12 +195,17 @@ class SocketService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 SocketService socketService(SocketServiceRef ref) {
-  return SocketService(client: ref.watch(socketClientProvider));
+  final socketService = SocketService(client: ref.watch(socketClientProvider));
+  ref.onDispose(() {
+    // TODO: Remove listeners when socket service is disposed?
+    socketService.playerLeavesRoom();
+  });
+  return socketService;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<DraftData> socketServiceStream(SocketServiceStreamRef ref) {
   return ref.watch(socketServiceProvider).draftStream;
 }

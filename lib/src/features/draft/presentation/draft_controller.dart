@@ -1,10 +1,12 @@
 import 'package:fantasy_drum_corps/src/features/draft/application/socket_service.dart';
+import 'package:fantasy_drum_corps/src/features/draft/data/socket_client.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/draft_state.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'dart:developer' as dev;
 
 import '../domain/draft_data.dart';
 
@@ -14,20 +16,10 @@ part 'draft_controller.g.dart';
 class DraftController extends _$DraftController {
   @override
   DraftState build() {
-    final socketService = ref.watch(socketServiceProvider);
-    socketService.onDraftCancelled();
-    socketService.onDraftOver();
-    socketService.onDraftStarted();
-    socketService.onRoomCreated();
-    socketService.onRoomJoined();
-    socketService.onPlayerMissedTurn();
-    socketService.onServerEndTurn();
-    socketService.onServerError();
-    socketService.onUpdateJoinedPlayers();
-    socketService.onTurnStarted();
+    ref.read(socketServiceProvider).setListeners();
     ref.listen(socketServiceStreamProvider, (_, data) {
       final draftData = data.value;
-      final tempState = state.copyWith(isLoading: true);
+      final tempState = state;
       switch (draftData) {
         case StartOfTurn():
           state = tempState.copyWith(
@@ -63,16 +55,24 @@ class DraftController extends _$DraftController {
             draftError: true,
             errorMessage: draftData.errorMessage,
           );
-          ref.read(socketServiceProvider).disposeSocket();
+        case ServerError():
+          state = tempState.copyWith(
+              serverError: true, errorMessage: draftData.errorMessage);
         case UpdateJoinedPlayers():
           state = tempState.copyWith(joinedPlayers: draftData.joinedPlayers);
         case DraftCancelled():
-          state = tempState.copyWith(draftCancelled: true, draftStarted: false);
-          ref.read(socketServiceProvider).disposeSocket();
+          state = tempState.copyWith(
+              draftCancelled: true,
+              draftStarted: false,
+              joinedRoom: false,
+              joinedPlayers: {},
+              roomCreated: false,
+              playerReady: false,
+              allPlayersReady: false);
         case null:
       }
-      // Reset loading flag and error/cancelled flags
-      state = state.copyWith(isLoading: false, draftError: false, draftCancelled: false);
+      // Reset draft error flag
+      state = state.copyWith(draftError: false);
     });
 
     final Lineup playerLineup = {};
@@ -89,23 +89,23 @@ class DraftController extends _$DraftController {
     );
   }
 
-  void dispose() {
-    ref.watch(socketServiceProvider).disposeSocket();
-  }
-
   void joinRoom(
       {required String playerId,
       required String tourId,
       required String action}) {
+    dev.log('Sending request to join room', name: 'Draft Controller');
     ref.watch(socketServiceProvider).clientJoinRoom(playerId, tourId, action);
   }
 
   void leaveRoom() {
     ref.watch(socketServiceProvider).playerLeavesRoom();
+    state = state.copyWith(joinedRoom: false, playerReady: false);
   }
 
-  void clientReadyForDraft() =>
-      ref.watch(socketServiceProvider).clientReadyForDraft();
+  void clientReadyForDraft() {
+    ref.watch(socketServiceProvider).clientReadyForDraft();
+    state = state.copyWith(playerReady: true);
+  }
 
   void playerEndTurn(DrumCorpsCaption pick) =>
       ref.watch(socketServiceProvider).playerEndTurn(pick);
@@ -126,6 +126,7 @@ class DraftController extends _$DraftController {
       state = state.copyWith(
           draftError: true,
           errorMessage: 'No ${pick.caption.fullName} slot available');
+      state = state.copyWith(draftError: false);
       return;
     }
     if (state.alreadySelectedCorps.contains(pick.corps)) {
@@ -133,6 +134,7 @@ class DraftController extends _$DraftController {
           draftError: true,
           errorMessage:
               'You already have ${pick.corps.fullName} in your lineup.');
+      state = state.copyWith(draftError: false);
       return;
     }
 

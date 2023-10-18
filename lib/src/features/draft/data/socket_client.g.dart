@@ -6,11 +6,11 @@ part of 'socket_client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$socketClientHash() => r'4ff54aa493bea9ed48372564d3a01cabbc0a9a60';
+String _$socketClientHash() => r'e391145658da394ab1ef69c232b73ac9d4c93766';
 
 /// See also [socketClient].
 @ProviderFor(socketClient)
-final socketClientProvider = AutoDisposeProvider<SocketClient>.internal(
+final socketClientProvider = Provider<SocketClient>.internal(
   socketClient,
   name: r'socketClientProvider',
   debugGetCreateSourceHash:
@@ -19,6 +19,6 @@ final socketClientProvider = AutoDisposeProvider<SocketClient>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SocketClientRef = AutoDisposeProviderRef<SocketClient>;
+typedef SocketClientRef = ProviderRef<SocketClient>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
