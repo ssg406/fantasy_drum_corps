@@ -1,42 +1,40 @@
+import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../routing/app_routes.dart';
 
-class DraftButton extends StatefulWidget {
-  const DraftButton(
-      {Key? key,
-      required this.tourId,
-      required this.draftComplete,
-      required this.isOwner})
-      : super(key: key);
+class DraftButton extends ConsumerWidget {
+  const DraftButton({
+    Key? key,
+    required this.tourId,
+    required this.draftComplete,
+    required this.isOwner,
+    required this.playerId,
+  }) : super(key: key);
 
   final String tourId;
   final bool draftComplete;
   final bool isOwner;
+  final String playerId;
 
   @override
-  State<DraftButton> createState() => _DraftButtonState();
-}
-
-class _DraftButtonState extends State<DraftButton> {
-  String get tourId => widget.tourId;
-
-  bool get draftComplete => widget.draftComplete;
-
-  bool get isOwner => widget.isOwner;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FilledButton.icon(
       icon: const Icon(Icons.play_circle_outline_outlined),
       onPressed: () {
-        _navigateToDraftLobby(context);
+        if (!draftComplete) {
+          ref.read(draftControllerProvider.notifier).joinRoom(
+              playerId: playerId,
+              tourId: tourId,
+              action: isOwner ? 'create' : 'join');
+        }
+        context.pushNamed(AppRoutes.draftLobby.name,
+            pathParameters: {'tid': tourId});
       },
       label: const Text('Go to Draft'),
     );
   }
-
-  void _navigateToDraftLobby(BuildContext context) => context
-      .pushNamed(AppRoutes.draftLobby.name, pathParameters: {'tid': tourId});
 }
