@@ -22,7 +22,7 @@ class ManageDraft extends StatelessWidget {
         const ItemLabel(label: 'Manage Draft'),
         gapH8,
         Text(
-          'Start the draft to begin the process of building corps with your tour mates. Go to the draft page to acccess the draft if it is in progress.',
+          'Reset the draft here if needed. You can start the draft from the Tour Detail page.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         ButtonBar(
@@ -59,11 +59,6 @@ class ManageDraft extends StatelessWidget {
                   );
                 },
               ),
-            if (!tour.draftComplete)
-              DraftButton(
-                  tourId: tourId,
-                  draftComplete: tour.draftComplete,
-                  isOwner: true),
           ],
         ),
       ],
