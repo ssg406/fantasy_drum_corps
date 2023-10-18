@@ -212,20 +212,25 @@ class DraftAlreadyRun extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          'It looks like you already have a Fantasy Corps for this tour. '
-          'The tour admin can reset all corps for this tour, or click below '
-          'to go to your existing Fantasy Corps.',
-          style: Theme.of(context).textTheme.bodyLarge,
+    return Center(
+      child: Padding(
+        padding: pagePadding,
+        child: Column(
+          children: [
+            Text(
+              'It looks like you already have a Fantasy Corps for this tour. '
+              'The tour admin can reset all corps for this tour, or click below '
+              'to go to your existing Fantasy Corps.',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            gapH8,
+            FilledButton(
+              onPressed: () => context.goNamed(AppRoutes.myCorps.name),
+              child: const Text('My Corps'),
+            )
+          ],
         ),
-        gapH8,
-        FilledButton(
-          onPressed: () => context.goNamed(AppRoutes.myCorps.name),
-          child: const Text('My Corps'),
-        )
-      ],
+      ),
     );
   }
 }
