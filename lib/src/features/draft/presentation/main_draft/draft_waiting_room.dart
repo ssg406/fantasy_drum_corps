@@ -30,37 +30,31 @@ class DraftWaitingRoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        debugPrint('willPopScope');
-        return false;
-      },
-      child: PageScaffolding(
-        pageTitle: '$tourName Draft Waiting Room',
-        onBackPressed: onBackPressed,
-        child: Column(
-          children: [
-            players.isEmpty
-                ? _getNoPlayersDisplay(context)
-                : _getJoinedPlayersDisplay(context),
-            gapH16,
-            ButtonBar(
-              children: [
-                if (isTourOwner)
-                  FilledButton(
-                    onPressed: canStartDraft ? onOwnerStartsDraft : null,
-                    child:
-                        Text(canStartDraft ? 'START DRAFT' : 'PLAYERS NOT READY'),
-                  ),
+    return PageScaffolding(
+      pageTitle: '$tourName Draft Waiting Room',
+      onBackPressed: onBackPressed,
+      child: Column(
+        children: [
+          players.isEmpty
+              ? _getNoPlayersDisplay(context)
+              : _getJoinedPlayersDisplay(context),
+          gapH16,
+          ButtonBar(
+            children: [
+              if (isTourOwner)
                 FilledButton(
-                  onPressed: playerIsReady ? null : markPlayerReady,
-                  child: Text(playerIsReady ? 'PLAYER READY' : 'READY TO PLAY'),
-                )
-              ],
-            ),
-            if (!isTourOwner) _getNonOwnerWaitingText(context),
-          ],
-        ),
+                  onPressed: canStartDraft ? onOwnerStartsDraft : null,
+                  child:
+                      Text(canStartDraft ? 'START DRAFT' : 'PLAYERS NOT READY'),
+                ),
+              FilledButton(
+                onPressed: playerIsReady ? null : markPlayerReady,
+                child: Text(playerIsReady ? 'PLAYER READY' : 'READY TO PLAY'),
+              )
+            ],
+          ),
+          if (!isTourOwner) _getNonOwnerWaitingText(context),
+        ],
       ),
     );
   }
