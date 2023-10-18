@@ -84,3 +84,7 @@ class EndOfTurn extends DraftData {
 class DraftError extends DraftData {
   DraftError({super.errorMessage});
 }
+
+class ServerError extends DraftData {
+  ServerError({super.errorMessage});
+}
