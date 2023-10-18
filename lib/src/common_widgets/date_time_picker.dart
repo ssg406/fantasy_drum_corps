@@ -27,7 +27,7 @@ class DateTimePicker extends StatelessWidget {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime(2023, 9, 15),
+      lastDate: DateTime(2024, 12, 31),
     );
     if (pickedDate != null && pickedDate != selectedDate) {
       onSelectedDate?.call(pickedDate);
