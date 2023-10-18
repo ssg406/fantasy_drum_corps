@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
@@ -33,6 +34,10 @@ void main() async {
   // Turn off # in URL for web
   usePathUrlStrategy();
 
+  // ensure URL changes in the address bar when using push / pushNamed
+// more info here: https://docs.google.com/document/d/1VCuB85D5kYxPR3qYOjVmw8boAGKb7k62heFyfFHTOvw/edit
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+
   final sharedPreferences = await SharedPreferences.getInstance();
   final container = ProviderContainer(
     overrides: [
@@ -44,7 +49,6 @@ void main() async {
 
   /// HTTP Overrides to fix Android Socket.io connection
   HttpOverrides.global = MyHttpOverrides();
-
   runApp(
     UncontrolledProviderScope(
       container: container,
