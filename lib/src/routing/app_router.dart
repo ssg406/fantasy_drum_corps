@@ -7,7 +7,9 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_cancelled.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_lobby.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_server_error.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/corps_detail/corps_detail.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
@@ -24,6 +26,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/routing/go_router_refresh_stream.dart';
+import 'package:fantasy_drum_corps/src/routing/presentation/error_page.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -79,6 +82,7 @@ GoRouter goRouter(GoRouterRef ref) {
 
       return null;
     },
+    errorBuilder: (context, state) => const RouterErrorPage(),
     routes: [
       GoRoute(
         path: '/signIn',
@@ -308,6 +312,12 @@ GoRouter goRouter(GoRouterRef ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: '/pageTest',
+            name: 'pageTest',
+            pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey, child: const DraftServerError()),
           ),
         ],
       ),
