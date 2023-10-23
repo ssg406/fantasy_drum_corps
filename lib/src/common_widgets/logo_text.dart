@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LogoText extends StatelessWidget {
   const LogoText(
       {super.key,
-      this.size = 24.0,
+      this.size = 20.0,
       this.isAdmin = false,
       this.color,
       this.alignment = MainAxisAlignment.start});
@@ -20,25 +19,24 @@ class LogoText extends StatelessWidget {
     return Row(
       mainAxisAlignment: alignment,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: FaIcon(
-            FontAwesomeIcons.shieldHalved,
-            size: size,
-            color: color,
-          ),
+        // Padding(
+        //   padding: const EdgeInsets.all(2.0),
+        //   child: FaIcon(
+        //     FontAwesomeIcons.shieldHalved,
+        //     size: size,
+        //     color: color,
+        //   ),
+        // ),
+        Text(
+          ' FANTASY CORPS',
+          style: TextStyle(fontSize: size, color: color),
         ),
-        Text(' FANTASY CORPS',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontSize: size, color: color)),
         if (isAdmin)
-          Text(' ADMIN',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: size,
-                  )),
+          Text(
+            ' ADMIN',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary, fontSize: size),
+          ),
       ],
     );
   }

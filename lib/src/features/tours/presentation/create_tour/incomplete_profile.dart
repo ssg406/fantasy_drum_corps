@@ -4,6 +4,8 @@ import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common_widgets/common_buttons.dart';
+
 class IncompleteProfileWarning extends StatelessWidget {
   const IncompleteProfileWarning({Key? key}) : super(key: key);
 
@@ -30,9 +32,9 @@ class IncompleteProfileWarning extends StatelessWidget {
             gapH24,
             ButtonBar(
               children: [
-                FilledButton(
+                PrimaryActionButton(
                   onPressed: () => context.goNamed(AppRoutes.profile.name),
-                  child: const Text('Go to Profile'),
+                  labelText: 'Go to Profile',
                 ),
               ],
             )

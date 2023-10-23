@@ -1,7 +1,7 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +12,7 @@ class NewMemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TitledIconCard(
-      icon: const FaIcon(
-        FontAwesomeIcons.shieldHalved,
-        color: AppColors.customBlue,
-      ),
+      iconData: FontAwesomeIcons.shieldHalved,
       title: 'Find Tours',
       subtitle:
           'Find tours to join to participate in the draft and create your Fantasy Corps',
@@ -29,15 +26,15 @@ class NewMemberCard extends StatelessWidget {
           gapH16,
           ButtonBar(
             children: [
-              TextButton.icon(
+              PrimaryTextButton(
                 onPressed: () => context.goNamed(AppRoutes.createTour.name),
-                icon: const Icon(Icons.add_circle_outline_rounded),
-                label: const Text('Create Tour'),
+                icon: Icons.add_circle_outline_rounded,
+                labelText: 'Create Tour',
               ),
-              FilledButton.icon(
+              PrimaryActionButton(
                 onPressed: () => context.goNamed(AppRoutes.searchTours.name),
-                icon: const Icon(Icons.people_alt_rounded),
-                label: const Text('Join Tour'),
+                icon: Icons.people_alt_rounded,
+                labelText: 'Join Tour',
               )
             ],
           ),

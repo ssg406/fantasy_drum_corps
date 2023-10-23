@@ -7,9 +7,7 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authenticate_screen.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/authentication_form_type.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_cancelled.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_lobby.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_server_error.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/corps_detail/corps_detail.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
@@ -313,11 +311,12 @@ GoRouter goRouter(GoRouterRef ref) {
               ),
             ],
           ),
+          // TODO remove in production
           GoRoute(
             path: '/pageTest',
             name: 'pageTest',
-            pageBuilder: (context, state) => MaterialPage(
-                key: state.pageKey, child: const DraftServerError()),
+            pageBuilder: (context, state) =>
+                MaterialPage(key: state.pageKey, child: const Placeholder()),
           ),
         ],
       ),

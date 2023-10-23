@@ -13,33 +13,28 @@ class PlayerLineup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1,
-      child: Padding(
-        padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
-            ? cardPadding
-            : const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-        child: Column(
-          children: [
-            Text(
-              'YOUR FANTASY CORPS',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
+      elevation: 0,
+      child: Column(
+        children: [
+          Text(
+            'YOUR FANTASY CORPS',
+            style: Theme.of(context).textTheme.titleLarge,
+            textAlign: TextAlign.center,
+          ),
+          gapH24,
+          SizedBox(
+            height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
+            child: ListView(
+              children: [
+                for (final caption in lineup.keys)
+                  LineupCaptionSlot(
+                    caption: caption,
+                    pick: lineup[caption],
+                  ),
+              ],
             ),
-            gapH24,
-            SizedBox(
-              height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
-              child: ListView(
-                children: [
-                  for (final caption in lineup.keys)
-                    LineupCaptionSlot(
-                      caption: caption,
-                      pick: lineup[caption],
-                    ),
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

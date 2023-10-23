@@ -1,16 +1,18 @@
+import 'dart:developer' as dev;
+
 import 'package:fantasy_drum_corps/src/features/draft/application/socket_service.dart';
-import 'package:fantasy_drum_corps/src/features/draft/data/socket_client.dart';
 import 'package:fantasy_drum_corps/src/features/draft/domain/draft_state.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'dart:developer' as dev;
 
 import '../domain/draft_data.dart';
 
 part 'draft_controller.g.dart';
+
+// TODO Tour owner can enable or disable shuffling of players for each round
 
 @riverpod
 class DraftController extends _$DraftController {
@@ -46,6 +48,7 @@ class DraftController extends _$DraftController {
           );
         case MissedTurn():
           _playerMissedTurn();
+          state = tempState.copyWith(missedTurn: false);
         case EndOfTurn():
           state = tempState.copyWith(
             lastPick: draftData.captionPick,
@@ -68,11 +71,15 @@ class DraftController extends _$DraftController {
               joinedPlayers: {},
               roomCreated: false,
               playerReady: false,
-              allPlayersReady: false);
+              allPlayersReady: false,
+              draftError: false,
+              serverError: false,
+              errorMessage: null);
         case null:
       }
       // Reset draft error flag
-      state = state.copyWith(draftError: false);
+      state = state.copyWith(
+          draftError: false, serverError: false, errorMessage: null);
     });
 
     final Lineup playerLineup = {};

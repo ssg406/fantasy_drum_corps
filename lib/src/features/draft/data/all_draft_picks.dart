@@ -3,719 +3,412 @@ import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_mod
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 
 const startingDraftPicks = [
+  DrumCorpsCaption(id: '1', corps: DrumCorps.bluecoats, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '1',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.brass),
+      id: '2', corps: DrumCorps.bluecoats, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '3', corps: DrumCorps.bluecoats, caption: Caption.ge1),
+  DrumCorpsCaption(id: '4', corps: DrumCorps.bluecoats, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '2',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.colorGuard),
+      id: '5', corps: DrumCorps.bluecoats, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '3',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.ge1),
+      id: '6', corps: DrumCorps.bluecoats, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '4',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.ge2),
+      id: '7', corps: DrumCorps.bluecoats, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '5',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.musicAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '6',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '7',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '8',
-      corps: DrumCorps.bluecoats,
-      caption: Caption.visualProficiency),
+      id: '8', corps: DrumCorps.bluecoats, caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '9',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.brass),
+      id: '9', corps: DrumCorps.blueDevils, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '10',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.colorGuard),
+      id: '10', corps: DrumCorps.blueDevils, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '11', corps: DrumCorps.blueDevils, caption: Caption.ge1),
+  DrumCorpsCaption(id: '12', corps: DrumCorps.blueDevils, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '11',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.ge1),
+      id: '13', corps: DrumCorps.blueDevils, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '12',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.ge2),
+      id: '14', corps: DrumCorps.blueDevils, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '13',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.musicAnalysis),
+      id: '15', corps: DrumCorps.blueDevils, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '14',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '15',
-      corps: DrumCorps.blueDevils,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '16',
+      id: '16',
       corps: DrumCorps.blueDevils,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '17',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.brass),
+      id: '17', corps: DrumCorps.blueKnights, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '18',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.colorGuard),
+      id: '18', corps: DrumCorps.blueKnights, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '19',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.ge1),
+      id: '19', corps: DrumCorps.blueKnights, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '20',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.ge2),
+      id: '20', corps: DrumCorps.blueKnights, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '21',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.musicAnalysis),
+      id: '21', corps: DrumCorps.blueKnights, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '22',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.percussion),
+      id: '22', corps: DrumCorps.blueKnights, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '23',
-      corps: DrumCorps.blueKnights,
-      caption: Caption.visualAnalysis),
+      id: '23', corps: DrumCorps.blueKnights, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '24',
+      id: '24',
       corps: DrumCorps.blueKnights,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '25',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.brass),
+      id: '25', corps: DrumCorps.theAcademy, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '26',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.colorGuard),
+      id: '26', corps: DrumCorps.theAcademy, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '27', corps: DrumCorps.theAcademy, caption: Caption.ge1),
+  DrumCorpsCaption(id: '28', corps: DrumCorps.theAcademy, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '27',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.ge1),
+      id: '29', corps: DrumCorps.theAcademy, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '28',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.ge2),
+      id: '30', corps: DrumCorps.theAcademy, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '29',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.musicAnalysis),
+      id: '31', corps: DrumCorps.theAcademy, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '30',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '31',
-      corps: DrumCorps.theAcademy,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '32',
+      id: '32',
       corps: DrumCorps.theAcademy,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '33',
-      corps: DrumCorps.blueStars,
-      caption: Caption.brass),
+      id: '33', corps: DrumCorps.blueStars, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '34',
-      corps: DrumCorps.blueStars,
-      caption: Caption.colorGuard),
+      id: '34', corps: DrumCorps.blueStars, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '35', corps: DrumCorps.blueStars, caption: Caption.ge1),
+  DrumCorpsCaption(id: '36', corps: DrumCorps.blueStars, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '35',
-      corps: DrumCorps.blueStars,
-      caption: Caption.ge1),
+      id: '37', corps: DrumCorps.blueStars, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '36',
-      corps: DrumCorps.blueStars,
-      caption: Caption.ge2),
+      id: '38', corps: DrumCorps.blueStars, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '37',
-      corps: DrumCorps.blueStars,
-      caption: Caption.musicAnalysis),
+      id: '39', corps: DrumCorps.blueStars, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '38',
-      corps: DrumCorps.blueStars,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '39',
-      corps: DrumCorps.blueStars,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '40',
-      corps: DrumCorps.blueStars,
-      caption: Caption.visualProficiency),
+      id: '40', corps: DrumCorps.blueStars, caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '41',
-      corps: DrumCorps.bostonCrusaders,
-      caption: Caption.brass),
+      id: '41', corps: DrumCorps.bostonCrusaders, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '42',
-      corps: DrumCorps.bostonCrusaders,
-      caption: Caption.colorGuard),
+      id: '42', corps: DrumCorps.bostonCrusaders, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '43',
-      corps: DrumCorps.bostonCrusaders,
-      caption: Caption.ge1),
+      id: '43', corps: DrumCorps.bostonCrusaders, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '44',
-      corps: DrumCorps.bostonCrusaders,
-      caption: Caption.ge2),
+      id: '44', corps: DrumCorps.bostonCrusaders, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '45',
+      id: '45',
       corps: DrumCorps.bostonCrusaders,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '46',
-      corps: DrumCorps.bostonCrusaders,
-      caption: Caption.percussion),
+      id: '46', corps: DrumCorps.bostonCrusaders, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '47',
+      id: '47',
       corps: DrumCorps.bostonCrusaders,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '48',
+      id: '48',
       corps: DrumCorps.bostonCrusaders,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '49',
-      corps: DrumCorps.theCadets,
-      caption: Caption.brass),
+      id: '49', corps: DrumCorps.theCadets, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '50',
-      corps: DrumCorps.theCadets,
-      caption: Caption.colorGuard),
+      id: '50', corps: DrumCorps.theCadets, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '51', corps: DrumCorps.theCadets, caption: Caption.ge1),
+  DrumCorpsCaption(id: '52', corps: DrumCorps.theCadets, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '51',
-      corps: DrumCorps.theCadets,
-      caption: Caption.ge1),
+      id: '53', corps: DrumCorps.theCadets, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '52',
-      corps: DrumCorps.theCadets,
-      caption: Caption.ge2),
+      id: '54', corps: DrumCorps.theCadets, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '53',
-      corps: DrumCorps.theCadets,
-      caption: Caption.musicAnalysis),
+      id: '55', corps: DrumCorps.theCadets, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '54',
-      corps: DrumCorps.theCadets,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '55',
-      corps: DrumCorps.theCadets,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '56',
-      corps: DrumCorps.theCadets,
-      caption: Caption.visualProficiency),
+      id: '56', corps: DrumCorps.theCadets, caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '57',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.brass),
+      id: '57', corps: DrumCorps.carolinaCrown, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '58',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.colorGuard),
+      id: '58', corps: DrumCorps.carolinaCrown, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '59',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.ge1),
+      id: '59', corps: DrumCorps.carolinaCrown, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '60',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.ge2),
+      id: '60', corps: DrumCorps.carolinaCrown, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '61',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.musicAnalysis),
+      id: '61', corps: DrumCorps.carolinaCrown, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '62',
-      corps: DrumCorps.carolinaCrown,
-      caption: Caption.percussion),
+      id: '62', corps: DrumCorps.carolinaCrown, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '63',
+      id: '63',
       corps: DrumCorps.carolinaCrown,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '64',
+      id: '64',
       corps: DrumCorps.carolinaCrown,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '65',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.brass),
+      id: '65', corps: DrumCorps.theCavaliers, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '66',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.colorGuard),
+      id: '66', corps: DrumCorps.theCavaliers, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '67',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.ge1),
+      id: '67', corps: DrumCorps.theCavaliers, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '68',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.ge2),
+      id: '68', corps: DrumCorps.theCavaliers, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '69',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.musicAnalysis),
+      id: '69', corps: DrumCorps.theCavaliers, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '70',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.percussion),
+      id: '70', corps: DrumCorps.theCavaliers, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '71',
-      corps: DrumCorps.theCavaliers,
-      caption: Caption.visualAnalysis),
+      id: '71', corps: DrumCorps.theCavaliers, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '72',
+      id: '72',
       corps: DrumCorps.theCavaliers,
       caption: Caption.visualProficiency),
   //break
+  DrumCorpsCaption(id: '73', corps: DrumCorps.colts, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '73', corps: DrumCorps.colts, caption: Caption.brass),
+      id: '74', corps: DrumCorps.colts, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '75', corps: DrumCorps.colts, caption: Caption.ge1),
+  DrumCorpsCaption(id: '76', corps: DrumCorps.colts, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '74',
-      corps: DrumCorps.colts,
-      caption: Caption.colorGuard),
+      id: '77', corps: DrumCorps.colts, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '75', corps: DrumCorps.colts, caption: Caption.ge1),
+      id: '78', corps: DrumCorps.colts, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '76', corps: DrumCorps.colts, caption: Caption.ge2),
+      id: '79', corps: DrumCorps.colts, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '77',
-      corps: DrumCorps.colts,
-      caption: Caption.musicAnalysis),
+      id: '80', corps: DrumCorps.colts, caption: Caption.visualProficiency),
+  //break
+  DrumCorpsCaption(id: '81', corps: DrumCorps.crossmen, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '78',
-      corps: DrumCorps.colts,
-      caption: Caption.percussion),
+      id: '82', corps: DrumCorps.crossmen, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '83', corps: DrumCorps.crossmen, caption: Caption.ge1),
+  DrumCorpsCaption(id: '84', corps: DrumCorps.crossmen, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '79',
-      corps: DrumCorps.colts,
-      caption: Caption.visualAnalysis),
+      id: '85', corps: DrumCorps.crossmen, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '80',
-      corps: DrumCorps.colts,
-      caption: Caption.visualProficiency),
+      id: '86', corps: DrumCorps.crossmen, caption: Caption.percussion),
+  DrumCorpsCaption(
+      id: '87', corps: DrumCorps.crossmen, caption: Caption.visualAnalysis),
+  DrumCorpsCaption(
+      id: '88', corps: DrumCorps.crossmen, caption: Caption.visualProficiency),
+  //break
+  DrumCorpsCaption(id: '89', corps: DrumCorps.genesis, caption: Caption.brass),
+  DrumCorpsCaption(
+      id: '90', corps: DrumCorps.genesis, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '91', corps: DrumCorps.genesis, caption: Caption.ge1),
+  DrumCorpsCaption(id: '92', corps: DrumCorps.genesis, caption: Caption.ge2),
+  DrumCorpsCaption(
+      id: '93', corps: DrumCorps.genesis, caption: Caption.musicAnalysis),
+  DrumCorpsCaption(
+      id: '94', corps: DrumCorps.genesis, caption: Caption.percussion),
+  DrumCorpsCaption(
+      id: '95', corps: DrumCorps.genesis, caption: Caption.visualAnalysis),
+  DrumCorpsCaption(
+      id: '96', corps: DrumCorps.genesis, caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '81',
-      corps: DrumCorps.crossmen,
-      caption: Caption.brass),
+      id: '97', corps: DrumCorps.jerseySurf, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '82',
-      corps: DrumCorps.crossmen,
-      caption: Caption.colorGuard),
+      id: '98', corps: DrumCorps.jerseySurf, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '99', corps: DrumCorps.jerseySurf, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '83',
-      corps: DrumCorps.crossmen,
-      caption: Caption.ge1),
+      id: '100', corps: DrumCorps.jerseySurf, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '84',
-      corps: DrumCorps.crossmen,
-      caption: Caption.ge2),
+      id: '101', corps: DrumCorps.jerseySurf, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '85',
-      corps: DrumCorps.crossmen,
-      caption: Caption.musicAnalysis),
+      id: '102', corps: DrumCorps.jerseySurf, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '86',
-      corps: DrumCorps.crossmen,
-      caption: Caption.percussion),
+      id: '103', corps: DrumCorps.jerseySurf, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '87',
-      corps: DrumCorps.crossmen,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '88',
-      corps: DrumCorps.crossmen,
-      caption: Caption.visualProficiency),
-  //break
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '89',
-      corps: DrumCorps.genesis,
-      caption: Caption.brass),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '90',
-      corps: DrumCorps.genesis,
-      caption: Caption.colorGuard),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '91', corps: DrumCorps.genesis, caption: Caption.ge1),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '92', corps: DrumCorps.genesis, caption: Caption.ge2),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '93',
-      corps: DrumCorps.genesis,
-      caption: Caption.musicAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '94',
-      corps: DrumCorps.genesis,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '95',
-      corps: DrumCorps.genesis,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '96',
-      corps: DrumCorps.genesis,
-      caption: Caption.visualProficiency),
-  //break
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '97',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.brass),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '98',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.colorGuard),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '99',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.ge1),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '100',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.ge2),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '101',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.musicAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '102',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '103',
-      corps: DrumCorps.jerseySurf,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '104',
+      id: '104',
       corps: DrumCorps.jerseySurf,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '105',
-      corps: DrumCorps.madisonScouts,
-      caption: Caption.brass),
+      id: '105', corps: DrumCorps.madisonScouts, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '106',
-      corps: DrumCorps.madisonScouts,
-      caption: Caption.colorGuard),
+      id: '106', corps: DrumCorps.madisonScouts, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '107',
-      corps: DrumCorps.madisonScouts,
-      caption: Caption.ge1),
+      id: '107', corps: DrumCorps.madisonScouts, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '108',
-      corps: DrumCorps.madisonScouts,
-      caption: Caption.ge2),
+      id: '108', corps: DrumCorps.madisonScouts, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '109',
+      id: '109',
       corps: DrumCorps.madisonScouts,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '110',
-      corps: DrumCorps.madisonScouts,
-      caption: Caption.percussion),
+      id: '110', corps: DrumCorps.madisonScouts, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '111',
+      id: '111',
       corps: DrumCorps.madisonScouts,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '112',
+      id: '112',
       corps: DrumCorps.madisonScouts,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '113',
-      corps: DrumCorps.mandarins,
-      caption: Caption.brass),
+      id: '113', corps: DrumCorps.mandarins, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '114',
-      corps: DrumCorps.mandarins,
-      caption: Caption.colorGuard),
+      id: '114', corps: DrumCorps.mandarins, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '115', corps: DrumCorps.mandarins, caption: Caption.ge1),
+  DrumCorpsCaption(id: '116', corps: DrumCorps.mandarins, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '115',
-      corps: DrumCorps.mandarins,
-      caption: Caption.ge1),
+      id: '117', corps: DrumCorps.mandarins, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '116',
-      corps: DrumCorps.mandarins,
-      caption: Caption.ge2),
+      id: '118', corps: DrumCorps.mandarins, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '117',
-      corps: DrumCorps.mandarins,
-      caption: Caption.musicAnalysis),
+      id: '119', corps: DrumCorps.mandarins, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '118',
-      corps: DrumCorps.mandarins,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '119',
-      corps: DrumCorps.mandarins,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '120',
+      id: '120',
       corps: DrumCorps.mandarins,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '121',
-      corps: DrumCorps.musicCity,
-      caption: Caption.brass),
+      id: '121', corps: DrumCorps.musicCity, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '122',
-      corps: DrumCorps.musicCity,
-      caption: Caption.colorGuard),
+      id: '122', corps: DrumCorps.musicCity, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '123', corps: DrumCorps.musicCity, caption: Caption.ge1),
+  DrumCorpsCaption(id: '124', corps: DrumCorps.musicCity, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '123',
-      corps: DrumCorps.musicCity,
-      caption: Caption.ge1),
+      id: '125', corps: DrumCorps.musicCity, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '124',
-      corps: DrumCorps.musicCity,
-      caption: Caption.ge2),
+      id: '126', corps: DrumCorps.musicCity, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '125',
-      corps: DrumCorps.musicCity,
-      caption: Caption.musicAnalysis),
+      id: '127', corps: DrumCorps.musicCity, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '126',
-      corps: DrumCorps.musicCity,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '127',
-      corps: DrumCorps.musicCity,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '128',
+      id: '128',
       corps: DrumCorps.musicCity,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '129',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.brass),
+      id: '129', corps: DrumCorps.pacificCrest, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '130',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.colorGuard),
+      id: '130', corps: DrumCorps.pacificCrest, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '131',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.ge1),
+      id: '131', corps: DrumCorps.pacificCrest, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '132',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.ge2),
+      id: '132', corps: DrumCorps.pacificCrest, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '133',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.musicAnalysis),
+      id: '133', corps: DrumCorps.pacificCrest, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '134',
-      corps: DrumCorps.pacificCrest,
-      caption: Caption.percussion),
+      id: '134', corps: DrumCorps.pacificCrest, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '135',
+      id: '135',
       corps: DrumCorps.pacificCrest,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '136',
+      id: '136',
       corps: DrumCorps.pacificCrest,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '137',
-      corps: DrumCorps.phantomRegiment,
-      caption: Caption.brass),
+      id: '137', corps: DrumCorps.phantomRegiment, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '138',
-      corps: DrumCorps.phantomRegiment,
-      caption: Caption.colorGuard),
+      id: '138', corps: DrumCorps.phantomRegiment, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '139',
-      corps: DrumCorps.phantomRegiment,
-      caption: Caption.ge1),
+      id: '139', corps: DrumCorps.phantomRegiment, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '140',
-      corps: DrumCorps.phantomRegiment,
-      caption: Caption.ge2),
+      id: '140', corps: DrumCorps.phantomRegiment, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '141',
+      id: '141',
       corps: DrumCorps.phantomRegiment,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '142',
-      corps: DrumCorps.phantomRegiment,
-      caption: Caption.percussion),
+      id: '142', corps: DrumCorps.phantomRegiment, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '143',
+      id: '143',
       corps: DrumCorps.phantomRegiment,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '144',
+      id: '144',
       corps: DrumCorps.phantomRegiment,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '145',
-      corps: DrumCorps.santaClaraVanguard,
-      caption: Caption.brass),
+      id: '145', corps: DrumCorps.santaClaraVanguard, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '146',
+      id: '146',
       corps: DrumCorps.santaClaraVanguard,
       caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '147',
-      corps: DrumCorps.santaClaraVanguard,
-      caption: Caption.ge1),
+      id: '147', corps: DrumCorps.santaClaraVanguard, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '148',
-      corps: DrumCorps.santaClaraVanguard,
-      caption: Caption.ge2),
+      id: '148', corps: DrumCorps.santaClaraVanguard, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '149',
+      id: '149',
       corps: DrumCorps.santaClaraVanguard,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '150',
+      id: '150',
       corps: DrumCorps.santaClaraVanguard,
       caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '151',
+      id: '151',
       corps: DrumCorps.santaClaraVanguard,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '152',
+      id: '152',
       corps: DrumCorps.santaClaraVanguard,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '153',
-      corps: DrumCorps.seattleCascades,
-      caption: Caption.brass),
+      id: '153', corps: DrumCorps.seattleCascades, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '154',
-      corps: DrumCorps.seattleCascades,
-      caption: Caption.colorGuard),
+      id: '154', corps: DrumCorps.seattleCascades, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '155',
-      corps: DrumCorps.seattleCascades,
-      caption: Caption.ge1),
+      id: '155', corps: DrumCorps.seattleCascades, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '156',
-      corps: DrumCorps.seattleCascades,
-      caption: Caption.ge2),
+      id: '156', corps: DrumCorps.seattleCascades, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '157',
+      id: '157',
       corps: DrumCorps.seattleCascades,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '158',
-      corps: DrumCorps.seattleCascades,
-      caption: Caption.percussion),
+      id: '158', corps: DrumCorps.seattleCascades, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '159',
+      id: '159',
       corps: DrumCorps.seattleCascades,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '160',
+      id: '160',
       corps: DrumCorps.seattleCascades,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '161',
-      corps: DrumCorps.spiritOfAtlanta,
-      caption: Caption.brass),
+      id: '161', corps: DrumCorps.spiritOfAtlanta, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '162',
-      corps: DrumCorps.spiritOfAtlanta,
-      caption: Caption.colorGuard),
+      id: '162', corps: DrumCorps.spiritOfAtlanta, caption: Caption.colorGuard),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '163',
-      corps: DrumCorps.spiritOfAtlanta,
-      caption: Caption.ge1),
+      id: '163', corps: DrumCorps.spiritOfAtlanta, caption: Caption.ge1),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '164',
-      corps: DrumCorps.spiritOfAtlanta,
-      caption: Caption.ge2),
+      id: '164', corps: DrumCorps.spiritOfAtlanta, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '165',
+      id: '165',
       corps: DrumCorps.spiritOfAtlanta,
       caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '166',
-      corps: DrumCorps.spiritOfAtlanta,
-      caption: Caption.percussion),
+      id: '166', corps: DrumCorps.spiritOfAtlanta, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '167',
+      id: '167',
       corps: DrumCorps.spiritOfAtlanta,
       caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '168',
+      id: '168',
       corps: DrumCorps.spiritOfAtlanta,
       caption: Caption.visualProficiency),
   //break
   DrumCorpsCaption(
-      drumCorpsCaptionId: '169',
-      corps: DrumCorps.troopers,
-      caption: Caption.brass),
+      id: '169', corps: DrumCorps.troopers, caption: Caption.brass),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '170',
-      corps: DrumCorps.troopers,
-      caption: Caption.colorGuard),
+      id: '170', corps: DrumCorps.troopers, caption: Caption.colorGuard),
+  DrumCorpsCaption(id: '171', corps: DrumCorps.troopers, caption: Caption.ge1),
+  DrumCorpsCaption(id: '172', corps: DrumCorps.troopers, caption: Caption.ge2),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '171',
-      corps: DrumCorps.troopers,
-      caption: Caption.ge1),
+      id: '173', corps: DrumCorps.troopers, caption: Caption.musicAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '172',
-      corps: DrumCorps.troopers,
-      caption: Caption.ge2),
+      id: '174', corps: DrumCorps.troopers, caption: Caption.percussion),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '173',
-      corps: DrumCorps.troopers,
-      caption: Caption.musicAnalysis),
+      id: '175', corps: DrumCorps.troopers, caption: Caption.visualAnalysis),
   DrumCorpsCaption(
-      drumCorpsCaptionId: '174',
-      corps: DrumCorps.troopers,
-      caption: Caption.percussion),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '175',
-      corps: DrumCorps.troopers,
-      caption: Caption.visualAnalysis),
-  DrumCorpsCaption(
-      drumCorpsCaptionId: '176',
-      corps: DrumCorps.troopers,
-      caption: Caption.visualProficiency),
+      id: '176', corps: DrumCorps.troopers, caption: Caption.visualProficiency),
 ];

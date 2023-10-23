@@ -44,7 +44,7 @@ class _DashboardState extends ConsumerState<Dashboard> {
             children: [
               Text(
                 'CORPS HALL',
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               gapH8,
               AsyncValueWidget(

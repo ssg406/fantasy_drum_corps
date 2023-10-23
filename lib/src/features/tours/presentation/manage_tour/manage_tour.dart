@@ -11,7 +11,7 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/m
 import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_members.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class ManageTour extends ConsumerWidget {
   const ManageTour({Key? key, required this.tourId}) : super(key: key);
@@ -40,7 +40,9 @@ class ManageTourContents extends StatelessWidget {
       child: ResponsiveCenter(
         maxContentWidth: 1200,
         child: Padding(
-          padding: pagePadding,
+          padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+              ? pagePadding
+              : mobilePagePadding,
           child: Column(
             children: [
               TitledSectionCard(
@@ -53,28 +55,17 @@ class ManageTourContents extends StatelessWidget {
                       tourId: tour.id!,
                       owner: tour.owner,
                     ),
-                    gapH8,
-                    const Divider(
-                      thickness: 1.0,
-                    ),
-                    gapH8,
-                    if (tour.draftComplete)
-                      ...[
-                        ManageDraft(tourId: tour.id!, tour: tour),
-                        gapH8,
-                        const Divider(
-                          thickness: 1.0,
-                        ),
-                        gapH8,
-                      ],
+                    gapH16,
+                    if (tour.draftComplete) ...[
+                      ManageDraft(tourId: tour.id!, tour: tour),
+                      gapH8,
+                    ],
                     DeleteTour(tour: tour),
                   ],
                 ),
               ),
               gapH16,
-              CustomBackButton(
-                customOnPressed: () => context.pop(),
-              ),
+              const CustomBackButton(),
             ],
           ),
         ),

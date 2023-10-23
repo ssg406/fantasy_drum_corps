@@ -1,8 +1,9 @@
+import 'dart:developer' as dev;
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'dart:io' show Platform;
-import 'dart:developer' as dev;
 
 part 'socket_client.g.dart';
 
@@ -21,7 +22,8 @@ class SocketClient {
   }
 
   // Production server
-  // String get connectionString => 'https://fantasy-drum-corps-server.herokuapp.com';
+  // String get connectionString =>
+  //     'https://fdc-socket-server-0486b50ecf41.herokuapp.com/';
 
   SocketClient() {
     socket = io.io(

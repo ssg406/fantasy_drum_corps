@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
@@ -16,8 +17,8 @@ class HowToPlay extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Complete Your Profile'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'Complete Your Profile',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -29,8 +30,8 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH24,
           Text(
-            'Create or Join a Tour'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'Create or Join a Tour',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -44,14 +45,17 @@ class HowToPlay extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           gapH16,
-          FilledButton(
-            onPressed: () => context.pushNamed(AppRoutes.searchTours.name),
-            child: const Text('Join a Tour'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: PrimaryTextButton(
+                onPressed: () => context.pushNamed(AppRoutes.searchTours.name),
+                labelText: 'Join a Tour',
+                icon: Icons.group_add),
           ),
           gapH24,
           Text(
-            'Get Ready to Draft'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'Get Ready to Draft',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -69,8 +73,8 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH24,
           Text(
-            'Draft Your Fantasy Corps'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'Draft Your Fantasy Corps',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -86,8 +90,8 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH24,
           Text(
-            'Missed the Draft?'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'Missed the Draft?',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -102,8 +106,8 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH24,
           Text(
-            'The Leaderboard'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'The Leaderboard',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -117,8 +121,8 @@ class HowToPlay extends StatelessWidget {
           ),
           gapH24,
           Text(
-            'How we Play'.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+            'How we Play',
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -131,18 +135,22 @@ class HowToPlay extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           gapH16,
-          FilledButton(
-            onPressed: () {
-              final Uri emailUri = Uri(
-                scheme: 'mailto',
-                path: 'help@fantasydrumcorps.com',
-                query: encodeQueryParameters(<String, String>{
-                  'subject': 'Reporting concerns about FantasyDrumCorps',
-                }),
-              );
-              launchUrl(emailUri);
-            },
-            child: const Text('Contact Us'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: PrimaryTextButton(
+              onPressed: () {
+                final Uri emailUri = Uri(
+                  scheme: 'mailto',
+                  path: 'help@fantasydrumcorps.com',
+                  query: encodeQueryParameters(<String, String>{
+                    'subject': 'Reporting concerns about FantasyDrumCorps',
+                  }),
+                );
+                launchUrl(emailUri);
+              },
+              labelText: 'Contact Us',
+              icon: Icons.mail_outline_outlined,
+            ),
           )
         ],
       ),

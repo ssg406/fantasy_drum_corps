@@ -73,6 +73,7 @@ class TourDetailContents extends ConsumerWidget {
                 ? Axis.horizontal
                 : Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

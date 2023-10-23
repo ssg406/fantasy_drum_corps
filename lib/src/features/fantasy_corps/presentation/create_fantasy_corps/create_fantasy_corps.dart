@@ -1,6 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/admin/application/score_service.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
@@ -11,6 +10,8 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../common_widgets/common_buttons.dart';
 
 class CreateFantasyCorps extends StatelessWidget {
   const CreateFantasyCorps({
@@ -124,11 +125,10 @@ class _CreateFantasyCorpsContentsState
                 ),
                 gapH32,
                 Center(
-                  child: PrimaryButton(
+                  child: PrimaryActionButton(
                     onPressed: _submitForm,
-                    label: _isEditing ? 'UPDATE' : 'FINISH',
+                    labelText: _isEditing ? 'UPDATE' : 'FINISH',
                     isLoading: state.isLoading,
-                    onSurface: true,
                   ),
                 ),
               ],

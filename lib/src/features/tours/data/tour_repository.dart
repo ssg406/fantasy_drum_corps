@@ -25,17 +25,16 @@ class ToursRepository {
         toFirestore: (league, _) => league.toJson(),
       );
 
-  // Create league
-  Future<void> addTour(Tour tour) {
-    return _database.collection(toursPath).add(tour.toJson());
-  }
+  // Create tour
+  Future<void> addTour(Tour tour) =>
+      _database.collection(toursPath).add(tour.toJson());
 
-  // Update a league
+  // Update a tour
   Future<void> updateTour(Tour tour) {
     return _database.doc(tourPath(tour.id!)).update(tour.toJson());
   }
 
-  // Delete league
+  // Delete tour
   Future<void> deleteTour({required TourID tourId}) {
     //Check user is deleting their own tour
     final tourRef = _database.doc(tourPath(tourId));

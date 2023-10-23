@@ -12,7 +12,7 @@ class GreetingCard extends StatelessWidget {
       children: [
         Text(
           '$greeting Welcome to Fantasy Corps.',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],
     );

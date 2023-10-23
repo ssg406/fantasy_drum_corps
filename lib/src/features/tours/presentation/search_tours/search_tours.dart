@@ -1,7 +1,7 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_tour_tile.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/label_checkbox.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/tour_search_tile.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
@@ -88,7 +88,7 @@ class ResultsContainer extends StatelessWidget {
       child: ListView(
         children: [
           for (final tour in filteredTours)
-            TourSearchTile(
+            CommonTourTile(
               tour: tour,
             ),
         ],

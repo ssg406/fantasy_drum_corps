@@ -1,7 +1,10 @@
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../common_widgets/common_buttons.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -21,8 +24,8 @@ class AboutPage extends StatelessWidget {
           // ),
           // gapH16,
           Text(
-            'CONTACT',
-            style: theme.textTheme.titleLarge,
+            'Contact',
+            style: theme.textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -30,23 +33,27 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          FilledButton(
-            onPressed: () {
-              final Uri emailUri = Uri(
-                scheme: 'mailto',
-                path: 'help@fantasydrumcorps.com',
-                query: encodeQueryParameters(<String, String>{
-                  'subject': 'A question about Fantasy Drum Corps',
-                }),
-              );
-              launchUrl(emailUri);
-            },
-            child: const Text('Email Us'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: PrimaryTextButton(
+              onPressed: () {
+                final Uri emailUri = Uri(
+                  scheme: 'mailto',
+                  path: 'help@fantasydrumcorps.com',
+                  query: encodeQueryParameters(<String, String>{
+                    'subject': 'A question about Fantasy Drum Corps',
+                  }),
+                );
+                launchUrl(emailUri);
+              },
+              labelText: 'Email Us',
+              icon: Icons.email_outlined,
+            ),
           ),
           gapH24,
           Text(
-            'LICENSE',
-            style: theme.textTheme.titleLarge,
+            'License',
+            style: theme.textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -61,16 +68,20 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          FilledButton(
-            onPressed: () async {
-              await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
-            },
-            child: const Text('GNU Licenses'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: PrimaryTextButton(
+              onPressed: () async {
+                await launchUrl(Uri.parse('https://www.gnu.org/licenses/'));
+              },
+              labelText: 'GNU Licenses',
+              icon: FontAwesomeIcons.fileLines,
+            ),
           ),
           gapH24,
           Text(
-            'SOURCE',
-            style: theme.textTheme.titleLarge,
+            'Source',
+            style: theme.textTheme.headlineSmall,
           ),
           gapH16,
           Text(
@@ -82,20 +93,22 @@ class AboutPage extends StatelessWidget {
             style: theme.textTheme.bodyLarge,
           ),
           gapH8,
-          ButtonBar(alignment: MainAxisAlignment.start, children: [
-            FilledButton(
+          ButtonBar(children: [
+            PrimaryTextButton(
               onPressed: () async {
                 await launchUrl(
-                    Uri.parse('http://github.com/ssg406/fantasy_drum_corps'));
+                    Uri.parse('https://github.com/ssg406/fantasy_drum_corps'));
               },
-              child: const Text('Fantasy Drum Corps App'),
+              labelText: 'Fantasy Drum Corps App',
+              icon: FontAwesomeIcons.github,
             ),
-            FilledButton(
+            PrimaryTextButton(
               onPressed: () async {
                 await launchUrl(Uri.parse(
-                    'http://github.com/ssg406/fantasy_drum_corps_server'));
+                    'https://github.com/ssg406/fantasy_drum_corps_server'));
               },
-              child: const Text('Fantasy Drum Corps Server'),
+              labelText: 'Fantasy Drum Corps Server',
+              icon: FontAwesomeIcons.github,
             ),
           ]),
         ],

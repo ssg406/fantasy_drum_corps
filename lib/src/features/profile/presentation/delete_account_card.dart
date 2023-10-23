@@ -5,6 +5,8 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common_widgets/common_buttons.dart';
+
 class DeleteAccountCard extends ConsumerStatefulWidget {
   const DeleteAccountCard({Key? key}) : super(key: key);
 
@@ -17,32 +19,25 @@ class _DeleteAccountCardState extends ConsumerState<DeleteAccountCard> {
   String? _errorText;
   final _textController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue>(profileScreenControllerProvider,
-            (_, state) => state.showAlertDialogOnError(context));
+        (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(profileScreenControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Delete Account',
-          style: Theme
-              .of(context)
-              .textTheme
-              .titleMedium,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         gapH16,
         Text(
           'Deleting your account removes all personal information '
-              'that you have stored in Fantasy Drum Corps and cannot be '
-              'undone. Lineups you have created will remain on the site to '
-              'allow other members to continue in your absence.',
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyLarge,
+          'that you have stored in Fantasy Drum Corps and cannot be '
+          'undone. Lineups you have created will remain on the site to '
+          'allow other members to continue in your absence.',
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         gapH16,
         Row(
@@ -65,16 +60,12 @@ class _DeleteAccountCardState extends ConsumerState<DeleteAccountCard> {
                     onPressed: () => setState(() => _showPasswordField = false),
                     child: const Text('Cancel'),
                   ),
-                FilledButton(
+                PrimaryActionButton(
+                  isDestructive: true,
                   onPressed: _deleteAccount,
-                  style: FilledButton.styleFrom(
-                      backgroundColor: Theme
-                          .of(context)
-                          .colorScheme
-                          .error),
-                  child: state.isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Delete Account'),
+                  labelText: 'Delete Account',
+                  isLoading: state.isLoading,
+                  icon: Icons.delete_forever,
                 ),
               ],
             ),
@@ -89,7 +80,7 @@ class _DeleteAccountCardState extends ConsumerState<DeleteAccountCard> {
       context: context,
       title: 'Delete Account',
       content:
-      'Are you sure you want to delete your account? This option cannot be undone.',
+          'Are you sure you want to delete your account? This option cannot be undone.',
       defaultActionText: 'Delete',
       cancelActionText: 'Cancel',
     );

@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common_widgets/common_buttons.dart';
+
 /// [DetailsCard] presents a UI that allows the user to change their display
 /// name and update or remove their profile image
 class DetailsCard extends ConsumerWidget {
@@ -68,7 +70,7 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
       children: [
         Text(
           'Avatar and Display Name',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         gapH16,
         Row(
@@ -115,11 +117,11 @@ class _DetailsCardContentsState extends ConsumerState<DetailsCardContents>
         ),
         Align(
           alignment: Alignment.bottomRight,
-          child: FilledButton(
+          child: PrimaryTextButton(
             onPressed: _submitDisplayName,
-            child: state.isLoading
-                ? const CircularProgressIndicator()
-                : const Text('Save'),
+            icon: Icons.check,
+            isLoading: state.isLoading,
+            labelText: 'Save',
           ),
         ),
       ],

@@ -163,8 +163,7 @@ class SocketService {
       // Create list of [DrumCorpsCaption] from server message
       final List<DrumCorpsCaption> availablePicks = List.empty(growable: true);
       for (var pick in allPicks) {
-        availablePicks
-            .add(DrumCorpsCaption.fromJson(pick, pick['drumCorpsCaptionId']));
+        availablePicks.add(DrumCorpsCaption.fromJson(pick, pick['id']));
       }
 
       // Start turn
@@ -188,8 +187,7 @@ class SocketService {
     client.socket.on(SERVER_END_TURN, (data) {
       dev.log('Received server ended turn', name: 'Socket Service');
       final pickJson = data['lastPlayerPick'];
-      final pick =
-          DrumCorpsCaption.fromJson(pickJson, pickJson['drumCorpsCaptionId']);
+      final pick = DrumCorpsCaption.fromJson(pickJson, pickJson['id']);
       socketResponseStream.add(EndOfTurn(captionPick: pick));
     });
   }

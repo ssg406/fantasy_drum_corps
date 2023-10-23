@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'password_card_controller.g.dart';
 
-/// [AsyncNotifier] controller for [PasswordCard] on profile page. Communicates
+/// [AsyncNotifierProvider] for [PasswordCard] on profile page. Communicates
 /// with [AuthRepository] to update password
 @riverpod
 class PasswordCardController extends _$PasswordCardController {
@@ -19,5 +19,4 @@ class PasswordCardController extends _$PasswordCardController {
         .read(authRepositoryProvider)
         .setPassword(oldPassword: currentPassword, newPassword: newPassword));
   }
-
 }

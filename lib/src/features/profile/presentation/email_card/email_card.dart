@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/presentation/authenticate_screen/register_screen_validators.dart';
@@ -36,14 +37,13 @@ class _EmailCardState extends ConsumerState<EmailCard>
 
     return AsyncValueWidget(
       value: ref.watch(userChangesStreamProvider),
-      //ref.watch(userChangesStreamProvider),
       data: (User? user) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Email Address',
-              style: Theme.of(context).textTheme.titleMedium,
+              'Email',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             gapH16,
             Form(
@@ -62,11 +62,11 @@ class _EmailCardState extends ConsumerState<EmailCard>
             gapH16,
             Align(
               alignment: Alignment.bottomRight,
-              child: FilledButton(
+              child: PrimaryTextButton(
                 onPressed: _submitEmail,
-                child: state.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Save'),
+                labelText: 'Save Email',
+                icon: Icons.check,
+                isLoading: state.isLoading,
               ),
             ),
           ],

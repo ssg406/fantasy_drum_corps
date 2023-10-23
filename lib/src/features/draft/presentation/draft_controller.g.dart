@@ -6,7 +6,7 @@ part of 'draft_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$draftControllerHash() => r'b47d1b8c14f77d8dd23cd74330657fe437eddb62';
+String _$draftControllerHash() => r'eecfbfa7ac9ee4bd51deb4476c92a378472b6546';
 
 /// See also [DraftController].
 @ProviderFor(DraftController)

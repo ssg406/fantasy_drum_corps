@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -93,15 +94,13 @@ class _LeaveTourContentsState extends ConsumerState<LeaveTourContents> {
                   gapH24,
                   ButtonBar(
                     children: [
-                      TextButton(
+                      PrimaryTextButton(
                         onPressed: _leaveTour,
-                        child: state.isLoading
-                            ? const CircularProgressIndicator()
-                            : const Text('LEAVE'),
+                        labelText: 'Leave',
                       ),
-                      FilledButton(
+                      PrimaryActionButton(
                         onPressed: () => context.pop(),
-                        child: const Text('STAY'),
+                        labelText: 'STAY',
                       ),
                     ],
                   )
@@ -109,9 +108,7 @@ class _LeaveTourContentsState extends ConsumerState<LeaveTourContents> {
               ),
             ),
             gapH16,
-            CustomBackButton(
-              customOnPressed: () => context.pop(),
-            ),
+            const CustomBackButton(),
           ],
         ),
       ),

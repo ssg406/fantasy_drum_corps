@@ -13,20 +13,17 @@ class CustomBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: alignment,
-      child: Tooltip(
-        message: 'Back',
-        child: TextButton.icon(
-          icon: const Icon(Icons.arrow_circle_left_outlined),
-          label: const Text('Back'),
-          onPressed: customOnPressed ??
-              () {
-                if (Navigator.of(context).canPop()) {
-                  context.pop();
-                } else {
-                  context.goNamed(AppRoutes.dashboard.name);
-                }
-              },
-        ),
+      child: TextButton.icon(
+        icon: const Icon(Icons.arrow_circle_left_outlined),
+        label: const Text('Back'),
+        onPressed: customOnPressed ??
+            () {
+              if (Navigator.of(context).canPop()) {
+                context.pop();
+              } else {
+                context.goNamed(AppRoutes.dashboard.name);
+              }
+            },
       ),
     );
   }

@@ -32,155 +32,146 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: widget.canPick ? 3 : 1,
-      child: Padding(
-        padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
-            ? cardPadding
-            : mobileCardPadding,
-        child: Column(
-          children: [
-            Text('REMAINING PICKS',
-                style: Theme.of(context).textTheme.titleLarge),
-            gapH8,
-            SizedBox(
-              height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
-              child: widget.availableCaptions == null
-                  ? const Center(child: Text('No available captions'))
-                  : GroupedListView<DrumCorpsCaption, String>(
-                      elements: widget.availableCaptions!,
-                      groupBy:
-                          _isGroupedByCaption ? _groupByCaption : _groupByCorps,
-                      useStickyGroupSeparators: true,
-                      groupHeaderBuilder: (dcc) => Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5.0),
-                            color: widget.canPick
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.3)),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 12),
-                        width: double.infinity,
-                        child: Text(
-                          _isGroupedByCaption
-                              ? dcc.caption.fullName
-                              : dcc.corps.fullName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                        ),
+      elevation: 0,
+      child: Column(
+        children: [
+          Text('REMAINING PICKS',
+              style: Theme.of(context).textTheme.titleLarge),
+          gapH8,
+          SizedBox(
+            height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
+            child: widget.availableCaptions == null
+                ? const Center(child: Text('No available captions'))
+                : GroupedListView<DrumCorpsCaption, String>(
+                    elements: widget.availableCaptions!,
+                    groupBy:
+                        _isGroupedByCaption ? _groupByCaption : _groupByCorps,
+                    useStickyGroupSeparators: true,
+                    groupHeaderBuilder: (dcc) => Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: widget.canPick
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.3)),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 12),
+                      width: double.infinity,
+                      child: Text(
+                        _isGroupedByCaption
+                            ? dcc.caption.fullName
+                            : dcc.corps.fullName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary),
                       ),
-                      indexedItemBuilder: (context, dcc, index) {
-                        return ListTile(
-                          title: Text(dcc.displayString),
-                          selected: index == _selectedIndex,
-                          selectedColor: Colors.black,
-                          selectedTileColor:
-                              AppColors.customGreen.withOpacity(0.2),
-                          visualDensity: const VisualDensity(
-                              horizontal: -4.0, vertical: -4.0),
-                          onTap: !widget.canPick
-                              ? null
-                              : () {
-                                  setState(
-                                    () {
-                                      _selectedCaption = dcc;
-                                      // Deselect if clicking on selected tile
-                                      _selectedIndex = index == _selectedIndex
-                                          ? null
-                                          : index;
-                                    },
-                                  );
-                                },
-                        );
-                      },
                     ),
-            ),
-            gapH8,
-            Expanded(
-              child: ButtonBar(
-                overflowDirection: VerticalDirection.up,
-                children: [
+                    indexedItemBuilder: (context, dcc, index) {
+                      return ListTile(
+                        title: Text(dcc.displayString),
+                        selected: index == _selectedIndex,
+                        selectedColor: Colors.black,
+                        selectedTileColor:
+                            AppColors.customGreen.withOpacity(0.2),
+                        visualDensity: const VisualDensity(
+                            horizontal: -4.0, vertical: -4.0),
+                        onTap: !widget.canPick
+                            ? null
+                            : () {
+                                setState(
+                                  () {
+                                    _selectedCaption = dcc;
+                                    // Deselect if clicking on selected tile
+                                    _selectedIndex =
+                                        index == _selectedIndex ? null : index;
+                                  },
+                                );
+                              },
+                      );
+                    },
+                  ),
+          ),
+          gapH8,
+          Expanded(
+            child: ButtonBar(
+              overflowDirection: VerticalDirection.up,
+              children: [
+                ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                    ? IconButton(
+                        color: Theme.of(context).colorScheme.primary,
+                        onPressed: () => setState(
+                            () => _isGroupedByCaption = !_isGroupedByCaption),
+                        icon: const Icon(Icons.sort),
+                      )
+                    : TextButton.icon(
+                        onPressed: () => setState(
+                            () => _isGroupedByCaption = !_isGroupedByCaption),
+                        icon: const Icon(Icons.sort),
+                        label: Text(_isGroupedByCaption
+                            ? 'Sort by Corps'
+                            : 'Sort by Caption'),
+                      ),
+                if (widget.canPick)
                   ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                      ? IconButton(
-                          color: Theme.of(context).colorScheme.primary,
-                          onPressed: () => setState(
-                              () => _isGroupedByCaption = !_isGroupedByCaption),
-                          icon: const Icon(Icons.sort),
+                      ? IconButton.filled(
+                          onPressed: () {
+                            if (_selectedCaption == null) {
+                              showAlertDialog(
+                                  context: context,
+                                  title: 'No Selection Made',
+                                  content: 'Select a caption to draft first.');
+                              return;
+                            }
+                            widget.onCaptionSelected(_selectedCaption!);
+                            setState(() {
+                              // Reset the index and the caption to prevent duplication
+                              _selectedIndex = null;
+                              _selectedCaption = null;
+                            });
+                          },
+                          icon: const Icon(Icons.play_circle_outline_rounded),
                         )
-                      : TextButton.icon(
-                          onPressed: () => setState(
-                              () => _isGroupedByCaption = !_isGroupedByCaption),
-                          icon: const Icon(Icons.sort),
-                          label: Text(_isGroupedByCaption
-                              ? 'Sort by Corps'
-                              : 'Sort by Caption'),
+                      : FilledButton.icon(
+                          icon: const Icon(Icons.play_circle_outline_rounded),
+                          label: const Text(
+                            'Draft',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            if (_selectedCaption == null) {
+                              showAlertDialog(
+                                  context: context,
+                                  title: 'No Selection Made',
+                                  content: 'Select a caption to draft first.');
+                              return;
+                            }
+                            widget.onCaptionSelected(_selectedCaption!);
+                            setState(() {
+                              // Reset the index and the caption to prevent duplication
+                              _selectedIndex = null;
+                              _selectedCaption = null;
+                            });
+                          },
                         ),
-                  if (widget.canPick)
-                    ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                        ? IconButton.filled(
-                            onPressed: () {
-                              if (_selectedCaption == null) {
-                                showAlertDialog(
-                                    context: context,
-                                    title: 'No Selection Made',
-                                    content:
-                                        'Select a caption to draft first.');
-                                return;
-                              }
-                              widget.onCaptionSelected(_selectedCaption!);
-                              setState(() {
-                                // Reset the index and the caption to prevent duplication
-                                _selectedIndex = null;
-                                _selectedCaption = null;
-                              });
-                            },
-                            icon: const Icon(Icons.play_circle_outline_rounded),
-                          )
-                        : FilledButton.icon(
-                            icon: const Icon(Icons.play_circle_outline_rounded),
-                            label: const Text(
-                              'Draft',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () {
-                              if (_selectedCaption == null) {
-                                showAlertDialog(
-                                    context: context,
-                                    title: 'No Selection Made',
-                                    content:
-                                        'Select a caption to draft first.');
-                                return;
-                              }
-                              widget.onCaptionSelected(_selectedCaption!);
-                              setState(() {
-                                // Reset the index and the caption to prevent duplication
-                                _selectedIndex = null;
-                                _selectedCaption = null;
-                              });
-                            },
-                          ),
-                  if (!widget.canPick)
-                    ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                        ? const IconButton.filled(
-                            onPressed: null,
-                            icon: Icon(Icons.hourglass_bottom_rounded),
-                          )
-                        : FilledButton.icon(
-                            onPressed: null,
-                            icon: const Icon(Icons.hourglass_bottom_rounded),
-                            label: const Text('WAITING'),
-                          ),
-                ],
-              ),
-            )
-          ],
-        ),
+                if (!widget.canPick)
+                  ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                      ? const IconButton.filled(
+                          onPressed: null,
+                          icon: Icon(Icons.hourglass_bottom_rounded),
+                        )
+                      : FilledButton.icon(
+                          onPressed: null,
+                          icon: const Icon(Icons.hourglass_bottom_rounded),
+                          label: const Text('WAITING'),
+                        ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

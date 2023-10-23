@@ -1,7 +1,7 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -14,10 +14,7 @@ class CompleteProfileCard extends StatelessWidget {
     return TitledIconCard(
       title: 'Complete Your Profile',
       subtitle: 'Choose a display name and sponsored corps',
-      icon: const FaIcon(
-        FontAwesomeIcons.user,
-        color: AppColors.customBlue,
-      ),
+      iconData: FontAwesomeIcons.user,
       child: Column(
         children: [
           Text(
@@ -27,10 +24,10 @@ class CompleteProfileCard extends StatelessWidget {
           gapH16,
           ButtonBar(
             children: [
-              FilledButton.icon(
+              PrimaryActionButton(
                 onPressed: () => context.goNamed(AppRoutes.profile.name),
-                icon: const Icon(Icons.person),
-                label: const Text('Go to Profile'),
+                icon: Icons.person,
+                labelText: 'Go to Profile',
               ),
             ],
           ),

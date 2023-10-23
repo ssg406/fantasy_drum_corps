@@ -1,8 +1,8 @@
-import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../routing/app_routes.dart';
 
@@ -22,8 +22,8 @@ class DraftButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton.icon(
-      icon: const Icon(Icons.play_circle_outline_outlined),
+    return PrimaryActionButton(
+      icon: Icons.play_circle_outline_outlined,
       onPressed: () {
         if (!draftComplete) {
           ref.read(draftControllerProvider.notifier).joinRoom(
@@ -34,7 +34,7 @@ class DraftButton extends ConsumerWidget {
         context.pushNamed(AppRoutes.draftLobby.name,
             pathParameters: {'tid': tourId});
       },
-      label: const Text('Go to Draft'),
+      labelText: 'Go to Draft',
     );
   }
 }

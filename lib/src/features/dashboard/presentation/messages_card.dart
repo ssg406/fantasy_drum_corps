@@ -16,10 +16,7 @@ class DashboardMessages extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TitledIconCard(
-      icon: const FaIcon(
-        FontAwesomeIcons.message,
-        color: AppColors.customBlue,
-      ),
+      iconData: FontAwesomeIcons.message,
       title: 'Messages',
       subtitle: 'Communication from the Fantasy Drum Corps team',
       child: AsyncValueWidget(
@@ -38,39 +35,35 @@ class AllMessageList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     messages.sort((a, b) => b.date.compareTo(a.date));
-    return SizedBox(
-      height: 300,
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: [
-          if (messages.isEmpty)
-            Center(
-              child: Text(
-                'No messages found',
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
+    return Column(
+      children: [
+        if (messages.isEmpty)
+          Center(
+            child: Text(
+              'No messages found',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          for (final message in messages)
-            ListTile(
-              leading: const FaIcon(
-                FontAwesomeIcons.asterisk,
-                color: AppColors.customBlue,
-              ),
-              title: Text(
-                '${message.title} - ${DateTimeUtils.formattedDate(message.date)}',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              subtitle: Text(
-                message.text,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontSize: 20.0),
-              ),
-              isThreeLine: true,
-            )
-        ],
-      ),
+          ),
+        for (final message in messages)
+          ListTile(
+            leading: const FaIcon(
+              FontAwesomeIcons.asterisk,
+              color: AppColors.customBlue,
+            ),
+            title: Text(
+              '${message.title} - ${DateTimeUtils.formattedDate(message.date)}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Text(
+              message.text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontSize: 20.0),
+            ),
+            isThreeLine: true,
+          )
+      ],
     );
   }
 }

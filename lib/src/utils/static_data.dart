@@ -13,7 +13,7 @@ class DrumCorpsData {
     for (final caption in Caption.values) {
       for (final corps in DrumCorps.values) {
         allPicks.add(DrumCorpsCaption(
-            drumCorpsCaptionId: '${caption.name} ${corps.name}',
+            id: '${caption.name} ${corps.name}',
             corps: corps,
             caption: caption));
       }
@@ -26,7 +26,7 @@ class DrumCorpsData {
     for (final caption in Caption.values) {
       final corpsList = DrumCorps.values
           .map((corps) => DrumCorpsCaption(
-              drumCorpsCaptionId: Random().nextDouble().toString(),
+              id: Random().nextDouble().toString(),
               caption: caption,
               corps: corps))
           .toList();

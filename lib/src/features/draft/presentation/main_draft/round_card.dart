@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:responsive_framework/responsive_breakpoints.dart';
-
-import '../../../../constants/app_sizes.dart';
 
 class RoundCard extends StatelessWidget {
   const RoundCard({
@@ -15,28 +12,16 @@ class RoundCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat('00');
-    return Flex(
-      direction: ResponsiveBreakpoints.of(context).largerThan(TABLET)
-          ? Axis.vertical
-          : Axis.horizontal,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'ROUND',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Theme.of(context).colorScheme.onTertiary),
-        ),
-        if (ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)) gapW8,
-        Text(
-          formatter.format(roundNumber),
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Colors.blue[900]),
-        ),
-      ],
+    return RichText(
+      text: TextSpan(
+        text: 'ROUND ',
+        style: Theme.of(context).textTheme.bodyLarge,
+        children: [
+          TextSpan(
+              text: formatter.format(roundNumber),
+              style: Theme.of(context).textTheme.titleMedium),
+        ],
+      ),
     );
   }
 }

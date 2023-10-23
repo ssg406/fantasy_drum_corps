@@ -1,6 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/admin/data/message_repository.dart';
 import 'package:fantasy_drum_corps/src/features/admin/data/score_repository.dart';
@@ -21,11 +21,11 @@ class AdminMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageScaffolding(
+    return const PageScaffolding(
       pageTitle: 'Admin Dashboard',
       showImage: false,
       child: Column(
-        children: const [
+        children: [
           ScoresCard(),
           gapH24,
           Divider(thickness: 1.0),
@@ -192,7 +192,7 @@ class NewMessageForm extends ConsumerWidget {
             ),
             gapH16,
             Center(
-              child: PrimaryButton(
+              child: PrimaryActionButton(
                   onPressed: () async {
                     if (!formKey.currentState!.validate()) return;
                     final message = AdminMessage(
@@ -205,7 +205,7 @@ class NewMessageForm extends ConsumerWidget {
                     titleController.clear();
                     textController.clear();
                   },
-                  label: 'Submit Message',
+                  labelText: 'Submit Message',
                   isLoading: state.isLoading),
             )
           ],

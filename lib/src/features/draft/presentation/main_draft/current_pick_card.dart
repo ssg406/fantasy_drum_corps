@@ -1,3 +1,4 @@
+import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:flutter/material.dart';
 
 class CurrentPickCard extends StatelessWidget {
@@ -8,20 +9,44 @@ class CurrentPickCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return currentPick != null && nextPick != null
-        ? _getTurnInProgressDisplay(context)
-        : Center(
-            child: Text(
-              'Loading Draft Data...',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+    return currentPick == null || nextPick == null
+        ? Container()
+        : Column(
+            children: [
+              RichText(
+                text: TextSpan(
+                  text: 'PICKING ',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  children: [
+                    TextSpan(
+                        text: currentPick,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: AppColors.customGreen)),
+                  ],
+                ),
+              ),
+              RichText(
+                text: TextSpan(
+                  text: 'NEXT ',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  children: [
+                    TextSpan(
+                        text: nextPick,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: AppColors.customBlue)),
+                  ],
+                ),
+              )
+            ],
           );
   }
 
   Widget _getTurnInProgressDisplay(BuildContext context) {
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.center,
-      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

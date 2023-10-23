@@ -6,25 +6,25 @@ import 'package:quiver/core.dart';
 @immutable
 class DrumCorpsCaption {
   const DrumCorpsCaption({
-    required this.drumCorpsCaptionId,
+    required this.id,
     required this.corps,
     required this.caption,
   });
 
-  final String drumCorpsCaptionId;
+  final String id;
   final DrumCorps corps;
   final Caption caption;
 
   factory DrumCorpsCaption.fromJson(Map<String, dynamic> json, String id) {
     return DrumCorpsCaption(
-        drumCorpsCaptionId: id,
+        id: id,
         corps: DrumCorps.values.byName(json['corps']),
         caption: Caption.values.byName(json['caption']));
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'drumCorpsCaptionId': drumCorpsCaptionId,
+      'id': id,
       'corps': corps.name,
       'caption': caption.name,
     };
@@ -32,27 +32,24 @@ class DrumCorpsCaption {
 
   DrumCorpsCaption copyWith({DrumCorps? corps, Caption? caption}) {
     return DrumCorpsCaption(
-        drumCorpsCaptionId: drumCorpsCaptionId,
-        corps: corps ?? this.corps,
-        caption: caption ?? this.caption);
+        id: id, corps: corps ?? this.corps, caption: caption ?? this.caption);
   }
 
   String get displayString => '${corps.fullName} ${caption.fullName}';
 
   @override
   String toString() =>
-      'DrumCorpsCaption(drumCorpsCaptionId: $drumCorpsCaptionId, corps: ${corps
-          .fullName}, caption: ${caption.name})';
+      'DrumCorpsCaption(id: $id, corps: ${corps.fullName}, caption: ${caption.name})';
 
   @override
-  int get hashCode => hash3(drumCorpsCaptionId, corps, caption);
+  int get hashCode => hash3(id, corps, caption);
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is DrumCorpsCaption &&
-        other.drumCorpsCaptionId == drumCorpsCaptionId &&
+        other.id == id &&
         other.corps == corps &&
         other.caption == caption;
   }

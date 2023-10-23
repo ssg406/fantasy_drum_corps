@@ -1,6 +1,6 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/primary_button.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/admin/domain/corps_score.dart';
 import 'package:fantasy_drum_corps/src/features/admin/presentation/admin_scores_controller.dart';
@@ -170,9 +170,9 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     gapH32,
-                    PrimaryButton(
+                    PrimaryActionButton(
                         onPressed: _submitForm,
-                        label: 'Submit Scores',
+                        labelText: 'Submit Scores',
                         isLoading: state.isLoading)
                   ],
                 ),

@@ -1,6 +1,6 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
-import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/available_captions.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/current_pick_card.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/last_pick_card.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/player_lineup.dart';
@@ -10,6 +10,8 @@ import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_mod
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
+
+import 'available_captions.dart';
 
 class MainDraft extends StatelessWidget {
   const MainDraft({
@@ -39,75 +41,62 @@ class MainDraft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET)
-          ? mobilePagePadding
-          : pagePadding,
-      child: SingleChildScrollView(
-        child: ResponsiveCenter(
-          maxContentWidth: 1000,
-          child: Column(
-            children: [
-              Card(
-                elevation: 1,
-                child: Padding(
-                  padding: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                      ? mobileCardPadding
-                      : cardPadding,
-                  child: Flex(
-                    direction:
-                        ResponsiveBreakpoints.of(context).largerThan(TABLET)
-                            ? Axis.horizontal
-                            : Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TimerCard(remainingTime: remainingTime),
-                      RoundCard(roundNumber: roundNumber),
-                      CurrentPickCard(
-                        currentPick: currentPick,
-                        nextPick: nextPick,
-                      ),
-                      LastPickCard(
-                        lastPlayersPick: lastPlayersPick,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              IntrinsicHeight(
-                child: Row(
+    return SingleChildScrollView(
+      child: ResponsiveCenter(
+        child: Column(
+          children: [
+            Flex(
+              direction: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              children: [
+                Row(
                   children: [
-                    Flexible(
-                      flex: 3,
-                      child: AvailableCaptions(
-                        canPick: canPick,
-                        availableCaptions: availablePicks,
-                        onCaptionSelected: onCaptionSelected,
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: PlayerLineup(
-                        lineup: fantasyCorps,
-                      ),
-                    )
+                    TimerCard(remainingTime: remainingTime),
+                    RoundCard(roundNumber: roundNumber),
                   ],
                 ),
-              ),
-              gapH16,
-              if (onCancelDraft != null)
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: FilledButton.icon(
-                    icon: const Icon(Icons.cancel_rounded),
-                    onPressed: onCancelDraft,
-                    style: FilledButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.error),
-                    label: const Text('Cancel Draft'),
-                  ),
+                Row(
+                  children: [
+                    CurrentPickCard(
+                      currentPick: currentPick,
+                      nextPick: nextPick,
+                    ),
+                    LastPickCard(lastPlayersPick: lastPlayersPick),
+                  ],
                 ),
-            ],
-          ),
+              ],
+            ),
+            gapH8,
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: AvailableCaptions(
+                        availableCaptions: availablePicks,
+                        onCaptionSelected: onCaptionSelected,
+                        canPick: canPick),
+                  ),
+                  if (ResponsiveBreakpoints.of(context).largerThan(TABLET))
+                    Flexible(
+                      child: PlayerLineup(lineup: fantasyCorps),
+                    ),
+                ],
+              ),
+            ),
+            if (ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET))
+              PlayerLineup(lineup: fantasyCorps),
+            if (onCancelDraft != null)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: PrimaryActionButton(
+                  icon: Icons.cancel_rounded,
+                  isDestructive: true,
+                  onPressed: onCancelDraft!,
+                  labelText: 'Cancel Draft',
+                ),
+              ),
+          ],
         ),
       ),
     );

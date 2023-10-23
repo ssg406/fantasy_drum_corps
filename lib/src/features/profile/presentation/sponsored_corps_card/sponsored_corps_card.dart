@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/players/data/players_repository.dart';
@@ -36,7 +37,7 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
           children: [
             Text(
               'Sponsored Drum Corps',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             gapH16,
             Form(
@@ -46,7 +47,11 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
                 decoration: const InputDecoration(labelText: 'Sponsored Corps'),
                 items: DrumCorps.values.map((drumCorps) {
                   return DropdownMenuItem<DrumCorps>(
-                      value: drumCorps, child: Text(drumCorps.fullName));
+                      value: drumCorps,
+                      child: Text(
+                        drumCorps.fullName,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ));
                 }).toList(),
                 onChanged: (DrumCorps? newValue) {
                   setState(() => _selectedCorps = newValue);
@@ -56,11 +61,11 @@ class _SponsoredCorpsCardState extends ConsumerState<SponsoredCorpsCard> {
             gapH16,
             Align(
               alignment: Alignment.bottomRight,
-              child: FilledButton(
+              child: PrimaryTextButton(
                 onPressed: _submitSelectedCorps,
-                child: state.isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Save Selection'),
+                icon: Icons.check,
+                isLoading: state.isLoading,
+                labelText: 'Save Selection',
               ),
             )
           ],

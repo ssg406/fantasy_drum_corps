@@ -1,14 +1,15 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_tour_tile.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/page_scaffold.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/tour_search_tile.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/tours/data/tour_repository.dart';
 import 'package:fantasy_drum_corps/src/features/tours/domain/tour_model.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class MyTours extends ConsumerWidget {
   const MyTours({super.key});
@@ -34,19 +35,16 @@ class MyToursContents extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageScaffolding(
       pageTitle: 'My Tours',
-      child: SizedBox(
-          height: 400,
-          child: myTours.isEmpty
-              ? const EmptyTourContainerActions()
-              : _getListView()),
-    );
-  }
-
-  Widget _getListView() {
-    return ListView(
-      children: [
-        for (final tour in myTours) TourSearchTile(tour: tour),
-      ],
+      child: Card(
+        elevation: 0,
+        child: myTours.isEmpty
+            ? const EmptyTourContainerActions()
+            : Column(
+                children: [
+                  for (final tour in myTours) CommonTourTile(tour: tour)
+                ],
+              ),
+      ),
     );
   }
 }
@@ -65,18 +63,21 @@ class EmptyTourContainerActions extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           gapH16,
-          Row(
+          Flex(
+            direction: ResponsiveBreakpoints.of(context).largerThan(MOBILE)
+                ? Axis.horizontal
+                : Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(
-                icon: const FaIcon(FontAwesomeIcons.circlePlus),
-                label: const Text('Create Tour'),
+              PrimaryTextButton(
+                icon: Icons.add,
+                labelText: 'Create Tour',
                 onPressed: () => context.goNamed(AppRoutes.createTour.name),
               ),
               gapW8,
-              TextButton.icon(
-                icon: const FaIcon(FontAwesomeIcons.userGroup),
-                label: const Text('Join Tour'),
+              PrimaryTextButton(
+                icon: Icons.group_add,
+                labelText: 'Join Tour',
                 onPressed: () => context.goNamed(AppRoutes.searchTours.name),
               )
             ],

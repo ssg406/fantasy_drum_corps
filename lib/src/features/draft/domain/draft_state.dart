@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:flutter/cupertino.dart';
@@ -131,9 +132,6 @@ class DraftState {
 extension DraftStateUI on DraftState {
   void handleDraftActions(
       BuildContext context, String tourId, String playerId) {
-    dev.log(
-        'handleDraftAction(\ndraftError: $draftError, \ndraftCancelled: $draftCancelled, \nserverError: $serverError, \nlineupComplete: $lineupComplete)',
-        name: 'DraftStateUI');
     if (draftError) {
       dev.log('Draft error, showing alert', name: 'DraftStateUI');
       showAlertDialog(
@@ -141,24 +139,6 @@ extension DraftStateUI on DraftState {
           title: 'Error',
           content: errorMessage ?? 'Invalid selection, try again.');
     }
-    // if (draftCancelled) {
-    //   showAlertDialog(
-    //       context: context,
-    //       title: 'Draft Cancelled',
-    //       content: 'The tour owner cancelled the draft');
-    //   context.pushNamed(AppRoutes.tourDetail.name,
-    //       pathParameters: {'tid': tourId});
-    // }
-    //
-    // if (serverError) {
-    //   showAlertDialog(
-    //       context: context,
-    //       title: 'Server Error',
-    //       content:
-    //           errorMessage ?? 'The draft server experienced a fatal error');
-    //   context.pushNamed(AppRoutes.tourDetail.name,
-    //       pathParameters: {'tid': tourId});
-    // }
 
     if (lineupComplete) {
       FantasyCorps corps = FantasyCorps(

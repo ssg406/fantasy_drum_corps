@@ -19,7 +19,7 @@ class AuthenticateScreenController extends _$AuthenticateScreenController {
     String? displayName,
     required AuthenticationFormType formType,
   }) async {
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
     state =
         await AsyncValue.guard(() => _authenticate(email, password, formType));
   }

@@ -7,9 +7,9 @@ part of 'create_tour_controller.dart';
 // **************************************************************************
 
 String _$createTourControllerHash() =>
-    r'325d9ea8231f55fd2fdbe48a98a0b29b501c9d15';
+    r'd2659d4d439c8365ebe985d206e54d11da17c5f4';
 
-/// Controller for [CreateTour]
+/// [AsyncNotifierProvider] manages state for [CreateTour]
 ///
 /// Copied from [CreateTourController].
 @ProviderFor(CreateTourController)

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
@@ -111,10 +112,11 @@ class _AutoDraftContentsState extends ConsumerState<AutoDraftContents> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           gapH16,
-          FilledButton.icon(
-            icon: const Icon(Icons.play_circle_outline_rounded),
+          PrimaryActionButton(
+            icon: Icons.play_circle_outline_rounded,
             onPressed: _generateLineup,
-            label: const Text('Generate Lineup'),
+            labelText: 'Generate Lineup',
+            isLoading: state.isLoading,
           ),
           GridView.count(
             shrinkWrap: true,
@@ -163,7 +165,6 @@ class _AutoDraftContentsState extends ConsumerState<AutoDraftContents> {
     }
 
     // For every list corresponding to Caption in leftPicks, shuffle the list
-    // TODO: consider deleting since index is selected randomly
     for (final key in leftPicks.keys) {
       leftPicks[key]!.shuffle();
     }
@@ -224,9 +225,9 @@ class DraftAlreadyRun extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             gapH8,
-            FilledButton(
+            PrimaryActionButton(
               onPressed: () => context.goNamed(AppRoutes.myCorps.name),
-              child: const Text('My Corps'),
+              labelText: 'My Corps',
             )
           ],
         ),

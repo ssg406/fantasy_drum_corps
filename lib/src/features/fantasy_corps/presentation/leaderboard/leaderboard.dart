@@ -68,10 +68,15 @@ class _LeaderboardContentsState extends State<LeaderboardContents> {
                   value: selectedTour,
                   items: widget.tours
                       .where((tour) => tour.draftComplete)
-                      .map((tour) => DropdownMenuItem<Tour>(
-                            value: tour,
-                            child: Text(tour.name),
-                          ))
+                      .map(
+                        (tour) => DropdownMenuItem<Tour>(
+                          value: tour,
+                          child: Text(
+                            tour.name,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      )
                       .toList(),
                   onChanged: (tour) => setState(() => selectedTour = tour),
                 ),

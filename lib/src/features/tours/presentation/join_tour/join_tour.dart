@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/back_button.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_section_card.dart';
@@ -102,17 +103,14 @@ class _JoinTourContentsState extends ConsumerState<JoinTourContents> {
                     ],
                     ButtonBar(
                       children: [
-                        TextButton(
+                        PrimaryTextButton(
                           onPressed: () => context.pop(),
-                          child: state.isLoading
-                              ? const CircularProgressIndicator()
-                              : const Text('CANCEL'),
+                          labelText: 'Cancel',
                         ),
-                        FilledButton(
+                        PrimaryActionButton(
                           onPressed: _submit,
-                          child: state.isLoading
-                              ? const CircularProgressIndicator()
-                              : const Text('JOIN'),
+                          labelText: 'Join',
+                          isLoading: state.isLoading,
                         ),
                       ],
                     )

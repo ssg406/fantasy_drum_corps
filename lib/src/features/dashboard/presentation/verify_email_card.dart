@@ -1,6 +1,6 @@
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/titled_icon_card.dart';
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_controller.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,25 +16,20 @@ class VerifyEmailCard extends ConsumerWidget {
     ref.listen<AsyncValue>(dashboardControllerProvider,
         (_, state) => state.showAlertDialogOnError(context));
     final state = ref.watch(dashboardControllerProvider);
-    final theme = Theme.of(context);
     return TitledIconCard(
       title: 'Verify Your Email',
       subtitle:
           'Verify your email to make sure you can fully participate this season! A verification email was sent to you when you registered.',
-      icon: const FaIcon(
-        FontAwesomeIcons.at,
-        color: AppColors.customBlue,
-      ),
+      iconData: FontAwesomeIcons.at,
       child: ButtonBar(
         children: [
-          FilledButton.icon(
+          PrimaryActionButton(
             onPressed: () => ref
                 .read(dashboardControllerProvider.notifier)
                 .sendVerificationEmail(user),
-            icon: const Icon(Icons.email_rounded),
-            label: state.isLoading
-                ? const CircularProgressIndicator()
-                : const Text('Resend Verification Email'),
+            icon: Icons.email_rounded,
+            labelText: 'Resend Verification Email',
+            isLoading: state.isLoading,
           ),
         ],
       ),

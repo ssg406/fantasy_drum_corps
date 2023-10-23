@@ -12,28 +12,20 @@ class ManageTourController extends _$ManageTourController {
   Future<void> removeMember(
       {required String playerId, required String tourId}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => _removeMember(playerId, tourId));
-  }
-
-  Future<void> _removeMember(String playerId, String tourId) {
-    final repository = ref.read(toursRepositoryProvider);
-    return repository.removePlayerFromTour(tourId: tourId, playerId: playerId);
+    state = await AsyncValue.guard(() => ref
+        .read(toursRepositoryProvider)
+        .removePlayerFromTour(tourId: tourId, playerId: playerId));
   }
 
   Future<void> deleteTour({required String tourId}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => _deleteTour(tourId));
+    state = await AsyncValue.guard(
+        () => ref.read(tourCorpsServiceProvider).deleteTour(tourId));
   }
-
-  Future<void> _deleteTour(String tourId) =>
-      ref.read(tourCorpsServiceProvider).deleteTour(tourId);
 
   Future<void> resetDraft(String tourId) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => _resetDraft(tourId));
-  }
-
-  Future<void> _resetDraft(String tourId) async {
-    ref.read(tourCorpsServiceProvider).resetTourDraft(tourId);
+    state = await AsyncValue.guard(
+        () => ref.read(tourCorpsServiceProvider).resetTourDraft(tourId));
   }
 }

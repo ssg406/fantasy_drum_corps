@@ -29,8 +29,9 @@ class AppThemeUtils {
         //adaptiveAppBarScrollUnderOff: FlexAdaptive.all(),
         filledButtonRadius: 10.0,
         elevatedButtonRadius: 10.0,
-        inputDecoratorBackgroundAlpha: 50,
-        inputDecoratorRadius: 25.0,
+        inputDecoratorFillColor: Colors.white70,
+        inputDecoratorBorderType: FlexInputBorderType.outline,
+        inputDecoratorRadius: 8,
         inputDecoratorUnfocusedBorderIsColored: false,
         cardRadius: 8.0,
         dialogRadius: 9.0,
@@ -45,7 +46,6 @@ class AppThemeUtils {
       textTheme: _getTextTheme(baseTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xff2583ff),
-        toolbarHeight: 100,
         centerTitle: true,
       ),
       dividerTheme: DividerThemeData(
@@ -70,17 +70,22 @@ class AppThemeUtils {
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 13,
       subThemesData: const FlexSubThemesData(
-        blendOnLevel: 20,
+        blendOnLevel: 10,
+        blendOnColors: false,
         useTextTheme: true,
         useM2StyleDividerInM3: true,
+        //adaptiveAppBarScrollUnderOff: FlexAdaptive.all(),
         filledButtonRadius: 10.0,
         elevatedButtonRadius: 10.0,
-        inputDecoratorRadius: 25.0,
+        inputDecoratorFillColor: Colors.white70,
+        inputDecoratorBorderType: FlexInputBorderType.outline,
+        inputDecoratorRadius: 8,
         inputDecoratorUnfocusedBorderIsColored: false,
         cardRadius: 8.0,
         dialogRadius: 9.0,
         datePickerDialogRadius: 9.0,
         timePickerDialogRadius: 9.0,
+        appBarBackgroundSchemeColor: SchemeColor.primary,
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
       useMaterial3: true,
@@ -97,44 +102,65 @@ class AppThemeUtils {
         ));
   }
 
+  // static TextTheme _getTextTheme(ThemeData baseTheme) {
+  //   return GoogleFonts.interTightTextTheme(
+  //     (baseTheme.textTheme).copyWith(
+  //       bodyLarge: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyLarge),
+  //       bodyMedium:
+  //           GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyMedium),
+  //       bodySmall: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodySmall),
+  //       labelLarge: GoogleFonts.roboto(
+  //           textStyle: baseTheme.textTheme.labelLarge
+  //               ?.copyWith(fontWeight: FontWeight.w300)),
+  //       labelMedium:
+  //           GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelMedium),
+  //       labelSmall:
+  //           GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelSmall),
+  //       titleSmall: GoogleFonts.leagueSpartan(
+  //         textStyle:
+  //             baseTheme.textTheme.titleSmall!.copyWith(letterSpacing: -0.5),
+  //       ),
+  //       titleMedium: GoogleFonts.leagueSpartan(
+  //         textStyle: baseTheme.textTheme.titleMedium!
+  //             .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
+  //       ),
+  //       titleLarge: GoogleFonts.leagueSpartan(
+  //         textStyle: baseTheme.textTheme.titleLarge!
+  //             .copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.5),
+  //       ),
+  //       displayLarge: GoogleFonts.leagueSpartan(
+  //         textStyle: baseTheme.textTheme.displayLarge!
+  //             .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
+  //       ),
+  //       displayMedium: GoogleFonts.leagueSpartan(
+  //         textStyle: baseTheme.textTheme.displayMedium!
+  //             .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
+  //       ),
+  //       displaySmall: GoogleFonts.leagueSpartan(
+  //         textStyle: baseTheme.textTheme.displaySmall!
+  //             .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
+  //       ),
+  //       headlineSmall: GoogleFonts.leagueSpartan(
+  //           textStyle: baseTheme.textTheme.headlineSmall),
+  //       headlineMedium: GoogleFonts.leagueSpartan(
+  //           textStyle: baseTheme.textTheme.headlineMedium),
+  //       headlineLarge: GoogleFonts.leagueSpartan(
+  //           textStyle: baseTheme.textTheme.headlineLarge),
+  //     ),
+  //   );
+  // }
+
   static TextTheme _getTextTheme(ThemeData baseTheme) {
-    return GoogleFonts.leagueSpartanTextTheme(
+    return GoogleFonts.poppinsTextTheme(
       (baseTheme.textTheme).copyWith(
-        bodyLarge: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyLarge),
-        bodyMedium:
-            GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodyMedium),
-        bodySmall: GoogleFonts.roboto(textStyle: baseTheme.textTheme.bodySmall),
-        labelLarge: GoogleFonts.roboto(
-            textStyle: baseTheme.textTheme.labelLarge
-                ?.copyWith(fontWeight: FontWeight.w300)),
-        labelMedium:
-            GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelMedium),
-        labelSmall:
-            GoogleFonts.roboto(textStyle: baseTheme.textTheme.labelSmall),
-        titleSmall: GoogleFonts.leagueSpartan(
-          textStyle:
-              baseTheme.textTheme.titleSmall!.copyWith(letterSpacing: -0.5),
-        ),
-        titleMedium: GoogleFonts.leagueSpartan(
-          textStyle: baseTheme.textTheme.titleMedium!
-              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -0.5),
-        ),
-        titleLarge: GoogleFonts.leagueSpartan(
-          textStyle: baseTheme.textTheme.titleLarge!
-              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -0.5),
-        ),
-        displayLarge: GoogleFonts.leagueSpartan(
-          textStyle: baseTheme.textTheme.displayLarge!
-              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
-        ),
-        displayMedium: GoogleFonts.leagueSpartan(
-          textStyle: baseTheme.textTheme.displayMedium!
-              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
-        ),
-        displaySmall: GoogleFonts.leagueSpartan(
-          textStyle: baseTheme.textTheme.displaySmall!
-              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.0),
-        ),
+        titleLarge: baseTheme.textTheme.titleLarge!
+            .copyWith(fontWeight: FontWeight.bold, letterSpacing: -1.5),
+        titleMedium: baseTheme.textTheme.titleMedium!
+            .copyWith(fontWeight: FontWeight.bold, letterSpacing: -0.75),
+        titleSmall: baseTheme.textTheme.titleSmall!
+            .copyWith(fontWeight: FontWeight.bold, letterSpacing: -0.75),
+        headlineSmall: baseTheme.textTheme.headlineSmall!
+            .copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }

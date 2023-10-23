@@ -20,7 +20,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
         debugPrint('Error: ${e.toString()}\n$st');
         return Center(
           child: Text(
-            'Internal Server Error',
+            'AsyncValue Error:${e.toString()}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/labeled_flex_row.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
@@ -57,13 +58,13 @@ class CorpsDetail extends ConsumerWidget {
                         label: 'Repertoire',
                         item: Text(corps.repertoire ?? 'Not Set')),
                     gapH16,
-                    TextButton.icon(
-                      icon: const Icon(Icons.edit),
+                    PrimaryTextButton(
+                      icon: Icons.edit,
                       onPressed: () => context.pushNamed(
                           AppRoutes.editCorps.name,
                           extra: corps,
                           pathParameters: {'cid': corps.fantasyCorpsId!}),
-                      label: const Text('Edit Details'),
+                      labelText: 'Edit Details',
                     ),
                     gapH24,
                     Text(
