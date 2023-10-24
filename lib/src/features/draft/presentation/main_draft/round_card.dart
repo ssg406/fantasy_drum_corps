@@ -15,11 +15,14 @@ class RoundCard extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: 'ROUND ',
-        style: Theme.of(context).textTheme.bodyLarge,
+        style: Theme.of(context).textTheme.titleLarge,
         children: [
           TextSpan(
               text: formatter.format(roundNumber),
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.primary)),
         ],
       ),
     );

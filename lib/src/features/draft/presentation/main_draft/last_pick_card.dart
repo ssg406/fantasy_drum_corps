@@ -1,5 +1,6 @@
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
+import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:flutter/material.dart';
 
 class LastPickCard extends StatelessWidget {
@@ -8,19 +9,26 @@ class LastPickCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        text: 'LAST PICK ',
-        style: Theme.of(context).textTheme.bodyLarge,
-        children: [
-          TextSpan(
-              text: lastPlayersPick?.displayString,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: AppColors.customBlue)),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'LAST PICK ',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        Text(
+          _getPickText(),
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(color: Theme.of(context).colorScheme.primary),
+          overflow: TextOverflow.ellipsis,
+        )
+      ],
     );
   }
+
+  String _getPickText() => lastPlayersPick == null
+      ? ''
+      : '${lastPlayersPick!.corps.fullName} ${lastPlayersPick!.caption.abbreviation}';
 }

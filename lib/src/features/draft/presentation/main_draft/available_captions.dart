@@ -35,8 +35,8 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
       elevation: 0,
       child: Column(
         children: [
-          Text('REMAINING PICKS',
-              style: Theme.of(context).textTheme.titleLarge),
+          Text('Remaining Picks',
+              style: Theme.of(context).textTheme.headlineSmall),
           gapH8,
           SizedBox(
             height: ResponsiveBreakpoints.of(context).screenHeight * 0.5,
@@ -51,10 +51,10 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           color: widget.canPick
-                              ? Theme.of(context).colorScheme.primary
+                              ? Theme.of(context).colorScheme.secondaryContainer
                               : Theme.of(context)
                                   .colorScheme
-                                  .primary
+                                  .secondaryContainer
                                   .withOpacity(0.3)),
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 12),
@@ -67,7 +67,9 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                             .textTheme
                             .titleMedium!
                             .copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer),
                       ),
                     ),
                     indexedItemBuilder: (context, dcc, index) {
@@ -77,8 +79,8 @@ class _AvailableCaptionsState extends State<AvailableCaptions> {
                         selectedColor: Colors.black,
                         selectedTileColor:
                             AppColors.customGreen.withOpacity(0.2),
-                        visualDensity: const VisualDensity(
-                            horizontal: -4.0, vertical: -4.0),
+                        visualDensity:
+                            const VisualDensity(horizontal: -4, vertical: -4),
                         onTap: !widget.canPick
                             ? null
                             : () {
