@@ -323,8 +323,12 @@ class IntroText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        LogoText(
-          size: textSize,
+        Text(
+          'FANTASY CORPS',
+          style: Theme.of(context)
+              .textTheme
+              .displayMedium!
+              .copyWith(fontWeight: FontWeight.bold, letterSpacing: -2.5),
         ),
         gapH16,
         SizedBox(

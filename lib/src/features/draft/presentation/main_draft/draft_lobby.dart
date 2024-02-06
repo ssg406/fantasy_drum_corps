@@ -1,5 +1,6 @@
 import 'package:fantasy_drum_corps/src/features/draft/domain/draft_state.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/draft_controller.dart';
+import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_cancelled.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +11,6 @@ import '../../../authentication/data/auth_repository.dart';
 import '../../../tours/data/tour_repository.dart';
 import '../../../tours/domain/tour_model.dart';
 import '../auto_draft/auto_draft.dart';
-import 'draft_cancelled.dart';
 import 'draft_connection_waiting.dart';
 import 'draft_server_error.dart';
 import 'draft_waiting_room.dart';
@@ -63,8 +63,21 @@ class DraftLobbyContents extends ConsumerWidget {
         (_, draftState) =>
             draftState.handleDraftActions(context, tour.id!, playerId));
 
+    // return MainDraft(
+    //     remainingTime: 45,
+    //     roundNumber: 1,
+    //     canPick: true,
+    //     currentPick: 'samwise122',
+    //     nextPick: 'brainscratched',
+    //     lastPlayersPick: const DrumCorpsCaption(
+    //         id: '1', corps: DrumCorps.blueStars, caption: Caption.brass),
+    //     availablePicks: DrumCorpsData.getAllPicks(),
+    //     fantasyCorps: state.playerLineup,
+    //     onCaptionSelected: controller.onCaptionSelected,
+    //     onCancelDraft: controller.ownerCancelDraft);
+
     if (state.draftCancelled) {
-      return const DraftCancelled();
+      return const DraftCancelledWidget();
     }
 
     if (state.serverError) {

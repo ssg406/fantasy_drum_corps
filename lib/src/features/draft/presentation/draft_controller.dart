@@ -25,6 +25,7 @@ class DraftController extends _$DraftController {
       switch (draftData) {
         case StartOfTurn():
           state = tempState.copyWith(
+            missedTurn: false,
             roundNumber: draftData.roundNumber,
             availablePicks: draftData.availablePicks,
             currentPlayerName: draftData.currentPlayerName,
@@ -48,7 +49,6 @@ class DraftController extends _$DraftController {
           );
         case MissedTurn():
           _playerMissedTurn();
-          state = tempState.copyWith(missedTurn: false);
         case EndOfTurn():
           state = tempState.copyWith(
             lastPick: draftData.captionPick,

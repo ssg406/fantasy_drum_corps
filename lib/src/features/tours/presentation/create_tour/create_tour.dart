@@ -13,11 +13,13 @@ import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/c
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/incomplete_profile.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/private_tour_switch.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/tour_validators.dart';
+import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/utils/alert_dialogs.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 
 class CreateTour extends ConsumerWidget {
@@ -227,6 +229,8 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
         draftDateTime: draftDateTime,
         draftComplete: false);
     controller.updateTour(updatedTour);
+    _showSuccessMessage();
+    context.goNamed(AppRoutes.dashboard.name);
   }
 
   void _submitNewTour() async {
@@ -237,11 +241,14 @@ class _CreateTourContentsState extends ConsumerState<CreateTourContents>
         name: _name!,
         description: _description!,
         isPublic: _publicSelected,
+        password: _password,
         owner: '',
         members: [],
         draftDateTime: draftDateTime,
         draftComplete: false);
     ref.read(createTourControllerProvider.notifier).submitTour(tour);
+    _showSuccessMessage();
+    context.goNamed(AppRoutes.dashboard.name);
   }
 
   void _showSuccessMessage() {

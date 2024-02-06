@@ -4,13 +4,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class TitledIconCard extends StatelessWidget {
   const TitledIconCard({
     Key? key,
-    required this.iconData,
+    this.iconData,
     required this.title,
     this.subtitle,
     required this.child,
   }) : super(key: key);
 
-  final IconData iconData;
+  final IconData? iconData;
   final String title;
   final String? subtitle;
   final Widget child;
@@ -19,14 +19,17 @@ class TitledIconCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
+      color: Theme.of(context).colorScheme.primary.withAlpha(10),
       child: Column(
         children: [
           ListTile(
-            leading: FaIcon(
-              iconData,
-              size: 40,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            leading: iconData == null
+                ? null
+                : FaIcon(
+                    iconData,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             title: Text(
               title,
               style: Theme.of(context).textTheme.headlineSmall,

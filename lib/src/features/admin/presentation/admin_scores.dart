@@ -46,7 +46,6 @@ class _AdminScoresState extends ConsumerState<AdminScores> {
         ? const NotFound()
         : PageScaffolding(
             pageTitle: 'Enter Scores',
-            showImage: false,
             child: FocusScope(
               node: _node,
               child: Form(

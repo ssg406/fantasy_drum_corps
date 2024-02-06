@@ -1,7 +1,5 @@
 import 'dart:developer' as dev;
-import 'dart:io' show Platform;
 
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -11,19 +9,18 @@ class SocketClient {
   late final io.Socket socket;
 
   // Dev server
-  String get connectionString {
-    if (kIsWeb) {
-      return 'http://localhost:3000';
-    } else {
-      return Platform.isAndroid
-          ? 'http://10.0.2.2:3000'
-          : 'http://localhost:3000';
-    }
-  }
-
+  // String get connectionString {
+  //   if (kIsWeb) {
+  //     return 'http://localhost:3000';
+  //   } else {
+  //     return Platform.isAndroid
+  //         ? 'http://10.0.2.2:3000'
+  //         : 'http://localhost:3000';
+  //   }
+  // }
   // Production server
-  // String get connectionString =>
-  //     'https://fdc-socket-server-0486b50ecf41.herokuapp.com/';
+  String get connectionString =>
+      'https://fdc-socket-server-0486b50ecf41.herokuapp.com/';
 
   SocketClient() {
     socket = io.io(

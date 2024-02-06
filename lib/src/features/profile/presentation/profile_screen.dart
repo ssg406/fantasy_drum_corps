@@ -23,21 +23,28 @@ class UserProfile extends ConsumerWidget {
     return PageScaffolding(
       pageTitle: 'My Profile',
       onBackPressed: () => context.goNamed(AppRoutes.dashboard.name),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const DetailsCard(),
-          gapH24,
-          const SponsoredCorpsCard(),
-          gapH24,
-          if (!isGoogleAuth) ...[
-            const EmailCard(),
-            gapH24,
-            const PasswordCard(),
-            gapH24
-          ],
-          const DeleteAccountCard(),
-        ],
+      child: Card(
+        elevation: 0,
+        color: Theme.of(context).colorScheme.primary.withAlpha(10),
+        child: Padding(
+          padding: mobileCardPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const DetailsCard(),
+              gapH24,
+              const SponsoredCorpsCard(),
+              gapH24,
+              if (!isGoogleAuth) ...[
+                const EmailCard(),
+                gapH24,
+                const PasswordCard(),
+                gapH24
+              ],
+              const DeleteAccountCard(),
+            ],
+          ),
+        ),
       ),
     );
   }

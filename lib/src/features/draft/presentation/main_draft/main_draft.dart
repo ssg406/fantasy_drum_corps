@@ -6,9 +6,7 @@ import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/la
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/player_lineup.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/round_card.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/timer_card.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/caption_model.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/drum_corps_enum.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
@@ -43,16 +41,10 @@ class MainDraft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Lineup lineup = {
-      Caption.brass: DrumCorps.bluecoats,
-      Caption.percussion: DrumCorps.blueStars
-    };
     return SingleChildScrollView(
       child: ResponsiveCenter(
         child: Padding(
-          padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
-              ? pagePadding
-              : mobilePagePadding,
+          padding: mobilePagePadding,
           child: Column(
             children: [
               Card(
@@ -91,27 +83,37 @@ class MainDraft extends StatelessWidget {
                 ),
               ),
               gapH12,
-              IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: AvailableCaptions(
-                          availableCaptions: availablePicks,
-                          onCaptionSelected: onCaptionSelected,
-                          canPick: canPick),
+              Card(
+                elevation: 0,
+                color: Theme.of(context).colorScheme.primary.withAlpha(10),
+                child: Padding(
+                  padding: mobileCardPadding,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: AvailableCaptions(
+                              availableCaptions: availablePicks,
+                              onCaptionSelected: onCaptionSelected,
+                              canPick: canPick),
+                        ),
+                        if (ResponsiveBreakpoints.of(context).screenWidth >
+                            1000) ...[
+                          gapW24,
+                          Flexible(
+                            child: PlayerLineup(lineup: fantasyCorps),
+                          ),
+                        ]
+                      ],
                     ),
-                    if (ResponsiveBreakpoints.of(context)
-                        .largerThan(TABLET)) ...[
-                      gapW24,
-                      Flexible(
-                        child: PlayerLineup(lineup: lineup),
-                      ),
-                    ]
-                  ],
+                  ),
                 ),
               ),
-              if (ResponsiveBreakpoints.of(context).smallerOrEqualTo(TABLET))
-                PlayerLineup(lineup: lineup),
+              if (ResponsiveBreakpoints.of(context).screenWidth < 1000)
+                Card(
+                    elevation: 0,
+                    color: Theme.of(context).colorScheme.primary.withAlpha(10),
+                    child: PlayerLineup(lineup: fantasyCorps)),
               if (onCancelDraft != null)
                 Align(
                   alignment: Alignment.bottomRight,

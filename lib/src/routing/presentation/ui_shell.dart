@@ -4,7 +4,6 @@ import 'package:fantasy_drum_corps/src/features/authentication/data/auth_reposit
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/clickable_avatar_widget.dart';
 import 'package:fantasy_drum_corps/src/routing/presentation/ui_shell_controller.dart';
-import 'package:fantasy_drum_corps/src/utils/app_color_schemes.dart';
 import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,12 +21,6 @@ class NavShell extends ConsumerWidget {
 
   Map<AppRoutes, Widget> get navDestinations => {
         AppRoutes.dashboard: const FaIcon(FontAwesomeIcons.gaugeHigh),
-        AppRoutes.leaderboard: const FaIcon(FontAwesomeIcons.trophy),
-        AppRoutes.myCorps: const FaIcon(FontAwesomeIcons.solidFlag),
-        AppRoutes.myTours: const FaIcon(FontAwesomeIcons.users),
-        AppRoutes.searchTours:
-            const FaIcon(FontAwesomeIcons.magnifyingGlassPlus),
-        AppRoutes.createTour: const FaIcon(FontAwesomeIcons.circlePlus),
         AppRoutes.howToPlay: const Icon(Icons.rule_rounded),
         AppRoutes.about: const FaIcon(FontAwesomeIcons.circleInfo),
       };
@@ -74,7 +67,7 @@ class NavShell extends ConsumerWidget {
                           data: (bool isAdmin) => LogoText(
                             size: textSize,
                             isAdmin: isAdmin,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -91,12 +84,16 @@ class NavShell extends ConsumerWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
+              decoration:
+                  BoxDecoration(color: Theme.of(context).colorScheme.primary),
               child: Center(
-                child: FaIcon(
-                  FontAwesomeIcons.shieldHalved,
-                  color: AppColors.customBlue,
-                  size: 65.0,
+                child: Text(
+                  'MENU',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Theme.of(context).colorScheme.onPrimary),
                 ),
               ),
             ),

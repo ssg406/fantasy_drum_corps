@@ -9,17 +9,10 @@ import 'package:fantasy_drum_corps/src/features/authentication/presentation/auth
 import 'package:fantasy_drum_corps/src/features/dashboard/presentation/dashboard_main.dart';
 import 'package:fantasy_drum_corps/src/features/draft/presentation/main_draft/draft_lobby.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/corps_detail/corps_detail.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/create_fantasy_corps/create_fantasy_corps.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/leaderboard/leaderboard.dart';
-import 'package:fantasy_drum_corps/src/features/fantasy_corps/presentation/my_corps/my_corps.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/flutter_moji_customizer/flutter_moji_picker.dart';
 import 'package:fantasy_drum_corps/src/features/profile/presentation/profile_screen.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/create_tour/create_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/join_tour/join_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/leave_tour/leave_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/manage_tour/manage_tour.dart';
-import 'package:fantasy_drum_corps/src/features/tours/presentation/my_tours/my_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/search_tours/search_tours.dart';
 import 'package:fantasy_drum_corps/src/features/tours/presentation/tour_detail_page/tour_detail.dart';
 import 'package:fantasy_drum_corps/src/routing/app_routes.dart';
@@ -41,125 +34,108 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter goRouter(GoRouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: '/signIn',
-    navigatorKey: _rootNavigatorKey,
-    debugLogDiagnostics: true,
-    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
-    redirect: (context, state) {
-      final currentUser = authRepository.currentUser;
-      final isLoggedIn = currentUser != null;
-      if (isLoggedIn) {
-        // If logged in and at the sign in page, go to dashboard
-        if (state.matchedLocation.startsWith('/signIn')) {
-          return '/dashboard';
-        }
-        // If location is under admin pages
-        final adminUids = [
-          'dWC5c0tJL3aA450l76gqktSxSUN2',
-          '6QatDzHl9PNN4DQOsK304aqCeMB2',
-          'BiWZp0rcwGgAD2ac2YkExxJFLx73'
-        ];
-        if (state.matchedLocation.startsWith('/admin')) {
-          // And UID is not Sam's, Kenny's, or Ben's
-          if (!adminUids.contains(currentUser.uid)) {
-            // Send back to dashboard
+      initialLocation: '/sign-in',
+      navigatorKey: _rootNavigatorKey,
+      debugLogDiagnostics: true,
+      refreshListenable:
+          GoRouterRefreshStream(authRepository.authStateChanges()),
+      redirect: (context, state) {
+        final currentUser = authRepository.currentUser;
+        final isLoggedIn = currentUser != null;
+        if (isLoggedIn) {
+          // If logged in and at the sign in page, go to dashboard
+          if (state.matchedLocation.startsWith('/sign-in')) {
             return '/dashboard';
           }
+          // If location is under admin pages
+          final adminUids = [
+            'dWC5c0tJL3aA450l76gqktSxSUN2',
+            '6QatDzHl9PNN4DQOsK304aqCeMB2',
+            'BiWZp0rcwGgAD2ac2YkExxJFLx73'
+          ];
+          if (state.matchedLocation.startsWith('/admin')) {
+            // And UID is not Sam's, Kenny's, or Ben's
+            if (!adminUids.contains(currentUser.uid)) {
+              // Send back to dashboard
+              return '/dashboard';
+            }
+          }
+          // If not logged in and at any internal page, go back to sign in
+        } else {
+          if (state.matchedLocation.startsWith('/dashboard') ||
+              state.matchedLocation.startsWith('/profile') ||
+              state.matchedLocation.startsWith('/tours') ||
+              state.matchedLocation.startsWith('/about') ||
+              state.matchedLocation.startsWith('/admin') ||
+              state.matchedLocation.startsWith('/how-to-play') ||
+              state.matchedLocation.startsWith('/leaderboard')) {
+            return '/sign-in';
+          }
         }
-        // If not logged in and at any internal page, go back to sign in
-      } else {
-        if (state.matchedLocation.startsWith('/dashboard') ||
-            state.matchedLocation.startsWith('/profile') ||
-            state.matchedLocation.startsWith('/tours') ||
-            state.matchedLocation.startsWith('/about') ||
-            state.matchedLocation.startsWith('/myCorps') ||
-            state.matchedLocation.startsWith('/leaderboard')) {
-          return '/signIn';
-        }
-      }
 
-      return null;
-    },
-    errorBuilder: (context, state) => const RouterErrorPage(),
-    routes: [
-      GoRoute(
-        path: '/signIn',
-        name: AppRoutes.signIn.name,
-        pageBuilder: (context, state) => NoTransitionPage(
-          key: state.pageKey,
-          child:
-              const AuthenticateScreen(formType: AuthenticationFormType.signIn),
+        return null;
+      },
+      errorBuilder: (context, state) => const RouterErrorPage(),
+      routes: [
+        GoRoute(
+          path: '/sign-in',
+          name: AppRoutes.signIn.name,
+          pageBuilder: (context, state) => NoTransitionPage(
+            key: state.pageKey,
+            child: const AuthenticateScreen(
+                formType: AuthenticationFormType.signIn),
+          ),
         ),
-      ),
-      ShellRoute(
-        navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) {
-          return NavShell(child: child);
-        },
-        routes: [
-          GoRoute(
-            path: '/about',
-            name: AppRoutes.about.name,
-            pageBuilder: (context, state) =>
-                MaterialPage(key: state.pageKey, child: const AboutPage()),
-          ),
-          GoRoute(
-            path: '/howToPlay',
-            name: AppRoutes.howToPlay.name,
-            pageBuilder: (context, state) =>
-                MaterialPage(key: state.pageKey, child: const HowToPlay()),
-          ),
-          GoRoute(
-            path: '/dashboard',
-            name: AppRoutes.dashboard.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              key: state.pageKey,
-              child: const Dashboard(),
-            ),
-          ),
-          GoRoute(
-            path: '/tours',
-            name: AppRoutes.tours.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              key: state.pageKey,
-              child: const MyTours(),
-            ),
-            // Tours sub routes
+        ShellRoute(
+            navigatorKey: _shellNavigatorKey,
+            builder: (context, state, child) => NavShell(child: child),
             routes: [
               GoRoute(
-                path: 'create',
-                name: AppRoutes.createTour.name,
-                pageBuilder: (context, state) => MaterialPage(
+                path: '/about',
+                name: AppRoutes.about.name,
+                pageBuilder: (context, state) => NoTransitionPage(
                   key: state.pageKey,
-                  fullscreenDialog: true,
+                  child: const AboutPage(),
+                ),
+              ),
+              GoRoute(
+                path: '/how-to-play',
+                name: AppRoutes.howToPlay.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
+                  child: const HowToPlay(),
+                ),
+              ),
+              GoRoute(
+                path: '/dashboard',
+                name: AppRoutes.dashboard.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
+                  child: const Dashboard(),
+                ),
+              ),
+              GoRoute(
+                path: '/create-tour',
+                name: AppRoutes.createTour.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
                   child: const CreateTour(),
                 ),
               ),
               GoRoute(
-                path: 'myTours',
-                name: AppRoutes.myTours.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  fullscreenDialog: true,
-                  child: const MyTours(),
-                ),
-              ),
-              GoRoute(
-                path: 'searchTours',
+                path: '/search-tours',
                 name: AppRoutes.searchTours.name,
-                pageBuilder: (context, state) => MaterialPage(
+                pageBuilder: (context, state) => NoTransitionPage(
                   key: state.pageKey,
-                  fullscreenDialog: true,
                   child: const SearchTours(),
                 ),
               ),
               GoRoute(
-                path: ':tid',
+                path: '/tour/:tid',
                 name: AppRoutes.tourDetail.name,
                 pageBuilder: (context, state) {
                   final tourId = state.pathParameters['tid'] as String;
-                  return MaterialPage(
-                    fullscreenDialog: true,
+                  return NoTransitionPage(
                     key: state.pageKey,
                     child: TourDetail(tourId: tourId),
                   );
@@ -167,58 +143,41 @@ GoRouter goRouter(GoRouterRef ref) {
                 // Individual tour sub routes
                 routes: [
                   GoRoute(
-                      path: 'createCorps',
-                      name: AppRoutes.createCorps.name,
+                    path: 'create-corps',
+                    name: AppRoutes.createCorps.name,
+                    pageBuilder: (context, state) {
+                      final fantasyCorps = state.extra as FantasyCorps?;
+                      return NoTransitionPage(
+                        key: state.pageKey,
+                        child: CreateFantasyCorps(fantasyCorps: fantasyCorps),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                      path: 'edit-corps',
+                      name: AppRoutes.editCorps.name,
                       pageBuilder: (context, state) {
                         final fantasyCorps = state.extra as FantasyCorps?;
-                        return MaterialPage(
-                          fullscreenDialog: true,
-                          key: state.pageKey,
-                          child: CreateFantasyCorps(fantasyCorps: fantasyCorps),
-                        );
-                      }),
-                  GoRoute(
-                      path: 'manage',
-                      name: AppRoutes.manageTour.name,
-                      pageBuilder: (context, state) {
-                        final tourId = state.pathParameters['tid']!;
                         return NoTransitionPage(
-                          key: state.pageKey,
-                          child: ManageTour(tourId: tourId),
+                          child: CreateFantasyCorps(
+                            fantasyCorps: fantasyCorps,
+                            isEditing: true,
+                          ),
                         );
                       }),
                   GoRoute(
-                      path: 'leave',
-                      name: AppRoutes.leaveTour.name,
-                      pageBuilder: (context, state) {
-                        final tourId = state.pathParameters['tid']!;
-                        return NoTransitionPage(
-                          key: state.pageKey,
-                          child: LeaveTour(tourId: tourId),
-                        );
-                      }),
+                    path: 'edit-tour',
+                    name: AppRoutes.editTour.name,
+                    pageBuilder: (context, state) {
+                      final tourId = state.pathParameters['tid']!;
+                      return NoTransitionPage(
+                        key: state.pageKey,
+                        child: CreateTour(tourId: tourId),
+                      );
+                    },
+                  ),
                   GoRoute(
-                      path: 'join',
-                      name: AppRoutes.joinTour.name,
-                      pageBuilder: (context, state) {
-                        final tourId = state.pathParameters['tid']!;
-                        return NoTransitionPage(
-                          key: state.pageKey,
-                          child: JoinTour(tourId: tourId),
-                        );
-                      }),
-                  GoRoute(
-                      path: 'edit',
-                      name: AppRoutes.editTour.name,
-                      pageBuilder: (context, state) {
-                        final tourId = state.pathParameters['tid']!;
-                        return NoTransitionPage(
-                          key: state.pageKey,
-                          child: CreateTour(tourId: tourId),
-                        );
-                      }),
-                  GoRoute(
-                    path: 'draftLobby',
+                    path: 'draft-lobby',
                     name: AppRoutes.draftLobby.name,
                     pageBuilder: (context, state) {
                       final tourId = state.pathParameters['tid'];
@@ -229,97 +188,47 @@ GoRouter goRouter(GoRouterRef ref) {
                   ),
                 ],
               ),
-            ],
-          ),
-          GoRoute(
-            path: '/myCorps',
-            name: AppRoutes.myCorps.name,
-            pageBuilder: (context, state) =>
-                NoTransitionPage(key: state.pageKey, child: const MyCorps()),
-            routes: [
               GoRoute(
-                path: ':cid/corpsDetail',
-                name: AppRoutes.corpsDetail.name,
-                pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
-                  child: CorpsDetail(
-                    fantasyCorpsId: state.pathParameters['cid'],
-                  ),
-                ),
-              ),
-              GoRoute(
-                  path: ':cid/editCorps',
-                  name: AppRoutes.editCorps.name,
-                  pageBuilder: (context, state) {
-                    final corps = state.extra as FantasyCorps?;
-                    return MaterialPage(
-                      key: state.pageKey,
-                      child: CreateFantasyCorps(
-                        fantasyCorps: corps,
-                        isEditing: true,
-                      ),
-                    );
-                  })
-            ],
-          ),
-          GoRoute(
-            path: '/leaderboard',
-            name: AppRoutes.leaderboard.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              key: state.pageKey,
-              child: const Leaderboard(),
-            ),
-          ),
-          GoRoute(
-            path: '/profile',
-            name: AppRoutes.profile.name,
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              fullscreenDialog: true,
-              child: const UserProfile(),
-            ),
-            // Profile sub route
-            routes: [
-              GoRoute(
-                path: ':uid/createAvatar',
-                name: AppRoutes.createFluttermoji.name,
+                path: '/profile',
+                name: AppRoutes.profile.name,
                 pageBuilder: (context, state) => NoTransitionPage(
                   key: state.pageKey,
-                  child:
-                      FlutterMojiPicker(playerId: state.pathParameters['uid']!),
+                  child: const UserProfile(),
                 ),
+                // Profile sub route
+                routes: [
+                  GoRoute(
+                    path: ':uid/create-avatar',
+                    name: AppRoutes.createFluttermoji.name,
+                    pageBuilder: (context, state) => NoTransitionPage(
+                      key: state.pageKey,
+                      child: FlutterMojiPicker(
+                          playerId: state.pathParameters['uid']!),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          GoRoute(
-            path: '/admin',
-            name: AppRoutes.adminMain.name,
-            pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const AdminMain(),
-            ),
-            routes: [
               GoRoute(
-                path: 'addScore',
-                name: AppRoutes.adminAddScore.name,
-                pageBuilder: (context, state) {
-                  return MaterialPage(
-                    key: state.pageKey,
-                    child: AdminScores(corpsScore: state.extra as CorpsScore?),
-                  );
-                },
+                path: '/admin',
+                name: AppRoutes.adminMain.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
+                  child: const AdminMain(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'add-score',
+                    name: AppRoutes.adminAddScore.name,
+                    pageBuilder: (context, state) {
+                      return NoTransitionPage(
+                        key: state.pageKey,
+                        child:
+                            AdminScores(corpsScore: state.extra as CorpsScore?),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          // TODO remove in production
-          GoRoute(
-            path: '/pageTest',
-            name: 'pageTest',
-            pageBuilder: (context, state) =>
-                MaterialPage(key: state.pageKey, child: const Placeholder()),
-          ),
-        ],
-      ),
-    ],
-  );
+            ]),
+      ]);
 }

@@ -7,7 +7,7 @@ part of 'create_tour_controller.dart';
 // **************************************************************************
 
 String _$createTourControllerHash() =>
-    r'd2659d4d439c8365ebe985d206e54d11da17c5f4';
+    r'a1d819ef663a541e02ff1f227f8e7aca607b54c7';
 
 /// [AsyncNotifierProvider] manages state for [CreateTour]
 ///

@@ -23,7 +23,6 @@ class AdminMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return const PageScaffolding(
       pageTitle: 'Admin Dashboard',
-      showImage: false,
       child: Column(
         children: [
           ScoresCard(),

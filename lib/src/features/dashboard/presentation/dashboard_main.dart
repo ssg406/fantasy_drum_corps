@@ -48,7 +48,6 @@ class _DashboardState extends ConsumerState<Dashboard> {
               ),
               gapH8,
               AsyncValueWidget(
-                showLoading: false,
                 value: ref.watch(playerStreamProvider),
                 data: (Player? player) {
                   return player == null
@@ -71,10 +70,8 @@ class _DashboardState extends ConsumerState<Dashboard> {
                         );
                 },
               ),
-              if (user != null && !user.emailVerified) ...[
-                gapH24,
+              if (user != null && !user.emailVerified)
                 VerifyEmailCard(user: user),
-              ],
               AsyncValueWidget(
                 showLoading: false,
                 value: ref.watch(watchJoinedToursProvider),
@@ -90,16 +87,16 @@ class _DashboardState extends ConsumerState<Dashboard> {
                 },
               ),
               AsyncValueWidget(
-                  value: ref.watch(watchUserFantasyCorpsProvider),
-                  data: (List<FantasyCorps> corps) => corps.isEmpty
-                      ? Container()
-                      : Column(
-                          children: [
-                            gapH24,
-                            DashboardScoresCard(fantasyCorps: corps)
-                          ],
-                        )),
-              gapH24,
+                showLoading: false,
+                value: ref.watch(watchUserFantasyCorpsProvider),
+                data: (List<FantasyCorps> userCorps) {
+                  if (userCorps.isNotEmpty) {
+                    return DashboardCorpsCard(userCorps: userCorps);
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
               const DashboardMessages(),
             ],
           ),

@@ -20,7 +20,7 @@ class CreateTourController extends _$CreateTourController {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
         () => ref.read(toursRepositoryProvider).updateTour(tour));
-    ref.read(goRouterProvider).goNamed(AppRoutes.myTours.name);
+    ref.read(goRouterProvider).goNamed(AppRoutes.dashboard.name);
   }
 
   Future<void> submitTour(Tour tour) async {
@@ -32,6 +32,5 @@ class CreateTourController extends _$CreateTourController {
     final finalizedTour = tour.copyWith(owner: user.uid, members: [user.uid]);
     state = await AsyncValue.guard(
         () => ref.read(toursRepositoryProvider).addTour(finalizedTour));
-    ref.read(goRouterProvider).goNamed(AppRoutes.myTours.name);
   }
 }

@@ -12,7 +12,7 @@ class TitledSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Theme.of(context).colorScheme.tertiary.withAlpha(25),
+      color: Theme.of(context).colorScheme.primary.withAlpha(10),
       child: Padding(
         padding: ResponsiveBreakpoints.of(context).largerThan(TABLET)
             ? cardPadding

@@ -1,4 +1,3 @@
-import 'package:fantasy_drum_corps/src/common_widgets/responsive_center.dart';
 import 'package:fantasy_drum_corps/src/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,8 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../routing/app_routes.dart';
 
-class DraftCancelled extends StatelessWidget {
-  const DraftCancelled({super.key});
+class DraftCancelledWidget extends StatelessWidget {
+  const DraftCancelledWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

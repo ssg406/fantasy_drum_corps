@@ -7,12 +7,12 @@ part of 'tour_detail_controller.dart';
 // **************************************************************************
 
 String _$tourDetailControllerHash() =>
-    r'7d5b95822238aa78663d310a4271dac8b1d029ce';
+    r'1e632042896821583e7fea54d7bf8428df0ca55c';
 
 /// See also [TourDetailController].
 @ProviderFor(TourDetailController)
 final tourDetailControllerProvider =
-    AutoDisposeAsyncNotifierProvider<TourDetailController, bool>.internal(
+    AutoDisposeAsyncNotifierProvider<TourDetailController, void>.internal(
   TourDetailController.new,
   name: r'tourDetailControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final tourDetailControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$TourDetailController = AutoDisposeAsyncNotifier<bool>;
+typedef _$TourDetailController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

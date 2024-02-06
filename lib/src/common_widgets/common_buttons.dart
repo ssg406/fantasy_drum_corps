@@ -71,7 +71,7 @@ class PrimaryTextButton extends StatelessWidget {
         ? TextButton(
             style: isDestructive
                 ? TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error)
+                    foregroundColor: Theme.of(context).colorScheme.error)
                 : null,
             onPressed: isLoading ? null : onPressed,
             child: isLoading
@@ -85,15 +85,17 @@ class PrimaryTextButton extends StatelessWidget {
         : TextButton.icon(
             style: isDestructive
                 ? TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error)
+                    foregroundColor: Theme.of(context).colorScheme.error)
                 : null,
             onPressed: isLoading ? null : onPressed,
             icon: Icon(icon),
-            label: Text(
-              labelText.toUpperCase(),
-              style: const TextStyle(
-                  letterSpacing: 1.5, fontWeight: FontWeight.bold),
-            ),
+            label: isLoading
+                ? const CircularProgressIndicator()
+                : Text(
+                    labelText.toUpperCase(),
+                    style: const TextStyle(
+                        letterSpacing: 1.5, fontWeight: FontWeight.bold),
+                  ),
           );
   }
 }

@@ -11,26 +11,29 @@ class LineupCaptionSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: _getLeading(context),
-      title: Text(
-        caption.fullName,
-        style: Theme.of(context).textTheme.titleMedium,
-        textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-            ? TextAlign.center
-            : null,
+    return SizedBox(
+      width: 200,
+      child: ListTile(
+        leading: _getLeading(context),
+        title: Text(
+          caption.fullName,
+          style: Theme.of(context).textTheme.titleMedium,
+          textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+              ? TextAlign.center
+              : null,
+        ),
+        subtitle: pick == null
+            ? Text('OPEN SLOT',
+                style: Theme.of(context).textTheme.titleSmall,
+                textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                    ? TextAlign.center
+                    : null)
+            : Text(pick!.fullName,
+                style: Theme.of(context).textTheme.titleSmall,
+                textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+                    ? TextAlign.center
+                    : null),
       ),
-      subtitle: pick == null
-          ? Text('OPEN SLOT',
-              style: Theme.of(context).textTheme.titleSmall,
-              textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                  ? TextAlign.center
-                  : null)
-          : Text(pick!.fullName,
-              style: Theme.of(context).textTheme.titleSmall,
-              textAlign: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-                  ? TextAlign.center
-                  : null),
     );
   }
 

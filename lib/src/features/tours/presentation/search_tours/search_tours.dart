@@ -38,30 +38,37 @@ class _SearchToursState extends ConsumerState<SearchTours> {
   Widget build(BuildContext context) {
     return PageScaffolding(
       pageTitle: 'Find a Tour',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Be a Part of a Fantasy Corps Tour',
-              style: Theme.of(context).textTheme.titleLarge),
-          Text(
-            'Find your friends\' tour or join a public tour to meet new  drum corps fans!',
-            style: Theme.of(context).textTheme.bodyLarge,
+      child: Card(
+        elevation: 0,
+        color: Theme.of(context).colorScheme.primary.withAlpha(10),
+        child: Padding(
+          padding: mobileCardPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Be a Part of a Fantasy Corps Tour',
+                  style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                'Find your friends\' tour or join a public tour to meet new  drum corps fans!',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              gapH32,
+              SearchBar(
+                  onPublicOnlyChecked: setPublicFilter,
+                  onSearched: handleSearchText),
+              gapH32,
+              AsyncValueWidget(
+                value: ref.watch(watchAllToursProvider(watchPublicOnly)),
+                data: (List<Tour>? tours) {
+                  return ResultsContainer(
+                    tours: tours!,
+                    searchText: searchText,
+                  );
+                },
+              ),
+            ],
           ),
-          gapH32,
-          SearchBar(
-              onPublicOnlyChecked: setPublicFilter,
-              onSearched: handleSearchText),
-          gapH32,
-          AsyncValueWidget(
-            value: ref.watch(watchAllToursProvider(watchPublicOnly)),
-            data: (List<Tour>? tours) {
-              return ResultsContainer(
-                tours: tours!,
-                searchText: searchText,
-              );
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

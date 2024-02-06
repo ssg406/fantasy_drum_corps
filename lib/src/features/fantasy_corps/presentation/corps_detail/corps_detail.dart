@@ -1,6 +1,6 @@
 import 'package:fantasy_drum_corps/src/common_widgets/async_value_widget.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/common_buttons.dart';
-import 'package:fantasy_drum_corps/src/common_widgets/labeled_flex_row.dart';
+import 'package:fantasy_drum_corps/src/common_widgets/labelled_property.dart';
 import 'package:fantasy_drum_corps/src/common_widgets/not_found.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/data/fantasy_corps_repository.dart';
 import 'package:fantasy_drum_corps/src/features/fantasy_corps/domain/fantasy_corps.dart';
@@ -13,12 +13,6 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 import '../../../../common_widgets/lineup_caption_slot.dart';
 import '../../../../common_widgets/page_scaffold.dart';
 import '../../../../constants/app_sizes.dart';
-
-/// WHERE YOU LEFT OFF
-/// corpsScore need to be added back to the server because the current format
-/// doesn't match
-/// then test updating scores
-/// continue formatting corps detail page
 
 class CorpsDetail extends ConsumerWidget {
   const CorpsDetail({Key? key, this.fantasyCorpsId}) : super(key: key);
@@ -38,7 +32,6 @@ class CorpsDetail extends ConsumerWidget {
               final lineup = corps.lineup;
 
               return PageScaffolding(
-                showImage: false,
                 pageTitle: corps.name,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +43,13 @@ class CorpsDetail extends ConsumerWidget {
                     gapH12,
                     const Divider(thickness: 0.5),
                     gapH24,
-                    LabeledFlexRow(
+                    LabelledProperty(
                         label: 'Show Title',
-                        item: Text(corps.showTitle ?? 'Untitled')),
+                        value: corps.showTitle ?? 'Untitled'),
                     gapH8,
-                    LabeledFlexRow(
+                    LabelledProperty(
                         label: 'Repertoire',
-                        item: Text(corps.repertoire ?? 'Not Set')),
+                        value: corps.repertoire ?? 'Not Set'),
                     gapH16,
                     PrimaryTextButton(
                       icon: Icons.edit,

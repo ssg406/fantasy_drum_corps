@@ -1,10 +1,7 @@
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test/test.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 
 import '../../util/test_util.dart';
 

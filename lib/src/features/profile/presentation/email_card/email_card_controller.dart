@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fantasy_drum_corps/src/features/authentication/data/auth_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'email_card_controller.g.dart';

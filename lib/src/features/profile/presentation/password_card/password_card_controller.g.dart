@@ -9,7 +9,7 @@ part of 'password_card_controller.dart';
 String _$passwordCardControllerHash() =>
     r'b79fcde2ac391038c08ddb28c60da2cfac16b17a';
 
-/// [AsyncNotifier] controller for [PasswordCard] on profile page. Communicates
+/// [AsyncNotifierProvider] for [PasswordCard] on profile page. Communicates
 /// with [AuthRepository] to update password
 ///
 /// Copied from [PasswordCardController].

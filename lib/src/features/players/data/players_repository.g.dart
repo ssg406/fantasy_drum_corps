@@ -38,21 +38,7 @@ final playersRepositoryProvider =
 );
 
 typedef PlayersRepositoryRef = AutoDisposeProviderRef<PlayersRepository>;
-String _$playerStreamHash() => r'adb28a689a70e68348dac2d5487b84bfa8db88e1';
-
-/// See also [playerStream].
-@ProviderFor(playerStream)
-final playerStreamProvider = AutoDisposeStreamProvider<Player?>.internal(
-  playerStream,
-  name: r'playerStreamProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$playerStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef PlayerStreamRef = AutoDisposeStreamProviderRef<Player?>;
-String _$playerStreamByIdHash() => r'f8a61e629dca28e8f8423201a11eae219049678f';
+String _$fetchPlayerByIdHash() => r'1625bfd41537b91b031bf01e037a0fea344f53ef';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -74,6 +60,148 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// See also [fetchPlayerById].
+@ProviderFor(fetchPlayerById)
+const fetchPlayerByIdProvider = FetchPlayerByIdFamily();
+
+/// See also [fetchPlayerById].
+class FetchPlayerByIdFamily extends Family<AsyncValue<Player?>> {
+  /// See also [fetchPlayerById].
+  const FetchPlayerByIdFamily();
+
+  /// See also [fetchPlayerById].
+  FetchPlayerByIdProvider call(
+    String playerId,
+  ) {
+    return FetchPlayerByIdProvider(
+      playerId,
+    );
+  }
+
+  @override
+  FetchPlayerByIdProvider getProviderOverride(
+    covariant FetchPlayerByIdProvider provider,
+  ) {
+    return call(
+      provider.playerId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchPlayerByIdProvider';
+}
+
+/// See also [fetchPlayerById].
+class FetchPlayerByIdProvider extends AutoDisposeFutureProvider<Player?> {
+  /// See also [fetchPlayerById].
+  FetchPlayerByIdProvider(
+    String playerId,
+  ) : this._internal(
+          (ref) => fetchPlayerById(
+            ref as FetchPlayerByIdRef,
+            playerId,
+          ),
+          from: fetchPlayerByIdProvider,
+          name: r'fetchPlayerByIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$fetchPlayerByIdHash,
+          dependencies: FetchPlayerByIdFamily._dependencies,
+          allTransitiveDependencies:
+              FetchPlayerByIdFamily._allTransitiveDependencies,
+          playerId: playerId,
+        );
+
+  FetchPlayerByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.playerId,
+  }) : super.internal();
+
+  final String playerId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Player?> Function(FetchPlayerByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchPlayerByIdProvider._internal(
+        (ref) => create(ref as FetchPlayerByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        playerId: playerId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Player?> createElement() {
+    return _FetchPlayerByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchPlayerByIdProvider && other.playerId == playerId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, playerId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FetchPlayerByIdRef on AutoDisposeFutureProviderRef<Player?> {
+  /// The parameter `playerId` of this provider.
+  String get playerId;
+}
+
+class _FetchPlayerByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Player?> with FetchPlayerByIdRef {
+  _FetchPlayerByIdProviderElement(super.provider);
+
+  @override
+  String get playerId => (origin as FetchPlayerByIdProvider).playerId;
+}
+
+String _$playerStreamHash() => r'adb28a689a70e68348dac2d5487b84bfa8db88e1';
+
+/// See also [playerStream].
+@ProviderFor(playerStream)
+final playerStreamProvider = AutoDisposeStreamProvider<Player?>.internal(
+  playerStream,
+  name: r'playerStreamProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$playerStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef PlayerStreamRef = AutoDisposeStreamProviderRef<Player?>;
+String _$playerStreamByIdHash() => r'f8a61e629dca28e8f8423201a11eae219049678f';
 
 /// See also [playerStreamById].
 @ProviderFor(playerStreamById)

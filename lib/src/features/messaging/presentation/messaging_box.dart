@@ -8,7 +8,8 @@ import 'package:fantasy_drum_corps/src/utils/async_value_ui.dart';
 import 'package:fantasy_drum_corps/src/utils/datetime_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../common_widgets/common_buttons.dart';
 
 class MessagingBox extends ConsumerStatefulWidget {
   const MessagingBox({Key? key, required this.userId, required this.tourId})
@@ -34,63 +35,48 @@ class _MessagingBoxState extends ConsumerState<MessagingBox> {
     final state = ref.watch(messagingBoxControllerProvider);
     return Column(
       children: [
-        Text(
-          'Messaging',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        gapH16,
         SizedBox(
-          width: 450,
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _textController,
-                  onEditingComplete: _submitMessage,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter new message...',
-                    border: InputBorder.none,
-                  ),
+          height: 400,
+          child: AsyncValueWidget(
+            value: ref.watch(watchTourMessagesProvider(tourId)),
+            data: (List<TourMessage> messages) {
+              messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+              return messages.isEmpty
+                  ? const Center(child: Text('No Messages'))
+                  : ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) => MessageTile(
+                        id: messages[index].id!,
+                        message: messages[index].message,
+                        date: messages[index].dateTime,
+                        displayName: messages[index].user,
+                        isOwnMessage: messages[index].userId == userId,
+                        onDeleteMessage: _deleteMessage,
+                      ),
+                    );
+            },
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _textController,
+                onEditingComplete: _submitMessage,
+                decoration: const InputDecoration(
+                  hintText: 'Enter new message...',
+                  border: InputBorder.none,
                 ),
               ),
-              gapW12,
-              IconButton.filled(
-                  icon: state.isLoading
-                      ? const CircularProgressIndicator()
-                      : const Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: FaIcon(FontAwesomeIcons.paperPlane),
-                        ),
-                  onPressed: _submitMessage)
-            ],
-          ),
-        ),
-        gapH16,
-        Card(
-          child: SizedBox(
-            width: 450,
-            height: 400,
-            child: AsyncValueWidget(
-              value: ref.watch(watchTourMessagesProvider(tourId)),
-              data: (List<TourMessage> messages) {
-                messages.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-                return messages.isEmpty
-                    ? const Center(child: Text('No Messages'))
-                    : ListView.builder(
-                        reverse: true,
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) => MessageTile(
-                          id: messages[index].id!,
-                          message: messages[index].message,
-                          date: messages[index].dateTime,
-                          displayName: messages[index].user,
-                          isOwnMessage: messages[index].userId == userId,
-                          onDeleteMessage: _deleteMessage,
-                        ),
-                      );
-              },
             ),
-          ),
+            gapW12,
+            PrimaryActionButton(
+                labelText: 'Send',
+                isLoading: state.isLoading,
+                icon: Icons.send_rounded,
+                onPressed: _submitMessage)
+          ],
         ),
       ],
     );

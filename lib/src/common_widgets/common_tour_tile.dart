@@ -14,10 +14,7 @@ class CommonTourTile extends StatelessWidget {
     return ListTile(
       title: Text(
         tour.name,
-        style: Theme.of(context)
-            .textTheme
-            .headlineMedium!
-            .copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
       subtitle: Row(
         children: [
