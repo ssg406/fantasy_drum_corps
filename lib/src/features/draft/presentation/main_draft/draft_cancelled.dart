@@ -31,7 +31,7 @@ class DraftCancelledWidget extends StatelessWidget {
             ),
             gapH12,
             TextButton(
-              onPressed: () => context.goNamed(AppRoutes.tours.name),
+              onPressed: () => context.goNamed(AppRoutes.dashboard.name),
               child: const Text('Back to Tours'),
             ),
           ],

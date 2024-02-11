@@ -15,8 +15,6 @@ class PlayerLineup extends StatelessWidget {
         .map((caption) =>
             LineupCaptionSlot(caption: caption, pick: lineup[caption]))
         .toList();
-    final keysList = lineup.keys.toList();
-    final maxRows = (lineup.length / 2.0).ceil();
     return Column(
       children: [
         Text(
@@ -25,30 +23,14 @@ class PlayerLineup extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         gapH24,
-        for (int i = 0; i <= maxRows; i++)
+        for (int i = 0; i < captionSlotList.length; i += 2)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LineupCaptionSlot(
-                caption: keysList[i],
-                pick: lineup[keysList[i]],
-              ),
-              //if (keysList[i + 1] != null)
-              LineupCaptionSlot(
-                caption: keysList[i + 1],
-                pick: lineup[keysList[i + 1]],
-              )
+              captionSlotList[i],
+              if (i + 1 < captionSlotList.length) captionSlotList[i + 1]
             ],
-          )
-        // Column(
-        //   children: [
-        //     for (final caption in lineup.keys)
-        //       LineupCaptionSlot(
-        //         caption: caption,
-        //         pick: lineup[caption],
-        //       ),
-        //   ],
-        // ),
+          ),
       ],
     );
   }

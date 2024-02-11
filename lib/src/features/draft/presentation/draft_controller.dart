@@ -84,6 +84,7 @@ class DraftController extends _$DraftController {
 
     final Lineup playerLineup = {};
     // Set empty lineup
+    dev.log("Generating player lineup map", name: "Draft Controller");
     for (final caption in Caption.values) {
       playerLineup.addAll({caption: null});
     }
@@ -128,6 +129,7 @@ class DraftController extends _$DraftController {
   void playerSendsAutoPick(DrumCorpsCaption pick) =>
       ref.watch(socketServiceProvider).playerSendsAutoPick(pick);
 
+  // A caption has been selected by a draft player
   void onCaptionSelected(DrumCorpsCaption pick) {
     if (state.playerLineup[pick.caption] != null) {
       state = state.copyWith(

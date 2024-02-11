@@ -157,7 +157,7 @@ class _CreateFantasyCorpsContentsState
         lineupScore: lineupScore);
     await controller.addFantasyCorps(newCorps, isUpdating: _isEditing);
     if (mounted) {
-      context.goNamed(AppRoutes.myCorps.name);
+      context.goNamed(AppRoutes.dashboard.name);
     }
   }
 }
